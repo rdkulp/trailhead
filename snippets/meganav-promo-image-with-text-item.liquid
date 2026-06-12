@@ -1,0 +1,63 @@
+{% liquid
+  comment
+    Renders a meganav promo image with text item.
+
+    Required parameters:
+      - promo_width: { Number } The width of the promo area (as a percentage of the parent container).
+      - promo_column_count: { Number } The number of columns in the promo area.
+      - image: { Object } The promo image.
+      - image_aspect_ratio: { String } A string noting the aspect ratio of the promo image.
+      - image_position:  { String } Where the image displays, in relation to the promo text. Can be:
+        - 'beside_text': Beside the text (on the left)
+        - 'above_text': Above the text
+      - heading: { String } The promo heading.
+      - text: { String } The promo text.
+      - link: { String } The promo link.
+      - link_text: { String } The promo link text.
+      - show_animations: { Boolean } Whether animations are enabled.
+  endcomment
+
+  assign promo_image_width = '100vw - (100% - [[pw]]%) - (clamp(24px, 2vw, 36px) * 2)) / [[pcc]]'
+  assign promo_image_width = promo_image_width | replace: '[[pw]]', promo_width | replace: '[[pcc]]', promo_column_count
+
+  # When the image is beside the text, the image is only 50% of the width
+  if image_position == 'beside_text'
+    capture promo_image_width
+      echo '([[piw]]) / 2' | replace: '[[piw]]', promo_image_width
+    endcapture
+  endif
+
+  capture image_sizes
+    echo 'calc([[piw]])' | replace: '[[piw]]', promo_image_width
+  endcapture
+-%}
+
+<div class="meganav-promo-image-with-text-item" data-image-position="{{ image_position }}">
+  {% liquid
+    capture image
+      render 'image', image: image, sizes: image_sizes, aspect_ratio: image_aspect_ratio, include_placeholder: true, animate: show_animations
+    endcapture
+  -%}
+
+  {% if link != blank -%}
+    <a href="{{ link }}" aria-label="{{ heading }}" class="meganav-promo-image-with-text-item--image">{{ image }}</a>
+  {%- else -%}
+    <div class="meganav-promo-image-with-text-item--image">{{ image }}</div>
+  {%- endif %}
+
+  <div
+    class="meganav-promo-image-with-text-item--text fs-body-75 animation--container"
+  >
+    {% if heading != blank -%}
+      <h5 class="ff-heading fs-heading-6-base">{{ heading }}</h5>
+    {%- endif %}
+
+    {% if text != blank -%}
+      <p>{{ text }}</p>
+    {%- endif %}
+
+    {% if link != blank and link_text != blank -%}
+      <a class="btn btn--text-link" href="{{ link }}">{{ link_text }}</a>
+    {%- endif %}
+  </div>
+</div>

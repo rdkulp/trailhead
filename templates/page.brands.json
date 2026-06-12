@@ -1,0 +1,555 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_1": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Our brands",
+            "heading_tag": "h3",
+            "heading_font_size": 8
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>All products are authentic and imported from the country of origin. Every single piece is carefully curated in its practicality, bringing an exceptionally artistic experience to your beautiful home.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading", "text"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 750,
+        "color_scheme": "default",
+        "override_with_custom_colors": true,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 88,
+        "section_style_spacing_bottom": 76,
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_1": {
+      "type": "collection-list",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "button_link": "",
+        "button_label": "",
+        "button_style": "primary",
+        "maximum_content_width": 650,
+        "collections": [],
+        "num_columns": "4",
+        "num_rows": "all",
+        "enable_slider_desktop": true,
+        "num_columns_mobile": "2",
+        "num_rows_mobile": "all",
+        "enable_slider_mobile": true,
+        "show_product_counts": false,
+        "collection_item_style": "plain",
+        "image_source": "collection",
+        "image_aspect_ratio": "portrait",
+        "image_circle_crop_enable": false,
+        "image_spacing": 0,
+        "title_font_type": "heading",
+        "text_alignment": "center",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 40,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_2": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_4dDCCe": {
+          "type": "heading",
+          "settings": {
+            "title": "Furniture",
+            "heading_tag": "h3",
+            "heading_font_size": 8
+          }
+        },
+        "text_eaFPeQ": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our curated selection of brands for dining in, hosting, and entertaining</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading_4dDCCe", "text_eaFPeQ"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 750,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 120,
+        "section_style_spacing_bottom": 44,
+        "section_style_enable_animation": true
+      }
+    },
+    "featured_collection_with_media_1": {
+      "type": "featured-collection-with-media",
+      "blocks": {
+        "featured_image_k9xd7d": {
+          "type": "featured_image",
+          "settings": {
+            "background_image_media_fit": "cover",
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "media_link": "",
+            "image_overlay_tint_opacity": 30,
+            "image_overlay_tint_style": "gradient_down",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000",
+            "maximum_content_width": 500,
+            "accent": "Featured",
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent",
+            "title": "Bring bold to everyday spaces",
+            "heading_tag": "h3",
+            "heading_font_size": 4,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "Explore more",
+            "button_style": "secondary",
+            "text_position": "flex-start_flex-start",
+            "text_position_mobile": "flex-start_flex-start"
+          }
+        }
+      },
+      "block_order": ["featured_image_k9xd7d"],
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_link": "shopify://collections/all",
+        "button_label": "",
+        "button_style": "primary",
+        "collection": "",
+        "maximum_products": 6,
+        "num_columns": "3",
+        "enable_slider_desktop": false,
+        "enable_slider_mobile": true,
+        "media_position": "left",
+        "media_width": 50,
+        "media_height": 500,
+        "media_position_mobile": "above",
+        "media_height_mobile": 500,
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_buttons_1": {
+      "type": "collection-list-buttons",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "collections": [],
+        "num_columns": "4",
+        "num_rows": "all",
+        "grid_spacing": "comfort",
+        "num_rows_mobile": "5",
+        "enable_slider_mobile": false,
+        "show_product_counts": false,
+        "collection_item_style": "filled",
+        "shape": "rectangle",
+        "image_source": "product",
+        "image_position": "left",
+        "image_aspect_ratio": "square",
+        "image_circle_crop_enable": false,
+        "image_size": 80,
+        "image_spacing": 8,
+        "image_size_mobile": 50,
+        "image_spacing_mobile": 6,
+        "title_font_type": "heading",
+        "section_style_spacing_top": 24,
+        "section_style_spacing_bottom": 40,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_3": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_N7gpni": {
+          "type": "heading",
+          "settings": {
+            "title": "Decor",
+            "heading_tag": "h3",
+            "heading_font_size": 8
+          }
+        },
+        "text_wtBVPj": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our curated selection of brands for dining in, hosting, and entertaining</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading_N7gpni", "text_wtBVPj"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 750,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 120,
+        "section_style_spacing_bottom": 44,
+        "section_style_enable_animation": true
+      }
+    },
+    "image_hero_AjJ7dc": {
+      "type": "image-hero",
+      "blocks": {
+        "accent_kMMxNj": {
+          "type": "accent",
+          "settings": {
+            "text": "Highlight",
+            "accent_font_size": 5,
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent"
+          }
+        },
+        "heading_pA7NXN": {
+          "type": "heading",
+          "settings": {
+            "title": "Functional objects with maximized potential",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "text_jRRXBG": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We specialize in  technologically advanced collectible objects for private and public spaces.</p>",
+            "text_font_size": 3
+          }
+        },
+        "button_TP4zw4": {
+          "type": "button",
+          "settings": {
+            "button_link": "",
+            "button_label": "Explore more",
+            "button_style": "secondary"
+          }
+        }
+      },
+      "block_order": [
+        "accent_kMMxNj",
+        "heading_pA7NXN",
+        "text_jRRXBG",
+        "button_TP4zw4"
+      ],
+      "name": "t:sections.image_hero.presets.name",
+      "settings": {
+        "enable_full_width": false,
+        "image_height_type": "custom",
+        "custom_height_desktop": "650px",
+        "custom_height_mobile": "450px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 510,
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "center_center",
+        "image_overlay_tint_opacity": 10,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 48,
+        "section_style_enable_animation": true
+      }
+    },
+    "featured_collection_1": {
+      "type": "featured-collection",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "button_2_button_link": "",
+        "button_2_button_label": "",
+        "button_2_button_style": "tertiary",
+        "button_position": "header",
+        "collection": "",
+        "maximum_products": 10,
+        "num_columns": "5",
+        "num_columns_mobile": "2",
+        "enable_slider_desktop": true,
+        "enable_slider_mobile": true,
+        "show_view_all_tile": false,
+        "tile_location": "beginning",
+        "accent": "",
+        "title": "",
+        "heading_tag": "h3",
+        "text": "",
+        "text_position": "flex-start_flex-start",
+        "color_scheme": "default",
+        "override_with_custom_colors": true,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "background_image_focal_point": "image_presentation",
+        "image_overlay_tint_opacity": 100,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#876161",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_buttons_2": {
+      "type": "collection-list-buttons",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "collections": [],
+        "num_columns": "4",
+        "num_rows": "all",
+        "grid_spacing": "comfort",
+        "num_rows_mobile": "5",
+        "enable_slider_mobile": false,
+        "show_product_counts": false,
+        "collection_item_style": "filled",
+        "shape": "rectangle",
+        "image_source": "product",
+        "image_position": "left",
+        "image_aspect_ratio": "square",
+        "image_circle_crop_enable": false,
+        "image_size": 80,
+        "image_spacing": 8,
+        "image_size_mobile": 50,
+        "image_spacing_mobile": 6,
+        "title_font_type": "heading",
+        "section_style_spacing_top": 24,
+        "section_style_spacing_bottom": 40,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_4": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_3Kczzm": {
+          "type": "heading",
+          "settings": {
+            "title": "Dining",
+            "heading_tag": "h3",
+            "heading_font_size": 8
+          }
+        },
+        "text_fRtHe6": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our curated selection of brands for dining in, hosting, and entertaining</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading_3Kczzm", "text_fRtHe6"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 750,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 120,
+        "section_style_spacing_bottom": 44,
+        "section_style_enable_animation": true
+      }
+    },
+    "featured_collection_with_media_2": {
+      "type": "featured-collection-with-media",
+      "blocks": {
+        "featured_image_bqmEcY": {
+          "type": "featured_image",
+          "settings": {
+            "background_image_media_fit": "cover",
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "media_link": "",
+            "image_overlay_tint_opacity": 30,
+            "image_overlay_tint_style": "gradient_down",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000",
+            "maximum_content_width": 500,
+            "accent": "Highlight",
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent",
+            "title": "Balanced Design",
+            "heading_tag": "h3",
+            "heading_font_size": 4,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "Explore More",
+            "button_style": "secondary",
+            "text_position": "flex-start_flex-start",
+            "text_position_mobile": "flex-start_flex-start"
+          }
+        }
+      },
+      "block_order": ["featured_image_bqmEcY"],
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_link": "shopify://collections/all",
+        "button_label": "",
+        "button_style": "primary",
+        "collection": "",
+        "maximum_products": 6,
+        "num_columns": "3",
+        "enable_slider_desktop": false,
+        "enable_slider_mobile": true,
+        "media_position": "right",
+        "media_width": 50,
+        "media_height": 500,
+        "media_position_mobile": "above",
+        "media_height_mobile": 500,
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_buttons_3": {
+      "type": "collection-list-buttons",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "collections": [],
+        "num_columns": "4",
+        "num_rows": "2",
+        "grid_spacing": "comfort",
+        "num_rows_mobile": "5",
+        "enable_slider_mobile": false,
+        "show_product_counts": false,
+        "collection_item_style": "filled",
+        "shape": "rectangle",
+        "image_source": "product",
+        "image_position": "left",
+        "image_aspect_ratio": "square",
+        "image_circle_crop_enable": false,
+        "image_size": 80,
+        "image_spacing": 8,
+        "image_size_mobile": 50,
+        "image_spacing_mobile": 6,
+        "title_font_type": "heading",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 32,
+        "section_style_enable_animation": true
+      }
+    },
+    "image_hero": {
+      "type": "image-hero",
+      "settings": {
+        "enable_full_width": true,
+        "image_height_type": "custom",
+        "custom_height_desktop": "650px",
+        "custom_height_mobile": "450px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 500,
+        "text_position": "center_center",
+        "text_position_mobile": "center_center",
+        "image_overlay_tint_opacity": 0,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 80,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_1",
+    "collection_list_1",
+    "rich_text_2",
+    "featured_collection_with_media_1",
+    "collection_list_buttons_1",
+    "rich_text_3",
+    "image_hero_AjJ7dc",
+    "featured_collection_1",
+    "collection_list_buttons_2",
+    "rich_text_4",
+    "featured_collection_with_media_2",
+    "collection_list_buttons_3",
+    "image_hero"
+  ]
+}

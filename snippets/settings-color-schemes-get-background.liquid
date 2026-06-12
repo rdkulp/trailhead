@@ -1,0 +1,38 @@
+{%- comment -%}
+  This only returns the background color for the given color scheme config
+
+  * local_settings: shopify settings object for block or section
+  * id_prefix (optional)
+{%- endcomment -%}
+
+{%- assign global_settings = settings -%}
+
+{%- capture 'override_with_custom_colors_key' -%}{%- render 'get-prefixed-id', id: "override_with_custom_colors", prefix: id_prefix -%}{%- endcapture -%}
+
+{%- assign use_local_colors = local_settings[override_with_custom_colors_key] -%}
+
+{%- capture return -%}
+{%- if use_local_colors -%}
+  {%- capture 'color_background_key' -%}{%- render 'get-prefixed-id', id: "override_color_background", prefix: id_prefix -%}{%- endcapture -%}
+  {{ local_settings[color_background_key] }}
+{%- else -%}
+  {%- capture 'color_scheme_key' -%}{%- render 'get-prefixed-id', id: "color_scheme", prefix: id_prefix -%}{%- endcapture -%}
+  {%- case local_settings[color_scheme_key] -%}
+    {%- when 'default' -%}
+      {{ global_settings.color_background_body }}
+    {%- when 'inverse' -%}
+      {{ global_settings.color_text | color_mix: global_settings.color_background_body, 95 }}
+    {%- when 'soft' -%}
+      {{ global_settings.color_background_body | color_mix: global_settings.color_text, 95 }}
+    {%- when 'accent' -%}
+      {{ global_settings.color_accent }}
+    {%- when 'sale' -%}
+      {{ global_settings.color_products_sale_price }}
+    {%- when 'color_scheme_1' -%}
+      {{ global_settings.color_scheme_1_background_body }}
+    {%- when 'color_scheme_2' -%}
+      {{ global_settings.color_scheme_2_background_body }}
+  {%- endcase -%}
+{%- endif -%}
+{%- endcapture -%}
+{{- return | strip -}}

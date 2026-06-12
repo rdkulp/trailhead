@@ -1,0 +1,57 @@
+{% liquid
+  comment
+    Renders a video media container (used in the 'Video' and 'Video with content' sections).
+
+    Required parameters:
+      - video_aspect_ratio: { String } The aspect ratio of the video.
+      - video_alt: { String } The alt text for the video.
+      - loop: { Boolean } Whether the video should loop or not.
+      - is_shopify_video: { Boolean } Whether the video is Shopify-hosted.
+      - video: { Object } The video object for the Shopify-hosted video.
+      - is_external_video: { Boolean } Whethe the video is external (ie. YouTube/Vimeo).
+      - video_provider: { String } The video provider. Can be:
+        - 'youtube'
+        - 'vimeo'
+      - video_id: { String } The video's ID.
+      - image: { Object } The cover image to use for external videos.
+      - image_focal_point: { String } The focal point of the cover image.
+      - show_animations: { Booleans } Whether animations are enabled or not.
+  endcomment
+-%}
+
+<div class="video__media-container">
+  <div class="video__video-wrapper video-wrapper aspect-ratio--{{ video_aspect_ratio }}">
+    {% if is_shopify_video -%}
+      {{
+        video
+        | video_tag: loop: loop, controls: false, image_size: '1800x'
+        | replace: '<video', '<video class="video__video video"'
+      }}
+    {%- elsif is_external_video -%}
+      <div
+        class="video__iframe"
+        data-video-external-target
+        data-video-provider="{{ video_provider }}"
+        data-video-id="{{ video_id | escape }}"
+        data-loop="{{ loop }}"
+      ></div>
+      {% render 'image',
+        wrapper_class: 'video__image overlay visible',
+        image: image,
+        sizes: '(min-width: 960px) calc(100vw - calc(2 * clamp(24px, 2vw, 36px))),(min-width: 720px) calc(100vw - calc(2 * clamp(24px, 2vw, 36px))), calc(100vw - calc(2 * 16px))',
+        aspect_ratio: video_aspect_ratio,
+        focal_point: image_focal_point,
+        fallback_alt: video_alt,
+        animate: show_animations
+      -%}
+    {%- else -%}
+      {% comment %}
+        This is the state when there is not a correct source set, we need
+        something rendered to size the section correctly
+      {% endcomment %}
+      <div class="video__undefined_spacer">
+        {% render 'placeholder-image', placeholder_name: 'lifestyle-2', aspect_ratio: video_aspect_ratio %}
+      </div>
+    {%- endif %}
+  </div>
+</div>

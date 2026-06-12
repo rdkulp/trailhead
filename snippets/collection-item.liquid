@@ -1,0 +1,108 @@
+{% liquid
+  comment
+    Renders a collection item.
+
+    Required parameters:
+      - coll: { Object } The collection object.
+
+    Optional parameters:
+      - image_aspect_ratio: { String } The image's aspect ratio.
+      - image_source: { String } Whether the image should be:
+        - The collection's featured image
+        - The featured image of the first product in the collection
+      - image_circle_crop_enable: { Boolean } Whether to apply a circle crop to the image. Only
+        applies when the aspect ratio is "Square".
+      - image_sizes: { String } A list of responsive image sizes (for the 'sizes' attributes).
+      - text_alignment: { String } The horizontal text alignment of the collection details and
+        "Shop now" button.
+      - title_font_type: { String } The font type (family) to use for the collection title.
+      - title_font_size: { Number } A number representing the text "size". Ranges from 1-8.
+      - placeholder_name: { String } The name of the placeholder image to use.
+      - show_product_counts: { Boolean } Whether to show the inline product count
+      - beyond_desktop_limit: { Boolean } If true, hide within collection trucation.
+      - beyond_mobile_limit: { Boolean } If true, hide within collection trucation on mobile.
+      - wrapper_class: { String } A class to add to the button container.
+  endcomment
+
+  assign collection_image = ''
+  assign circle_crop = false
+
+  if show_product_counts
+    assign product_count_string = '([[pc]])' | replace: '[[pc]]', coll.all_products_count
+  endif
+
+  if beyond_desktop_limit
+    assign wrapper_class = wrapper_class | append: ' overflow-desktop'
+  endif
+  if beyond_mobile_limit
+    assign wrapper_class = wrapper_class | append: ' overflow-mobile'
+  endif
+
+  if image_source == 'collection'
+    assign collection_image = coll.image | default: coll.products.first.featured_image
+  else
+    assign collection_image = coll.products.first.featured_image
+  endif
+
+  if image_aspect_ratio == 'square' and image_circle_crop_enable
+    assign circle_crop = true
+  endif
+-%}
+
+{% capture content %} 
+  <div class="collection-item__image__wrap">
+    {%
+      render 'image'
+      image: collection_image,
+      wrapper_class: 'collection-item__image',
+      aspect_ratio: image_aspect_ratio,
+      sizes: image_sizes,
+      include_placeholder: true,
+      placeholder_name: placeholder_name,
+    %}
+  </div>
+
+  {% liquid
+    assign title_class = 'collection-item__title'
+
+    if title_font_type == 'body'
+      assign title_class = title_class | append: ' ff-body '
+    else
+      assign title_class = title_class | append: ' ff-heading '
+    endif
+
+    capture title_font_class
+      render 'settings-text-size', type: 'text', size: title_font_size
+    endcapture
+
+    assign title_class = title_class | append: title_font_class
+  -%}
+
+  <div class="collection-item__meta {{ title_class }}" data-text-alignment="{{ text_alignment }}">
+    {% if coll -%}
+      {{ coll.title }}
+      {% if show_product_counts %}
+        <span class="collection-item__product-count">{{ product_count_string }}</span>
+      {% endif %}
+    {%- else -%}
+      {{ 'collections.general.collection_label' | t }}
+    {%- endif %}
+  </div>
+{% endcapture %}
+
+<div
+  class="
+    collection-item
+    animation--item
+    {{ wrapper_class }}
+  "
+  data-image-crop="{{ circle_crop }}"
+>
+  {% if coll -%}
+    <a href="{{ coll.url }}" class="collection-item__link">
+      {{ content }}
+    </a>
+  {% else %}
+    {{ content }}
+  {%- endif %}
+</div>

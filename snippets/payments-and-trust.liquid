@@ -1,0 +1,126 @@
+{% liquid
+  comment
+    Renders the payments and trust product block.
+
+    Required parameters:
+      - block: { Object } The associated block object.
+  endcomment
+-%}
+
+{%- capture content -%}
+  <div
+    class="payments-and-trust{% if block.settings.add_box %} payments-and-trust--boxed{% endif %}"
+    style="
+      --content-alignment: {{ block.settings.content_alignment }};
+      --image-size: {{ block.settings.image_size }}%;
+    "
+  >
+    {% if block.settings.payment_heading_icon != 'none'
+      or block.settings.payment_heading != blank
+      or block.settings.payment_text != blank
+      or block.settings.show_payment_icons -%}
+      <div class="payments-and-trust__payment-content">
+        {% liquid
+          assign icons_below = false
+
+          if block.settings.payment_text_position == 'below' or block.settings.payment_text == blank
+            assign icons_below = true
+          endif
+        -%}
+
+        {% if block.settings.payment_heading_icon != 'none' and block.settings.payment_heading != blank -%}
+          <div
+            class="payments-and-trust__payment-heading-wrapper"
+            data-icons-image-below="{{ icons_below }}"
+          >
+            {% render 'icon-editorial', icon: block.settings.payment_heading_icon %}
+            <div class="ff-heading fs-heading-6-base">{{ block.settings.payment_heading }}</div>
+          </div>
+        {%- endif %}
+
+        {%- capture payment_text -%}
+          {% if block.settings.payment_text != blank -%}
+            <div class="payments-and-trust__payment-text rte non-page-rte">{{ block.settings.payment_text }}</div>
+          {%- endif %}
+        {%- endcapture -%}
+
+        {% liquid
+          if block.settings.payment_text_position == 'above'
+            echo payment_text
+          endif
+
+          if block.settings.show_payment_icons
+            render 'payment-icons'
+          endif
+
+          if block.settings.payment_text_position == 'below'
+            echo payment_text
+          endif
+        -%}
+      </div>
+    {%- endif %}
+
+    {% if block.settings.trust_heading_icon != 'none'
+      or block.settings.trust_heading != blank
+      or block.settings.trust_text != blank
+      or block.settings.trust_image != blank -%}
+      <div class="payments-and-trust__trust-content">
+        {% liquid
+          assign image_below = false
+
+          if block.settings.trust_text_position == 'below' or block.settings.trust_text == blank
+            assign image_below = true
+          endif
+        -%}
+
+        {% if block.settings.trust_heading_icon != 'none' and block.settings.trust_heading != blank -%}
+          <div
+            class="payments-and-trust__trust-heading-wrapper"
+            data-icons-image-below="{{ image_below }}"
+          >
+            {% render 'icon-editorial', icon: block.settings.trust_heading_icon %}
+            <div class="ff-heading fs-heading-6-base">{{ block.settings.trust_heading }}</div>
+          </div>
+        {%- endif %}
+
+        {%- capture trust_text -%}
+          {% if block.settings.trust_text != blank -%}
+            <div class="payments-and-trust__trust-text rte non-page-rte">{{ block.settings.trust_text }}</div>
+          {%- endif %}
+        {%- endcapture -%}
+
+        {% liquid
+          if block.settings.trust_text_position == 'above'
+            echo trust_text
+          endif
+
+          if block.settings.trust_image != blank
+            render 'section-block-image', image: block.settings.trust_image, wrapper_class: 'payments-and-trust__image', alignment: block.settings.content_alignment
+          endif
+
+          if block.settings.trust_text_position == 'below'
+            echo trust_text
+          endif
+        -%}
+      </div>
+    {%- endif %}
+  </div>
+{%- endcapture -%}
+
+{% if block.settings.display_as_collapsible_row -%}
+  {% render 'product-block-accordion',
+    block: block,
+    classes: 'product__block',
+    heading: block.settings.collapsible_row_title,
+    content: content,
+    disable_rte: true,
+    disable_max_width: true
+  -%}
+{%- else -%}
+  <div
+    class="product__block product__block--medium"
+    {{ block.shopify_attributes }}
+  >
+    {{ content }}
+  </div>
+{%- endif %}

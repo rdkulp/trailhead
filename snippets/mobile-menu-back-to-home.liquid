@@ -1,0 +1,14 @@
+{% liquid
+  assign default_label = 'general.accessibility.back_to_main_menu' | t
+  assign label = label | default: default_label
+%}
+<li class="mobile-menu__item mobile-menu__item--header">
+  <button
+    class="mobile-menu__item--heading-back-link fs-body-100 {{class}}"
+    data-action="home"
+    aria-label="{{ label }}"
+  >
+    {% render 'icon', icon: 'arrow-short', class: 'back-link-icon' %}
+    {{ label }}
+  </button>
+</li>

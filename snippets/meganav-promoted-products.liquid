@@ -1,0 +1,43 @@
+{% liquid
+  comment
+    Renders promoted product items for a meganav.
+
+    Required parameters:
+      - meganav_settings: { Object } The settings object for the associated meganav block.
+      - show_animations: { Boolean } Whether animations are enabled.
+  endcomment
+-%}
+
+<div class="meganav__secondary">
+  {% unless meganav_settings.promo_heading_text == blank %}
+    <h4 class="meganav__secondary--heading fs-accent fs-accent-bold">{{ meganav_settings.promo_heading_text }}</h4>
+  {% endunless %}
+
+  <div class="meganav__secondary--inner meganav-promoted-products-inner" data-layout="{{ meganav_settings.layout }}">
+    {% for prod in meganav_settings.products %}
+      {% render 'meganav-promoted-products-item',
+        promo_width: meganav_settings.promo_width,
+        layout: meganav_settings.layout,
+        prod: prod,
+        image_aspect_ratio: meganav_settings.image_aspect_ratio,
+        show_product_vendor: meganav_settings.show_product_vendor,
+        show_product_subtitles: meganav_settings.show_product_subtitles,
+        show_product_prices: meganav_settings.show_product_prices,
+        show_animations: show_animations
+      %}
+    {% else %}
+      {% for num in (1..3) %}
+        {% render 'meganav-promoted-products-item',
+          promo_width: meganav_settings.promo_width,
+          layout: meganav_settings.layout,
+          placeholder: true,
+          image_aspect_ratio: meganav_settings.image_aspect_ratio,
+          show_product_vendor: meganav_settings.show_product_vendor,
+          show_product_subtitles: meganav_settings.show_product_subtitles,
+          show_product_prices: meganav_settings.show_product_prices,
+          show_animations: show_animations
+        %}
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>

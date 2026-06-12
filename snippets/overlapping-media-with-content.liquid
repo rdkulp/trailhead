@@ -1,0 +1,172 @@
+{%- liquid
+  comment
+    Renders the content for the "Overlapping media with content" section. This also includes the "Image with content" and
+    "Video with content" sections, which only exist for backwards compatibility.
+
+    Required parameters:
+      - section: { Object } The section object.
+  endcomment
+-%}
+
+{% liquid
+  assign show_animations = false
+
+  if settings.enable_section_animations and section.settings.section_style_enable_animation
+    assign show_animations = true
+  endif
+
+  capture section_class
+    echo 'section media-with-content'
+
+    if show_animations
+      echo ' animation animation--media-with-content'
+    endif
+  endcapture
+
+  assign content_is_full_width = true
+
+  if section.settings.content_width == 'custom'
+    assign content_is_full_width = false
+  endif
+
+  # The values below don't include gutter, which is accounted for in the sizes string
+  if section.settings.enable_media_2
+    assign desktop_media_width = section.settings.media_width | divided_by: 100.0 | times: 0.6
+    assign mobile_media_width = 0.6
+  else
+    assign desktop_media_width = section.settings.media_width | divided_by: 100.0
+    assign mobile_media_width = 1
+  endif
+
+  assign image_sizes = '(min-width: 1024px) calc((100vw - (clamp(24px, 2vw, 36px) * 2)) * [[diw]]), (min-width: 720px) calc((100vw - (clamp(24px, 2vw, 36px) * 2)) * [[miw]]), calc((100vw - (16px * 2)) * [[miw]])' | replace: '[[diw]]', desktop_media_width | replace: '[[miw]]', mobile_media_width
+
+  assign prioritize_loading = false
+  if section.index == 1
+    assign prioritize_loading = true
+  endif
+-%}
+
+{% capture media -%}
+  <div class="media-with-content__media" data-has-two-media-items="{{ section.settings.enable_media_2 }}">
+    {%- if section.settings.media_1_type == 'image' -%}
+      {% render 'image',
+        wrapper_class: 'media-with-content__media-item media-with-content__media-item--primary media-with-content__media-item--desktop',
+        image: section.settings.image_1,
+        sizes: image_sizes,
+        aspect_ratio: section.settings.media_1_aspect_ratio,
+        focal_point: section.settings.media_1_focal_point,
+        include_placeholder: true,
+        animate: show_animations,
+        prioritize_loading: prioritize_loading
+      -%}
+
+      {%- if section.settings.mobile_image_1 != blank -%}
+        {% render 'image',
+          wrapper_class: 'media-with-content__media-item media-with-content__media-item--primary media-with-content__media-item--mobile',
+          image: section.settings.mobile_image_1,
+          sizes: image_sizes,
+          aspect_ratio: section.settings.mobile_media_1_aspect_ratio,
+          focal_point: section.settings.mobile_media_1_focal_point,
+          include_placeholder: true,
+          animate: show_animations,
+          prioritize_loading: prioritize_loading
+        -%}
+      {%- endif -%}
+    {%- else -%}
+      {%- render 'background-video',
+        video: section.settings.video_1,
+        enable_mobile_video: true,
+        mobile_video: section.settings.mobile_video_1,
+        focal_point: section.settings.media_1_focal_point,
+        focal_point_mobile: section.settings.mobile_media_1_focal_point,
+        aspect_ratio: section.settings.media_1_aspect_ratio,
+        aspect_ratio_mobile: section.settings.mobile_media_1_aspect_ratio,
+        class: 'media-with-content__media-item media-with-content__media-item--primary',
+        placeholder_name: 'image',
+        animate: show_animations,
+        has_overlay: true
+      -%}
+    {%-  endif -%}
+
+    {% if section.settings.enable_media_2 -%}
+      {%- if section.settings.media_2_type == 'image' -%}
+        {% render 'image',
+          wrapper_class: 'media-with-content__media-item media-with-content__media-item--secondary media-with-content__media-item--desktop',
+          image: section.settings.image_2,
+          sizes: image_sizes,
+          aspect_ratio: section.settings.media_2_aspect_ratio,
+          focal_point: section.settings.media_2_focal_point,
+          include_placeholder: true,
+          animate: show_animations,
+          prioritize_loading: prioritize_loading
+        -%}
+
+        {%- if section.settings.mobile_image_2 != blank -%}
+          {% render 'image',
+            wrapper_class: 'media-with-content__media-item media-with-content__media-item--secondary media-with-content__media-item--mobile',
+            image: section.settings.mobile_image_2,
+            sizes: image_sizes,
+            aspect_ratio: section.settings.mobile_media_2_aspect_ratio,
+            focal_point: section.settings.mobile_media_2_focal_point,
+            include_placeholder: true,
+            animate: show_animations,
+            prioritize_loading: prioritize_loading
+          -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- render 'background-video',
+          video: section.settings.video_2,
+          enable_mobile_video: true,
+          mobile_video: section.settings.mobile_video_2,
+          focal_point: section.settings.media_2_focal_point,
+          focal_point_mobile: section.settings.mobile_media_2_focal_point,
+          aspect_ratio: section.settings.media_2_aspect_ratio,
+          aspect_ratio_mobile: section.settings.mobile_media_2_aspect_ratio,
+          class: 'media-with-content__media-item media-with-content__media-item--secondary',
+          placeholder_name: 'image',
+          animate: show_animations,
+          has_overlay: true
+        -%}
+      {%-  endif -%}
+    {%- endif %}
+  </div>
+
+  {% if section.settings.media_caption != blank -%}
+    <div class="media-with-content__media-caption fs-body-75 animation--media-caption">
+      {{ section.settings.media_caption }}
+    </div>
+  {%- endif %}
+{%- endcapture %}
+
+{% capture content -%}
+  {% render 'section-blocks',
+    blocks: section.blocks,
+    alignment: section.settings.content_alignment,
+    full_width: content_is_full_width,
+    image_block_break_to_mobile_at: '720'
+  -%}
+{%- endcapture %}
+
+<div
+  class="{{ section_class }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="overlapping-media-with-content"
+  style="
+    {% render 'settings-color-schemes-style', local_settings: section.settings %}
+    {% render 'settings-section-style-style' %}
+  "
+>
+  <div class="section-inner">
+    {% render 'media-with-content',
+      content: content,
+      content_is_full_width: content_is_full_width,
+      content_width: section.settings.custom_width,
+      content_alignment: section.settings.content_alignment,
+      media: media,
+      media_container_width: section.settings.media_width,
+      media_position_desktop: section.settings.media_position_desktop,
+      media_position_mobile: section.settings.media_position_mobile,
+      show_animations: show_animations
+    -%}
+  </div>
+</div>

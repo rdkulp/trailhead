@@ -1,0 +1,35 @@
+{%- comment -%}
+  Use this within an element's style tag
+
+    style="{% render 'settings-image-overlay-style-for-content', local_settings: section.settings %}" >
+
+  Pass in
+
+  * local_settings: shopify settings object for block or section
+  * id_prefix (optional)
+
+  Note: --color-background is not usually used to render the overlay tint, but rather to "know"
+        the bg tint color, for instance solid buttons will use this for the text color
+{%- endcomment -%}
+
+{%- assign global_settings = settings -%}
+
+{%- capture 'tint_style_key' %}{%- render 'get-prefixed-id', id: "image_overlay_tint_style", prefix: id_prefix %}{% endcapture -%}
+{%- capture 'opacity_key' %}{%- render 'get-prefixed-id', id: "image_overlay_tint_opacity", prefix: id_prefix %}{% endcapture -%}
+{%- assign tint_opacity = local_settings[opacity_key] | times: 1.0 | divided_by: 100 -%}
+
+{%- capture 'override_with_custom_colors_key' -%}{%- render 'get-prefixed-id', id: "image_overlay_override_with_custom_colors", prefix: id_prefix -%}{%- endcapture -%}
+{%- assign use_local_colors = local_settings[override_with_custom_colors_key] -%}
+
+{% # prettier-ignore %}
+{%- if use_local_colors -%}
+  {%- capture 'color_text_key' -%}{%- render 'get-prefixed-id', id: "image_overlay_override_color_text", prefix: id_prefix -%}{%- endcapture -%}
+  {%- capture 'color_tint_key' %}{%- render 'get-prefixed-id', id: "image_overlay_override_color_tint", prefix: id_prefix %}{% endcapture -%}
+  --color-text: {{ local_settings[color_text_key] }};
+  --color-background: {{ local_settings[color_tint_key] }};
+  {%- render 'text-color-alpha-vars', color: local_settings[color_text_key] -%}
+{%- else -%}
+  --color-text: {{ global_settings.color_image_overlay_text }};
+  --color-background: {{ global_settings.color_image_overlay_tint }};
+  {%- render 'text-color-alpha-vars', color: global_settings.color_image_overlay_text -%}
+{%- endif -%}

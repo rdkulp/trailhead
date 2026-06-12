@@ -1,0 +1,97 @@
+{% liquid
+  comment
+    Renders the customer support product block.
+
+    Required parameters:
+      - block: { Object } The associated block object.
+  endcomment
+-%}
+
+{% capture image_sizes -%}
+  (min-width: 960px) {{ block.settings.image_size }}px, {{ block.settings.image_size_mobile }}px
+{%- endcapture %}
+
+{%- capture buttons -%}
+  {% for i in (1..2) -%}
+    {% liquid
+      assign label_setting = 'button_' | append: i | append: '_text'
+
+      if block.settings[label_setting] == blank
+        continue
+      endif
+
+      assign link_setting = 'button_' | append: i | append: '_link'
+      assign icon_setting = 'button_' | append: i | append: '_icon'
+      assign style_setting = 'button_' | append: i | append: '_button_style'
+    -%}
+
+    {%
+      render 'button',
+      label: block.settings[label_setting],
+      link: block.settings[link_setting],
+      icon: block.settings[icon_setting],
+      button_style: block.settings[style_setting],
+      button_size: 'small',
+    -%}
+  {%- endfor %}
+{%- endcapture -%}
+
+{%- capture content -%}
+  <div
+    class="product-blocks__customer-support"
+    data-with-box="{{ block.settings.add_box }}"
+    data-image-position="{{ block.settings.image_position }}"
+    data-image-crop="{{ block.settings.image_circle_crop_enable }}"
+    style="
+      --text-alignment: {{ block.settings.text_alignment }};
+      --image-width: {{ block.settings.image_size }}px;
+      --image-width-mobile: {{ block.settings.image_size_mobile }}px;
+    "
+  >
+    {% if block.settings.image != blank -%}
+      <div class="product-blocks__customer-support-image">
+        {% render 'image',
+          image: block.settings.image,
+          aspect_ratio: 'square',
+          focal_point: 'image_presentation',
+          sizes: image_sizes,
+        -%}
+      </div>
+    {%- endif %}
+
+    <div class="product-blocks__customer-support-content">
+      {% if block.settings.header != blank -%}
+        <div class="product-blocks__customer-support-heading ff-heading fs-heading-5-base">
+          {{ block.settings.header }}
+        </div>
+      {%- endif %}
+
+      {% if block.settings.text != blank -%}
+        <div class="product-blocks__customer-support-text ff-body fs-body-100">
+          {{ block.settings.text }}
+        </div>
+      {%- endif %}
+
+      {% if buttons != blank -%}
+        <div class="product-blocks__customer-support-buttons">
+          {{ buttons }}
+        </div>
+      {%- endif %}
+    </div>
+  </div>
+{%- endcapture -%}
+
+{% if block.settings.display_as_collapsible_row -%}
+  {% render 'product-block-accordion'
+    block: block,
+    heading: block.settings.collapsible_row_title,
+    content: content,
+  -%}
+{%- else -%}
+  <div
+    class="product__block product__block--medium"
+    {{ block.shopify_attributes }}
+  >
+    {{ content }}
+  </div>
+{%- endif %}

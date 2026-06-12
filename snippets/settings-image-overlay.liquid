@@ -1,0 +1,31 @@
+{%- comment -%}
+  Use this within an element tag directly
+
+    <div class="image-hero-overlay" {% render 'settings-image-overlay', local_settings: section.settings %}" >
+
+  Pass in
+
+  * local_settings: shopify settings object for block or section
+  * id_prefix (optional)
+{%- endcomment -%}
+
+{%- assign global_settings = settings -%}
+
+{%- capture 'tint_style_key' %}{%- render 'get-prefixed-id', id: "image_overlay_tint_style", prefix: id_prefix %}{% endcapture -%}
+{%- capture 'opacity_key' %}{%- render 'get-prefixed-id', id: "image_overlay_tint_opacity", prefix: id_prefix %}{% endcapture -%}
+
+{%- capture 'override_with_custom_colors_key' -%}{%- render 'get-prefixed-id', id: "image_overlay_override_with_custom_colors", prefix: id_prefix -%}{%- endcapture -%}
+{%- assign use_local_colors = local_settings[override_with_custom_colors_key] -%}
+
+{%- if use_local_colors -%}
+  {%- capture 'overlay_color_key_local' %}{%- render 'get-prefixed-id', id: "image_overlay_override_color_tint", prefix: id_prefix %}{% endcapture -%}
+  {%- assign overlay_color = local_settings[overlay_color_key_local] -%}
+{%- else -%}
+  {%- assign overlay_color = global_settings.color_image_overlay_tint -%}
+{%- endif -%}
+{%- liquid
+  assign tint_style = local_settings[tint_style_key]
+-%}
+data-image-overlay-tint-style="{{ local_settings[tint_style_key] }}" style="--overlay-opacity:
+{{- local_settings[opacity_key] -}}
+%; --color-overlay-tint: {{ overlay_color }};"

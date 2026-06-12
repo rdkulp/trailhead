@@ -1,0 +1,28 @@
+{% liquid
+  comment
+    Renders a text block.
+
+    Required parameters:
+      - alignment: { String } The horizontal alignment of the block content.
+      - text: { Object } The text.
+      - text_font_size: { Number } A number representing a font size, within the
+        text font scale.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+  endcomment
+
+  if text != blank
+    assign text_class = 'section-blocks__text ff-body rte'
+
+    capture text_font_class
+      render 'settings-text-size', type: 'text', size: text_font_size
+    endcapture
+
+    assign text_class = text_class | append: ' ' | append: text_font_class
+  endif
+-%}
+
+{% if text != blank -%}
+  <div class="{{ text_class }}" data-alignment="{{ alignment }}" {{ shopify_attributes }}>
+    {{ text }}
+  </div>
+{%- endif %}

@@ -1,0 +1,19 @@
+<div class="product__description product__block product__block--medium" {{ block.shopify_attributes }}>
+  {% if heading != blank -%}
+    <h2 class="ff-heading fs-heading-5-base">{{ heading }}</h2>
+  {%- endif %}
+
+  {%- liquid
+    capture text_font_class
+      if block.settings.text_font_size
+        render 'settings-text-size', type: 'text', size: block.settings.text_font_size
+      endif
+    endcapture
+  -%}
+
+  {%- if content != blank -%}
+    <div class="rte non-page-rte rte--product ff-body{% if text_font_class != blank %} {{ text_font_class }}{%- endif %} {{ additional_classes }}">
+      {{ content }}
+    </div>
+  {%- endif -%}
+</div>

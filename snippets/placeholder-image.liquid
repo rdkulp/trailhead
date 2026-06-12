@@ -1,0 +1,31 @@
+{% comment %}
+  pass in:
+  * aspect_ratio
+  * placeholder_name (optional) name from https://www.shopify.ca/partners/blog/placeholder-images
+  * wrapper_class (optional)
+  * natural_fallback_ratio (optional) ratio used when aspect_ratio is 'natural' (defaults to square)
+{% endcomment %}
+{%- liquid
+  assign placeholder_name = placeholder_name | default: 'image'
+  assign placeholder_aspect_ratio = aspect_ratio
+
+  if aspect_ratio == blank or aspect_ratio == 'natural'
+    if natural_fallback_ratio != blank
+      assign placeholder_aspect_ratio = natural_fallback_ratio
+    else
+      assign placeholder_aspect_ratio = 'square'
+    endif
+  endif
+
+  assign placeholder_class = 'placeholder-image image aspect-ratio--[[par]]' | replace: '[[par]]', placeholder_aspect_ratio
+
+  if wrapper_class != blank
+    assign placeholder_class = placeholder_class | append: ' ' | append: wrapper_class
+  endif
+-%}
+
+<div
+  class="{{ placeholder_class }}"
+>
+  {{ placeholder_name | placeholder_svg_tag: 'placeholder-svg' }}
+</div>

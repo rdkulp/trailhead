@@ -1,0 +1,172 @@
+{%- liquid
+  comment
+    Renders a filter item.
+
+    Required parameters:
+      - type: { String } The type of filter item. Can be:
+        - 'checkbox'
+        - 'chip'
+        - 'swatch'
+      - filter_value: { Object } The filter value.
+      - scope: { String } Where the filter item is being rendered. Can be:
+        - 'drawer'
+        - 'sidebar'
+      - truncate_item: { Boolean } Whether the item is hidden by truncation.
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+
+      Optional parameters:
+       - filter_label: { String } The label to use for the filter item (only applies for 'boolean' filters).
+  endcomment
+
+  if scope
+    assign scope = scope | prepend: '--'
+  endif
+
+  assign filter_item_content_disabled = false
+
+  if filter_value.count == 0 and filter_value.active == false
+    assign filter_item_content_disabled = true
+  endif
+-%}
+
+<li
+  class="filter-item"
+  data-filter-list-item
+  data-item-label="{{ filter_value.label | escape | downcase }}"
+  data-filter-item-type="{{ type }}"
+  data-filter-item-search-match="false"
+  data-filter-item-should-truncate="{{ truncate_item }}"
+  data-filter-item-is-truncated="{{ truncate_item }}"
+>
+  <label
+    data-filter-item
+    class="filter-item__content"
+    for="filter--{{ filter_value.param_name | url_escape }}--{{ filter_value.label | url_escape }}{{ scope }}"
+    data-filter-item-content-disabled="{{ filter_item_content_disabled }}"
+  >
+    <input
+      type="checkbox"
+      name="{{ filter_value.param_name }}"
+      value="{{ filter_value.value }}"
+      class="filter-item__checkbox visually-hidden"
+      data-filter-item-input
+      data-filter="{{ filter_value.param_name }}={{ filter_value.value }}"
+      data-value-escaped="{{ filter_value.value | url_escape }}"
+      id="filter--{{ filter_value.param_name | url_escape }}--{{ filter_value.label | url_escape }}{{ scope }}"
+      {% if filter_value.active -%}
+        checked
+      {%- endif %}
+      {% if key != blank and val != blank -%}
+        data-{{ key }}="{{ val | handle }}"
+      {%- endif %}
+      {% if filter_value.count == 0 and filter_value.active == false -%}
+        disabled
+      {%- endif %}
+    >
+
+    <div class="filter-item__content-inner">
+      {% if type == 'swatch' -%}
+        {% liquid
+          capture filter_swatch_style
+            assign downcased_label = filter_value.label | downcase
+
+            # Color
+            if filter_value.swatch and filter_value.swatch.color
+              echo 'background-color: [[bc]];' | replace: '[[bc]]', filter_value.swatch.color
+            else
+              if custom_color_key_map contains downcased_label
+                for color_name in custom_color_key_map
+                  if color_name == downcased_label
+                    echo 'background-color: [[bc]];' | replace: '[[bc]]', custom_color_value_map[forloop.index0]
+                    break
+                  endif
+                endfor
+              else
+                assign color_value = filter_value.label | downcase | replace: ' ', ''
+
+                echo 'background-color: [[bc]];' | replace: '[[bc]]', color_value
+              endif
+            endif
+
+            # Image
+            #
+            # Width of 80 to account for largest swatch display
+            if filter_value.swatch and filter_value.swatch.image
+              assign swatch_image_url = filter_value.swatch.image | image_url: width: 80
+            elsif filter_value.image
+              assign swatch_image_url = filter_value.image | image_url: width: 80
+            else
+              assign custom_swatch_image = filter_value.label | handle | append: '.png'
+
+              if images[custom_swatch_image] != blank
+                assign swatch_image_url = custom_swatch_image | file_img_url: 'small'
+              endif
+            endif
+
+            if swatch_image_url != blank
+              echo ' background-image: url([[siu]]);' | replace: '[[siu]]', swatch_image_url
+            endif
+          endcapture
+        -%}
+
+        <div
+          class="filter-item__swatch-wrapper"
+          data-shape="{{ settings.swatch_shape }}"
+        >
+          <div
+            class="filter-item__swatch"
+            style="{{ filter_swatch_style }}"
+          ></div>
+        </div>
+      {%- endif %}
+
+      {% if type == 'boolean' -%}
+        <div class="filter-item__toggle"></div>
+      {%- endif %}
+
+      {% if type == 'checkbox' -%}
+        <div class="filter-input__input">
+          {% render 'icon', icon: 'checkmark' %}
+        </div>
+      {%- endif %}
+
+      {% if type == 'boolean' or type == 'checkbox' or type == 'swatch' -%}
+        <span class="filter-item__label-wrapper">
+          <span class="filter-item__label">
+            {% if type == 'boolean' -%}
+              {{ filter_label -}}
+            {%- else -%}
+              {{ filter_value.label -}}
+            {%- endif %}
+            <span class="filter-item__count fs-body-60">
+              {{- 'filters.item_count_html' | t: value: filter_value.count -}}
+            </span>
+          </span>
+        </span>
+      {%- endif %}
+
+      {% if type == 'chip' -%}
+        <div class="filter-item__chip">
+          <span class="filter-item__label-wrapper">
+            <span class="filter-item__label">
+              {{ filter_value.label -}}
+              <span class="filter-item__count fs-body-60">
+                {{- 'filters.item_count_html' | t: value: filter_value.count -}}
+              </span>
+            </span>
+          </span>
+
+          {%- comment -%}
+            TODO: Update with new SVG system.
+          {%- endcomment -%}
+          <span class="filter-item__cross">
+            <svg width="100%" height="100%">
+              <line x1="0%" y1="100%" x2="100%" y2="0%" stroke="currentColor" />
+            </svg>
+          </span>
+        </div>
+      {%- endif %}
+    </div>
+  </label>
+</li>

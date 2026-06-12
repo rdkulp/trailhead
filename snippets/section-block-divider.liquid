@@ -1,0 +1,21 @@
+{% liquid
+  comment
+    Renders a divider block.
+
+    Required parameters:
+      - space_above: { Number } The amount of space above the divider, in pixels.
+      - space_below: { Number } The amount of space below the divider, in pixels.
+      - thickness: { Number } The thickness of the divider line, in pixels.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+  endcomment
+-%}
+
+<div
+  class="section-blocks__divider"
+  style="
+    --divider-height: {{ thickness }}px;
+    --divider-margin-top: {{ space_above }}px;
+    --divider-margin-bottom: {{ space_below }}px;
+  "
+  {{ shopify_attributes }}
+></div>

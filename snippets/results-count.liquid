@@ -1,0 +1,16 @@
+{% liquid
+  comment
+    Renders the results count for filtering.
+
+    Required parameters:
+      - results_count: { Number } The number of results.
+  endcomment
+
+  if results_count == 1
+    echo 'filters.one_result_html' | t: value: results_count
+  elsif results_count > 1
+    echo 'filters.many_results_html' | t: value: results_count
+  else
+    echo 'filters.no_results' | t
+  endif
+-%}

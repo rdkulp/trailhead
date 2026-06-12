@@ -1,0 +1,30 @@
+{%- comment -%}
+  Use this within an element tag directly
+
+    <div {% render 'settings-text-box', local_settings: section.settings' %}" >
+
+  Pass in
+
+  * local_settings: shopify settings object for block or section
+  * id_prefix (optional)
+  * leading_style: css style content that will appear before the text-box styles
+  * trailing_style: css style content that will appear after the text-box styles
+  * section_type: The inner padding of text boxes is dependent on what section type it is in. The following options can be used:
+    - "standard" -- Default
+    - "hero"
+    - "image-with-text"
+{%- endcomment -%}
+
+{%- capture text_box_style_key %}{%- render 'get-prefixed-id', id: "text_box_style", prefix: id_prefix %}{% endcapture -%}
+
+data-text-box-style="{{ local_settings[text_box_style_key] }}" data-text-box-section-type="
+{{- section_type | default: 'standard' -}}
+"
+
+style="
+{{- leading_style }}
+{% render 'settings-color-schemes-style', local_settings: local_settings, id_prefix: 'text_box' %}
+{{ trailing_style -}}
+"
+
+{% render 'settings-color-schemes', local_settings: local_settings, id_prefix: 'text_box' %}

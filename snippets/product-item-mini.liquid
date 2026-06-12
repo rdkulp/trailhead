@@ -1,0 +1,93 @@
+{%- liquid
+  comment
+    Renders a smaller less functional product card.
+
+    Required parameters:
+      - prod: { Object } Product object.
+      - image_sizes: { String } A list of responsive image sizes (for the 'sizes' attributes).
+      - show_quick_view: { Bool } Show the quick view overlay on the product image.
+      - aspect_ratio: { String } A string noting the aspect ratio of the featured image.
+
+    Optional parameters:
+      - placeholder: { Bool } If the snippet should show as placeholder without real content.
+  endcomment
+
+  assign image_sizes = sizes | default: '90px'
+-%}
+
+<div
+  class="product-item product-item--mini"
+  data-input-item
+  data-url="{{ prod.url | within: collection }}"
+  data-id="{{ prod.id }}"
+  data-variant-id="{{ prod.first_available_variant.id }}"
+  data-title="{{ prod.title }}"
+  data-quantity-in-cart="{{ item_in_cart }}"
+>
+  <div class="product-item__inner">
+    <div class="product-item__media">
+      <a class="product-item__image-link" href="{{ prod.url }}" aria-label="{{ prod.title }}">
+        {% render 'image',
+          image: prod.featured_media,
+          wrapper_class: 'product-item__image',
+          aspect_ratio: aspect_ratio,
+          object_fit: settings.product_listing_media_fit,
+          include_placeholder: true,
+          sizes: image_sizes
+        %}
+      </a>
+
+      {% if settings.enable_quick_view and show_quick_view %}
+        <div class="product-item__floating-action-buttons">
+          <button
+            class="product-item__quick-view-button btn btn--rounded show-product-quick-view product-item__disc-button"
+            tabindex="0"
+            href="{{ prod.url | within: collection }}"
+            title="{{ 'products.product.quick_view' | t }}"
+            style="
+              --icon-width: 19px;
+              --icon-height: 19px;
+            "
+          >
+            {% render 'icon', icon: 'quick-view' %}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="product-item__meta">
+      <div class="product-item__text ta-c">
+        <h4 class="product-item__product-title ff-body fs-body-75">
+          {%- if placeholder -%}
+            {{ 'homepage.onboarding.product_title' | t }}
+          {%- else -%}
+            <a href="{{ prod.url }}">{{ prod.title }}</a>
+          {%- endif -%}
+        </h4>
+
+        <p class="product-item__price ff-product-price fs-body-75">
+          {% if placeholder %}
+            {{ 9999 | money }}
+          {% elsif prod.compare_at_price > prod.price %}
+            <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+            <s class="t-subdued">{{ prod.compare_at_price | money }}</s>
+
+            {% if prod.price_varies %}
+              {%- assign sale_price = prod.price | money -%}
+              {{ 'products.product.on_sale_from_html' | t: price: sale_price }}
+            {% else %}
+              <span class="sale" data-price>{{ prod.price | money }}</span>
+            {% endif %}
+          {% else %}
+            {% if prod.price_varies %}
+              {%- assign price = prod.price | money -%}
+              {{ 'products.product.from_lowest_price_html' | t: lowest_price: price }}
+            {% else %}
+              <span class="product-item__price fs-body-75">{{ prod.price | money }}</span>
+            {% endif %}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

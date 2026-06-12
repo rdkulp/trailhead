@@ -1,0 +1,103 @@
+{%- liquid
+  comment
+    Renders an image block.
+
+    Required parameters:
+      - image: { Object } The image.
+      - width: { Number } The image width, in pixels.
+      - mobile_width: { Number } The image width on mobile, in pixels.
+
+    Optional parameters:
+      - break_to_mobile_at: { String } A pixel width to trigger mobile styles at.
+      - sizes: { String } Manually set the sizes attribute for the image.
+      - wrapper_class: { String } A class to add to the image container.
+      - image_full_width: { String } Passing through 'custom' or 'full'.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+      - alignment: { String } which can be:
+        - "left" or "flex-start"
+        - "center"
+        - "right" or "flex-end"
+      - alignment_mobile: { String } The horizontal alignment of the content for an image block with mobile setitings. Can be:
+        - "flex-start"
+        - "center"
+        - "flex-end"
+  endcomment
+
+  assign image_class = 'section-blocks__image image-block'
+
+  if wrapper_class
+    assign image_class = image_class | append: ' ' | append: wrapper_class
+  endif
+
+  assign full_width = false
+  if image_full_width == 'full'
+    assign full_width = true
+  endif
+
+  assign styles = ''
+
+  if image_full_width == 'custom'
+    if width
+      assign styles = styles | append: '--image-block-max-width: ' | append: width | append: 'px;'
+    endif
+  endif
+
+  if mobile_width
+    if styles != blank
+      assign styles = styles | append: ' '
+    endif
+
+    assign styles = styles | append: '--image-block-max-width-mobile: ' | append: mobile_width | append: 'px;'
+  endif
+
+  if alignment == 'left' or alignment == 'flex-start'
+    assign styles = styles | append: '--image-alignment: flex-start;'
+  elsif alignment == 'center'
+    assign styles = styles | append: '--image-alignment: center;'
+  elsif alignment == 'right' or alignment == 'flex-end'
+    assign styles = styles | append: '--image-alignment: flex-end;'
+  endif
+
+  if alignment_mobile
+    assign styles = styles | append: '--image-alignment-mobile: ' | append: alignment_mobile | append: ';'
+  endif
+
+  capture image_attributes
+    if break_to_mobile_at
+      echo 'data-mobile-break="[[btma]]"' | replace: '[[btma]]', break_to_mobile_at
+    endif
+
+    echo 'data-full-width="[[fw]]"' | replace: '[[fw]]', full_width
+
+    if shopify_attributes
+      echo shopify_attributes
+    endif
+  endcapture
+
+  if sizes == blank
+    capture sizes
+      if full_width
+        echo '100vw'
+      else
+        if break_to_mobile_at and width and mobile_width
+          echo '(min-width: [[btma]]px) [[w]]px, [[mw]]px' | replace: '[[btma]]', break_to_mobile_at | replace: '[[w]]', width | replace: '[[mw]]', mobile_width
+        endif
+      endif
+    endcapture
+  endif
+-%}
+
+<div
+  class="{{ image_class }}"
+  style="{{ styles }}"
+  {{ image_attributes }}
+>
+  <div class="image-block__inner">
+    {% render 'image',
+      image: image,
+      sizes: sizes,
+      include_placeholder: true,
+      placeholder_natural_fallback_ratio: 'landscape'
+    -%}
+  </div>
+</div>

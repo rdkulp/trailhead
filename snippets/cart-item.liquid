@@ -1,0 +1,159 @@
+{% liquid
+  comment
+    Renders a product item display for the cart template.
+
+    Required parameters:
+      - item: { Object } The current line item object.
+      - section_settings: { Object } The parent section's settings.
+      - parent_id: { String } An ID to be appended to 'cart-item' and passed to quantity-input (should be unique).
+  endcomment
+
+  assign item_aspect_ratio = settings.cart_item_aspect_ratio
+
+  if settings.cart_item_aspect_ratio == 'use_theme_settings'
+    assign item_aspect_ratio = settings.product_listing_aspect_ratio
+  endif
+
+  assign parent_id = 'cart-item-' | append: parent_id
+-%}
+
+<div class="cart__form-item" data-input-item data-id="{{ item.id }}" data-key="{{ item.key }}">
+  <div class="cart__form-item-image">
+    <a href="{{ item.url }}" class="cart__form-item-link">
+      {% render 'image',
+        image: item.image,
+        sizes: '120px',
+        prioritize_loading: true,
+        aspect_ratio: item_aspect_ratio,
+        include_placeholder: true
+      -%}
+    </a>
+  </div>
+
+  <div class="cart__form-item-details">
+    <div class="cart__form-item-info-wrapper">
+      <div class="cart__form-item-info">
+        <h4 class="cart__form-item-title fs-product-title">
+          <a href="{{ item.url }}">{{ item.product.title }}</a>
+        </h4>
+
+        {% unless item.product.has_only_default_variant -%}
+          <p class="cart__form-item-variant fs-body-75 t-opacity-70">{{ item.variant.title }}</p>
+        {%- endunless %}
+
+        {% if item.selling_plan_allocation -%}
+          <p class="cart__form-item-subscriptions fs-body-50 t-opacity-50">
+            {{ item.selling_plan_allocation.selling_plan.name }}
+          </p>
+        {%- endif %}
+
+        {%- assign property_count = item.properties | size -%}
+
+        {% if property_count > 0 -%}
+          <div class="cart__form-item-properties fs-body-60 t-opacity-80">
+            {% liquid
+              for p in item.properties
+                # Don't show property if property name begins with an underscore, or if property is blank.
+                assign first_char = p.first | slice: 0
+
+                unless p.last == blank or first_char == '_'
+                  capture property_content
+                    echo p.first | append: ': '
+
+                    if p.last contains '/uploads/'
+                      echo p.last | split: '/' | last | link_to: p.last
+                    else
+                      echo p.last
+                    endif
+                  endcapture
+
+                  echo '<p>'
+                  echo property_content | newline_to_br
+                  echo '</p>'
+                endunless
+              endfor
+            -%}
+          </div>
+        {%- endif %}
+
+        {% if item.line_level_discount_allocations.size > 0 -%}
+          <ul class="cart__form-item-discounts">
+            {% for discount_allocation in item.line_level_discount_allocations -%}
+              <li class="cart__form-item-discount fs-body-75">
+                {% render 'icon', icon: 'discount-badge' %}
+                {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+              </li>
+            {%- endfor %}
+          </ul>
+        {%- endif %}
+      </div>
+
+      <div class="cart__form-item-price-wrapper ff-product-price fs-body-100">
+        {% liquid
+          assign is_sale_price = false
+          assign final_price = item.original_price | money
+
+          # First priority is to Shopify discounts, then compare at sale prices
+          if item.original_line_price > item.final_line_price or item.variant.compare_at_price > item.variant.price
+            assign is_sale_price = true
+
+            if item.original_line_price > item.final_line_price
+              assign original_price = item.original_price | money
+              assign final_price = item.final_price | money
+            else
+              assign original_price = item.variant.compare_at_price | money
+            endif
+          endif
+
+          if section_settings.show_price_currency
+            assign final_price = final_price | append: ' ' | append: cart.currency.iso_code
+            assign original_price = original_price | append: ' ' | append: cart.currency.iso_code
+          endif
+        -%}
+
+        {%- if is_sale_price -%}
+          <s class="cart__form-item-price t-opacity-70">{{ original_price }}</s>
+        {%- endif -%}
+
+        <span
+          class="cart__form-item-price"
+          data-is-sale="{{ is_sale_price }}"
+        >
+          {{ final_price }}
+        </span>
+
+        <div class="unit-price-wrapper fs-body-60 ta-r">
+          {% render 'unit-price', item: item %}
+        </div>
+      </div>
+    </div>
+
+    <div class="cart__form-item-quantity-wrapper">
+      <p class="cart__form-item-error fs-body-50 hidden">{{ 'cart.general.error' | t }}</p>
+
+      {% if settings.cart_enable_low_inventory_warning -%}
+        {% if item.variant.inventory_management != blank
+          and item.variant.inventory_policy == 'deny'
+          and item.variant.inventory_quantity < settings.cart_low_inventory_warning_threshold
+        -%}
+          <p class="cart__inventory-warning fs-body-50">
+            {{ 'cart.general.inventory_warning' | t: amount: item.variant.inventory_quantity }}
+          </p>
+        {%- endif %}
+      {%- endif %}
+
+      {% render 'quantity-input',
+        prod: item.product,
+        parent_id: parent_id,
+        initial_value: item.quantity,
+        use_border: true
+      %}
+
+      <div class="cart__form-item-remove-wrapper">
+        <button type="button" data-remove-item class="cart__form-item-remove fs-body-75 t-subdued btn btn--text-link">
+          {{ 'cart.general.remove' | t }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

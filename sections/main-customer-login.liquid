@@ -1,0 +1,43 @@
+<section
+  class="customer login page section"
+  data-section-id="{{ section.id }}"
+  data-section-type="login"
+  style="{% render 'settings-section-style-style' %}"
+>
+  <div class="login__inner page__inner">
+    {% render 'account-login', id: 'account-login', heading_class: 'ff-heading fs-heading-2-base', is_template: true %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_customer_login.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header_style.content"
+    },
+    {
+      "id": "section_style_spacing_top",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_top.label",
+      "default": 0
+    },
+    {
+      "id": "section_style_spacing_bottom",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_bottom.label",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

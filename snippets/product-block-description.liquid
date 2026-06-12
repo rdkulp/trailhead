@@ -1,0 +1,50 @@
+{%- liquid
+  comment
+    Renders the product description.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - block: { Object } The associated block object.
+  endcomment
+
+  if prod != blank
+    assign description = prod.description
+  else
+    assign description = 'sections.featured_product.placeholder.description' | t
+  endif
+
+  assign truncate_num_lines = block.settings.truncate_num_lines
+  assign truncate_description = false
+
+  if description != blank and truncate_num_lines != '0'
+    assign truncate_description = true
+  endif
+
+  capture content
+    if truncate_description
+      render 'truncate-wrapper', content: description, num_lines: truncate_num_lines, parent_id: block.id
+    else
+      echo description
+    endif
+  endcapture
+-%}
+
+{% if block.settings.display_as_collapsible_row -%}
+  {% render 'product-block-accordion',
+    block: block,
+    heading: block.settings.title,
+    content: content,
+    disable_max_width: true,
+    disable_font_class: true,
+    classes: block.settings.text_font_class,
+    heading_tag: 'h2'
+  -%}
+{%- else -%}
+  {%
+    render 'product-block-text',
+    block: block,
+    heading: block.settings.title,
+    content: content,
+    additional_classes: block.settings.text_font_class,
+  -%}
+{%- endif %}

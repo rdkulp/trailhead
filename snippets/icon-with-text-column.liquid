@@ -1,0 +1,117 @@
+{% liquid
+  comment
+    Renders an icon with text column.
+
+    Required parameters:
+      - source: { String } A string noting where this snippet is being rendered from. Can be:
+        - 'section'
+        - 'product-block'
+      - icon: { String } The name of the column's icon.
+      - icon_border_type: { String } The icon's border type. Can be:
+        - 'none'
+        - 'circle'
+        - 'square'
+      - custom_icon_image: { Object } A custom icon image.
+      - image_sizes: { String } A list of responsive image sizes (for the 'sizes' attributes).
+      - heading: { String } The column's heading.
+      - text: { String } The column's text.
+      - desktop_alignment: { String } A string noting how the icon and text should be aligned
+        on desktop.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+
+    Optional parameters
+      - accent: { String } The column's accent text. Only supplied from the 'Icon with text columns' section.
+      - accent_size: { Number } A number representing the accent "size" (ranges from 1-8). Only supplied from
+        the 'Icon with text columns' section.
+      - heading_size: { Number } A number representing the accent "size" (ranges from 1-8). Only supplied from
+        the 'Icon with text columns' section.
+      - text_size: { Number } A number representing the accent "size" (ranges from 1-8). Only supplied from
+        the 'Icon with text columns' section.
+      - link: { String } A link for the icon.
+  endcomment
+-%}
+{% unless heading == blank and text == blank %}
+  <div
+    class="icon-with-text-column"
+    data-desktop-alignment="{{ desktop_alignment }}"
+    {{ shopify_attributes }}
+  >
+    {% liquid
+      assign icon_wrapper_tag = 'div'
+      assign icon_wrapper_attributes = 'class="icon-with-text-column__icon-wrapper icon-modifiers__wrapper"'
+
+      if link != blank
+        assign icon_wrapper_tag = 'a'
+        assign icon_wrapper_link = ' href="[[link]]"' | replace: '[[link]]', link
+        assign icon_wrapper_attributes = icon_wrapper_attributes | prepend: icon_wrapper_link
+      endif
+
+      capture icon_content
+        if custom_icon_image != blank
+          assign aspect_ratio = 'natural'
+
+          if icon_border_type == 'circle'
+            assign aspect_ratio = 'square'
+          endif
+
+          render 'image', wrapper_class: 'icon-modifiers__icon', image: custom_icon_image, sizes: image_sizes, src_set_type: grid, aspect_ratio: aspect_ratio
+        else
+          if icon != 'none'
+            render 'icon-editorial', class: 'icon-modifiers__icon', icon: icon
+          endif
+        endif
+      endcapture
+    -%}
+
+    {% unless icon_content == blank -%}
+      <{{ icon_wrapper_tag }} {{ icon_wrapper_attributes }}>
+        {{ icon_content }}
+      </{{ icon_wrapper_tag }}>
+    {%- endunless %}
+
+    <div class="icon-with-text-column__text-wrapper">
+      {% liquid
+        assign accent_class = 'icon-with-text-column__accent fs-accent'
+        assign heading_class = 'icon-with-text-column__heading ff-heading'
+        assign text_class = 'icon-with-text-column__text rte'
+
+        if source == 'section'
+          capture accent_font_class
+            render 'settings-text-size', type: 'accent', size: accent_size
+          endcapture
+
+          capture heading_font_class
+            render 'settings-text-size', type: 'heading', size: heading_size
+          endcapture
+
+          capture text_font_class
+            render 'settings-text-size', type: 'text', size: text_size
+          endcapture
+
+          assign accent_class = accent_class | append: ' ' | append: accent_font_class
+          assign heading_class = heading_class | append: ' ' | append: heading_font_class
+          assign text_class = text_class | append: ' ' | append: text_font_class
+        else
+          assign heading_class = heading_class | append: ' fs-accent-bold'
+          assign text_class = text_class | append: ' fs-body-75'
+        endif
+      -%}
+
+      {% if accent != blank -%}
+        <div class="{{ accent_class }}">{{ accent }}</div>
+      {%- endif %}
+
+      {% if heading != blank -%}
+        <div class="{{ heading_class }}">
+          {{ heading }}
+        </div>
+      {%- endif %}
+
+      {% if text != blank -%}
+        <div class="{{ text_class }}">
+          {{ text }}
+        </div>
+      {%- endif %}
+    </div>
+  </div>
+{% endunless %}

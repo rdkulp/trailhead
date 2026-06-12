@@ -1,0 +1,379 @@
+{% liquid
+  comment
+    Renders the filter top bar.
+
+    Required parameters:
+      - resource: { Object } The resource being filtered (ie. collection or search).
+      - section_settings: { Object } The parent section's settings.
+      - source: { String } Where the snippet is being rendered. Can be:
+        - 'collection'
+        - 'search'
+      - active_filter_count: { Number } The number of active filters.
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+  endcomment
+
+  assign filters_valid = false
+
+  if resource.filters != empty and section_settings.show_filters
+    assign filters_valid = true
+  endif
+
+  assign results_count = 0
+
+  if resource.products_count != blank
+    assign results_count = resource.products_count
+  elsif resource.results_count != blank
+    assign results_count = resource.results_count
+  endif
+
+  assign filter_bar_enabled = false
+
+  if section_settings.show_item_count or filters_valid or section_settings.show_sort or section_settings.enable_grid_mode
+    assign filter_bar_enabled = true
+  endif
+-%}
+
+{%- comment -%}
+  Capture each display element separately so that we can build the topbar based on what's enabled.
+{%- endcomment -%}
+
+{% capture results_count_display -%}
+  <p class="filter-topbar__results-count" data-results-count>
+    {% render 'results-count', results_count: results_count %}
+  </p>
+{%- endcapture %}
+
+{% capture grid_mode_display -%}
+  <div class="filter-bar__item-layout">
+    {% render 'item-layout-toggle', default_grid_mode: section_settings.default_grid_mode %}
+  </div>
+{%- endcapture %}
+
+{% capture drawer_toggle_display -%}
+  <button
+    type="button"
+    class="filter-topbar__drawer-toggle btn btn--tertiary"
+    data-drawer-toggle
+    aria-expanded="false"
+    aria-controls="filter-drawer"
+  >
+    {% render 'icon', icon: 'filter' %}
+
+    <span class="filter-topbar__drawer-toggle-text">
+      {{ 'filters.title' | t }}
+
+      <span
+        class="filter-topbar__drawer-toggle-text__count fs-body-75"
+        data-has-active-filters="{% if active_filter_count > 0 %}true{% else %}false{% endif %}"
+      >
+        ({{ active_filter_count }})
+      </span>
+    </span>
+  </button>
+{%- endcapture %}
+
+{% capture sidebar_toggle_display -%}
+  <button
+    type="button"
+    class="filter-topbar__sidebar-toggle btn btn--tertiary"
+    data-sidebar-toggle
+    aria-expanded="{% if section_settings.collapse_filter_sidebar %}false{% else %}true{% endif %}"
+    aria-controls="filter-sidebar"
+  >
+    {% render 'icon', icon: 'filter' %}
+
+    <span class="filter-topbar__sidebar-toggle-text">
+      <span class="toggle-text__title--show">{{ 'filters.title' | t }}</span>
+
+      <span class="toggle-text__title--hide">{{ 'filters.title_hide' | t }}</span>
+
+      <span
+        class="toggle-text__count fs-body-75"
+        data-has-active-filters="{% if active_filter_count > 0 %}true{% else %}false{% endif %}"
+      >
+        ({{ active_filter_count }})
+      </span>
+    </span>
+  </button>
+{%- endcapture %}
+
+{% capture active_filters_display -%}
+  {% render 'active-filters',
+    resource: resource,
+    show_swatch_filters: section_settings.show_swatch_filters,
+    active_filter_count: active_filter_count,
+    wrapper_class: 'filter-topbar__active-filters',
+    custom_color_key_map: custom_color_key_map,
+    custom_color_value_map: custom_color_value_map
+  -%}
+{%- endcapture %}
+
+{% capture sort_display -%}
+  <div
+    class="filter-bar__sort-group"
+    data-topbar-sort-group
+  >
+    {% liquid
+      assign sort_by = resource.sort_by | default: resource.default_sort_by
+
+      for option in resource.sort_options
+        if option.value == sort_by
+          assign sort_by = option.name
+        endif
+      endfor
+    -%}
+
+    <button
+      type="button"
+      class="filter-topbar__sort-toggle btn btn--tertiary"
+      data-filter-group-label
+      data-topbar-sort-toggle
+      aria-expanded="false"
+      aria-controls="filter-topbar-sort"
+    >
+      {% render 'icon', icon: 'sort' %}
+      <span class="filter-topbar__sort-label-desktop" data-sort-label>
+        {{- 'filters.sort_title' | t }}: {{ sort_by -}}
+      </span>
+      <span class="filter-topbar__sort-label-mobile">{{ 'filters.sort_title' | t }}</span>
+      {% render 'icon', icon: 'chevron-small' %}
+    </button>
+
+    <div
+      id="filter-topbar-sort"
+      class="filter-bar__sort-values"
+      data-topbar-sort-values
+      aria-hidden="true"
+    >
+      <div class="filter-bar__sort-values-inner" data-scroll-lock-ignore>
+        <div class="filter-bar__sort-values-header">
+          <h4
+            class="filter-bar__sort-title ff-heading fs-heading-4-base"
+            data-filter-drawer-title
+          >
+            {{ 'filters.sort_title' | t }}
+          </h4>
+
+          <button
+            type="button"
+            class="filter-bar__sort-close"
+            aria-label="{{ 'general.accessibility.close_modal' | t }}"
+            data-topbar-sort-toggle
+          >
+            {% render 'icon-button', icon: 'modal-drawer-close', icon_size: 24 %}
+          </button>
+        </div>
+
+        <ul class="filter-bar__sort-list">
+          {% for option in resource.sort_options -%}
+            {% liquid
+              assign is_active = false
+
+              if resource.sort_by != blank
+                if option.value == resource.sort_by
+                  assign is_active = true
+                endif
+              elsif option.value == resource.default_sort_by
+                assign is_active = true
+              endif
+            -%}
+
+            <li class="filter-item">
+              <label data-sort for="filter-{{ option.name | handleize }}" class="filter-item__content">
+                <input
+                  type="radio"
+                  name="sort_by"
+                  data-sort-item-input
+                  data-filter-item-input
+                  {% if is_active %}
+                    checked
+                  {% endif %}
+                  value="{{ option.value }}"
+                  data-value-escaped="{{ option.value | url_escape }}"
+                  id="filter-{{ option.name | escape | handleize }}"
+                  class="filter-item__radio visually-hidden"
+                >
+
+                <div class="filter-item__content-inner">
+                  <div class="filter-input__input">
+                    <div class="indicator"></div>
+                  </div>
+
+                  <span class="filter-item__label">{{ option.name }}</span>
+                </div>
+              </label>
+            </li>
+          {%- endfor %}
+        </ul>
+      </div>
+      <div class="filter-bar__sort-values-wash" data-topbar-sort-wash></div>
+    </div>
+  </div>
+{%- endcapture %}
+
+{% if filter_bar_enabled -%}
+  <div class="filter-topbar-wrap" data-source="{{source}}">
+    <form
+      class="filter-topbar animation--filter-topbar"
+      data-filter-form
+      data-filter-topbar
+      data-form-type="topbar"
+    >
+      {%- comment -%}
+        Keep the following within the form:
+          - search term
+          - product type
+          - product vendor
+      {%- endcomment -%}
+      {% if resource.terms -%}
+        <input type="hidden" name="q" value="{{ resource.terms | escape }}">
+        <input name="options[prefix]" type="hidden" value="last">
+      {%- elsif resource.current_type -%}
+        <input type="hidden" name="q" value="{{ resource.current_type | escape }}">
+      {%- elsif resource.current_vendor -%}
+        <input type="hidden" name="q" value="{{ resource.current_vendor | escape }}">
+      {%- endif %}
+
+      {% comment %} Hidden filter inputs so that the two filter forms can stay in sync {% endcomment %}
+      {% if filters_valid -%}
+        <div class="filter-topbar__hidden-filters" data-topbar-hidden-filters>
+          {% for filter in resource.filters -%}
+            {%- case filter.type -%}
+              {%- when 'boolean', 'list' -%}
+                {%- for filter_value in filter.values -%}
+                  <input
+                    type="checkbox"
+                    name="{{ filter_value.param_name }}"
+                    value="{{ filter_value.value }}"
+                    class="filter-item__checkbox"
+                    data-filter="{{ filter_value.param_name }}={{ filter_value.value }}"
+                    data-value-escaped="{{ filter_value.value | url_escape }}"
+                    data-filter-item-input
+                    {% if filter_value.active -%}
+                      checked
+                    {% endif %}
+                  >
+                {%- endfor -%}
+              {%- when 'price_range' -%}
+                <input
+                  type="number"
+                  name="{{ filter.min_value.param_name }}"
+                  min="0"
+                  max="{{ filter.range_max | divided_by: 100.00 | ceil }}"
+                  {%- if filter.min_value.value -%}
+                    value="{{ filter.min_value.value | divided_by: 100.00 }}"
+                  {%- endif -%}
+                  class="input"
+                  data-range-input-type="min"
+                  data-range-input
+                  data-filter-item-input
+                >
+                <input
+                  type="number"
+                  name="{{ filter.max_value.param_name }}"
+                  min="0"
+                  max="{{ filter.range_max | divided_by: 100.00 | ceil }}"
+                  {%- if filter.max_value.value -%}
+                    value="{{ filter.max_value.value | divided_by: 100.00 }}"
+                  {%- endif -%}
+                  class="input"
+                  data-range-input-type="max"
+                  data-range-input
+                  data-filter-item-input
+                >
+            {%- endcase -%}
+          {%- endfor %}
+        </div>
+      {%- endif %}
+
+      {% liquid
+        assign active_topbar_items = 0
+
+        if filters_valid
+          assign active_topbar_items = active_topbar_items | plus: 1
+        endif
+
+        if section.settings.show_sort
+          assign active_topbar_items = active_topbar_items | plus: 1
+        endif
+
+        if section.settings.enable_grid_mode
+          assign active_topbar_items = active_topbar_items | plus: 1
+        endif
+
+        assign topbar_gap = '--spacing-2'
+
+        if active_topbar_items == 1
+          assign topbar_gap = '--spacing-4'
+        endif
+      -%}
+
+      <div
+        class="filter-topbar__inner"
+        data-active-items="{{ active_topbar_items }}"
+        style="--topbar-gap-mobile: var({{ topbar_gap }});"
+      >
+        <div class="filter-topbar__sidebar-toggle-wrapper">
+          {% liquid
+            if filters_valid
+              echo sidebar_toggle_display
+            endif
+
+            if section.settings.show_item_count
+              echo results_count_display
+            endif
+          -%}
+        </div>
+
+        {% liquid
+          if filters_valid
+            echo drawer_toggle_display
+          endif
+
+          echo '<div class="filter-topbar__spacer"></div>'
+
+          if section.settings.enable_grid_mode
+            echo grid_mode_display
+          endif
+
+          if section.settings.show_sort
+            echo sort_display
+          endif
+
+          if filters_valid
+            echo active_filters_display
+          endif
+        -%}
+
+        {% if section.settings.show_item_count -%}
+          {% liquid
+            if active_topbar_items == 1
+              if filters_valid
+                assign results_order = 1
+              else
+                assign results_order = 'unset'
+              endif
+
+              assign results_width = 'unset'
+            else
+              assign results_order = 5
+              assign results_width = '100%'
+            endif
+
+            capture results_count_style
+              echo '--results-order: [[ro]];' | replace: '[[ro]]', results_order
+              echo '--results-width: [[rw]];' | replace: '[[rw]]', results_width
+            endcapture
+          -%}
+          <div
+            class="filter-topbar__results-count-wrapper"
+            style="{{ results_count_style }}"
+          >
+            {{ results_count_display }}
+          </div>
+        {%- endif %}
+      </div>
+    </form>
+  </div>
+{%- endif %}

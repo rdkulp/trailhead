@@ -1,0 +1,123 @@
+<div
+  class="
+    apps
+    section
+    {% if settings.enable_section_animations and section.settings.section_style_enable_animation %}
+      animation
+      animation--apps
+    {% endif %}
+  "
+  style="{% render 'settings-section-style-style' %}"
+  data-section-id="{{ section.id }}"
+  data-section-type="apps"
+>
+  <div class="section-inner">
+    <div class="section-header animation--container">
+      {%- unless section.settings.heading == blank -%}
+        <{{ section.settings.heading_tag }} class="apps__heading ff-heading fs-heading-3-base section-header__heading">
+          {{ section.settings.heading }}
+        </{{ section.settings.heading_tag }}>
+      {%- endunless -%}
+    </div>
+
+    {%- for block in section.blocks -%}
+      <div class="animation--item">
+        {% render block %}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.apps.name",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.collection_sections_shared.settings.title.label",
+      "default": "App section"
+    },
+    {
+      "id": "heading_tag",
+      "type": "select",
+      "label": "t:shared.settings.heading_tag.label",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "info": "t:shared.settings.heading_tag.info",
+      "default": "h3"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header_style.content"
+    },
+    {
+      "id": "section_style_spacing_top",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_top.label",
+      "default": 36
+    },
+    {
+      "id": "section_style_spacing_bottom",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_bottom.label",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "section_style_enable_animation",
+      "default": true,
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.apps.presets.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,92 @@
+{% liquid
+  comment
+    Renders a 'list' type filter form item.
+
+    Required parameters:
+      - filter: { Object } The current filter.
+      - section_settings: { Object } The parent section's settings.
+      - scope: { String } Where the form item is being rendered. Can be:
+        - 'drawer'
+        - 'sidebar'
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+  endcomment
+
+  assign group_name = filter.label | downcase
+  assign should_truncate = false
+  assign group_truncate_amount = section_settings.truncate_filter_list_amount
+  assign swatch_options = settings.swatch_options | downcase | split: ', '
+  assign chip_options = settings.chip_options | downcase | split: ', '
+  assign has_swatches = false
+  assign has_chips = false
+
+  if filter.presentation == 'swatch' or swatch_options contains group_name and section_settings.show_swatch_filters
+    assign has_swatches = true
+  endif
+
+  if chip_options contains group_name and section_settings.show_chip_filters
+    assign has_chips = true
+
+    if section_settings.chip_layout == '2col'
+      assign group_truncate_amount = section_settings.truncate_filter_list_amount | times: 2
+    endif
+  endif
+
+  if scope == 'sidebar' and section_settings.truncate_filter_list and filter.values.size > group_truncate_amount
+    assign should_truncate = true
+  endif
+-%}
+
+<div
+  class="filter-form__list-wrapper"
+  {% if scope == 'drawer' -%}
+    data-scroll-lock-ignore
+  {%- endif %}
+>
+  <ul
+    class="filter-form__list"
+    id="filter-form__list-{{ filter.label | handle }}--{{ scope }}"
+    data-has-chips="{{ has_chips }}"
+    data-chip-layout="{{ section_settings.chip_layout }}"
+  >
+    {% liquid
+      for filter_value in filter.values
+        assign truncate_item = false
+
+        if section_settings.truncate_filter_list and forloop.index > group_truncate_amount
+          assign truncate_item = true
+        endif
+
+        assign item_type = 'checkbox'
+
+        if has_swatches
+          assign item_type = 'swatch'
+        elsif has_chips
+          assign item_type = 'chip'
+        endif
+
+        render 'filter-item', type: item_type, filter_value: filter_value, scope: scope, truncate_item: truncate_item, custom_color_key_map: custom_color_key_map, custom_color_value_map: custom_color_value_map
+      endfor
+    -%}
+  </ul>
+</div>
+
+{% if should_truncate -%}
+  <button
+    type="button"
+    class="filter-form__truncate-toggle fs-body-75"
+    data-filter-truncate-toggle
+    data-is-truncated="true"
+    aria-expanded="true"
+    aria-controls="filter-form__list-{{ filter.label | handle }}--{{ scope }}"
+    data-show-more-text="{{ 'filters.filter_truncate_show_more' | t }}"
+    data-show-less-text="{{ 'filters.filter_truncate_show_less' | t }}"
+  >
+    <span
+      class="filter-form__truncate-toggle-text"
+      data-truncate-toggle-text
+    >
+      {{ 'filters.filter_truncate_show_more' | t }}
+    </span>
+  </button>
+{%- endif %}

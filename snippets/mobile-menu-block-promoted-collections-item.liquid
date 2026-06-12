@@ -1,0 +1,67 @@
+{% liquid
+  assign image_width = 90 | divided_by: column_count
+  assign image_sizes = image_width | append: 'vw'
+
+  unless placeholder
+    if image_source == 'collection'
+      assign image = nav_collection.image
+    elsif image_source == 'product'
+      assign image = nav_collection.products.first.featured_media
+    endif
+  endunless
+
+  assign placeholder_title = 'general.onboarding.collection_title' | t
+  assign tag = 'a'
+
+  if placeholder
+    assign tag = 'div'
+  endif
+
+  capture attributes
+    unless placeholder
+      echo 'href="[[cu]]"' | replace: '[[cu]]', nav_collection.url
+      echo 'aria-label="[ct]"' | replace: '[[ct]]', nav_collection.title
+    endunless
+  endcapture
+%}
+
+<div
+  class="mobile-menu-block-promoted-collections-item"
+  data-title-style="{{ collection_title_style }}"
+>
+  <{{ tag }}
+    {{ attributes }}
+    class="mobile-menu-block-promoted-collections-item-link"
+    {% if collection_title_style == 'overlay' %}
+      style="
+        {% render 'settings-text-position-style' local_settings: block.settings %}
+        {%- render 'settings-image-overlay-style-for-content', local_settings: block.settings -%}
+      "
+    {% endif %}
+  >
+    <div class="mobile-menu-block-promoted-collections-item__image-wrap">
+      {%- render 'image',
+        image: image,
+        sizes: image_sizes,
+        aspect_ratio: image_aspect_ratio,
+        include_placeholder: true
+      -%}
+    </div>
+
+    {% comment %} This title style is duplicated here and meganav.  TODO: make reusable {% endcomment %}
+    {% if collection_title_style == 'overlay' %}
+      <div
+        class="image-overlay animation--image-overlay"
+        {%- render 'settings-image-overlay', local_settings: block.settings -%}
+      ></div>
+    {% endif %}
+
+    <div
+      class="mobile-menu-block-promoted-collections-item__text-wrap"
+    >
+      <h3 class="ff-body fs-body-100 mobile-menu-block-promoted-collections-item__text-title">
+        {{ nav_collection.title | default: placeholder_title }}
+      </h3>
+    </div>
+  </{{ tag }}>
+</div>

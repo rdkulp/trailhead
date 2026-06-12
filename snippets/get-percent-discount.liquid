@@ -1,0 +1,12 @@
+{% liquid
+  comment
+    Renders a percent discount display.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+  endcomment
+
+  if prod.price and prod.compare_at_price and prod.price < prod.compare_at_price
+    echo prod.compare_at_price | minus: prod.price | times: 100.00 | divided_by: prod.compare_at_price | round
+  endif
+-%}

@@ -1,0 +1,79 @@
+{% liquid
+  comment
+    Renders the content of a product tabs item.
+
+    Required parameters:
+      - block: { Object } The parent block.
+      - font_class: { String } A class noting the heading font type. Can be:
+        - 'ff-heading'
+        - 'ff-body'
+  endcomment
+
+  assign desktop_columns = 1
+
+  case block.type
+    when 'two_column'
+      assign desktop_columns = 2
+    when 'three_column'
+      assign desktop_columns = 3
+  endcase
+-%}
+
+<div
+  class="product-tabs__tab-item-content"
+  style="
+    --grid-columns-desktop: {{ desktop_columns }};
+    --grid-gap-column-desktop: {{ block.settings.column_spacing | default: 28 }}px;
+  "
+  {% if desktop_columns > 1 -%}
+    data-vertical-alignment="{{ block.settings.content_vertical_alignment }}"
+  {%- endif %}
+>
+  {% case block.type -%}
+    {%- when 'product_description' -%}
+      {% render 'product-tabs-tab-column',
+        block_type: block.type,
+        num_columns: desktop_columns,
+        content_width: block.settings.content_width,
+        custom_width: block.settings.custom_width,
+        heading: block.settings.heading,
+        heading_font_type: font_type,
+        heading_font_size: block.settings.heading_font_size,
+        text_font_size: block.settings.text_font_size,
+        heading_tag: block.settings.heading_tag
+      -%}
+    {%- else -%}
+      {% for i in (1..desktop_columns) -%}
+        {% liquid
+          assign heading_setting = 'heading_column_' | append: i
+          assign heading_font_size_setting = 'heading_font_size_column_' | append: i
+          assign text_font_size_setting = 'text_font_size_column_' | append: i
+          assign image_setting = 'image_column_' | append: i
+          assign image_width_setting = 'image_width_column_' | append: i
+          assign image_position_setting = 'image_position_column_' | append: i
+          assign custom_liquid_setting = 'custom_liquid_column_' | append: i
+          assign page_for_content_setting = 'page_for_content_column_' | append: i
+          assign text_setting = 'text_column_' | append: i
+          assign heading_tag = 'heading_tag_column_' | append: i
+        -%}
+
+        {% render 'product-tabs-tab-column',
+          block_type: block.type,
+          num_columns: desktop_columns,
+          content_width: block.settings.content_width,
+          custom_width: block.settings.custom_width,
+          heading: block.settings[heading_setting],
+          heading_font_type: font_type,
+          heading_font_size: block.settings[heading_font_size_setting],
+          text_font_size: block.settings[text_font_size_setting],
+          image: block.settings[image_setting],
+          image_width: block.settings[image_width_setting],
+          image_position: block.settings[image_position_setting],
+          custom_liquid: block.settings[custom_liquid_setting],
+          page_for_content: block.settings[page_for_content_setting],
+          text: block.settings[text_setting],
+          heading_tag: block.settings[heading_tag]
+        -%}
+      {%- endfor %}
+  {%- endcase %}
+</div>

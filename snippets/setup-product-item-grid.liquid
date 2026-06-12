@@ -1,0 +1,20 @@
+{%- comment -%}
+  Renders data attributes and CSS variables for product items.
+
+  Use this snippet within an element's div tag.
+  Works in conjunction with the classes `standard-grid-spacing` and `product-item-holder`
+
+    <div
+      class="standard-grid-spacing product-item-holder"
+      {% render 'setup-product-item-grid' %}
+    >
+{%- endcomment -%}
+
+{% liquid
+  if settings.product_listing_product_list_style == 'colored_tile'
+    echo 'style="--product-item-background-color: [[plcct]];"' | replace: '[[plcct]]', settings.product_listing_color_colored_tile
+  endif
+  echo 'data-standard-grid-spacing-type="product-list"'
+  echo 'data-grid-style="[[plpls]]"' | replace: '[[plpls]]', settings.product_listing_product_list_style
+  echo 'data-product-item-alignment="[[plca]]"' | replace: '[[plca]]', settings.product_listing_content_alignment
+-%}

@@ -1,0 +1,26 @@
+{%- comment -%}
+  Renders data attributes and styles (ie. CSS variables) for section headers.
+
+  Used in conjunction with the section-header.js settings group generator, and should be included
+  directly in an element tag:
+
+    <div
+      class="section-header"
+      {% render 'settings-section-header', local_settings: section.settings' %}
+    >
+
+
+  Required parameters:
+    - local_settings: { Object } The parent section's settings.
+{%- endcomment -%}
+
+{% liquid
+  assign content_alignment = 'left'
+
+  if local_settings.center_content
+    assign content_alignment = 'center'
+  endif
+
+  echo 'data-alignment="[[ca]]"' | replace: '[[ca]]', content_alignment
+  echo 'style="--maximum-content-width: [[mcw]]px;"' | replace: '[[mcw]]', local_settings.maximum_content_width
+-%}

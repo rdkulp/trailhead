@@ -1,0 +1,232 @@
+{% liquid
+  assign swatch_options = settings.swatch_options | downcase | split: ', '
+  assign option_count = prod.options | size
+
+  # custom swatch colors
+  assign custom_colors = settings.custom_swatch_colors | newline_to_br | split: '<br />'
+  assign custom_color_map_key = ''
+  assign custom_color_map_value = ''
+
+  for color_value in custom_colors
+    assign custom_color_key = color_value | split: ':' | first | strip
+    assign custom_color_value = color_value | split: ':' | last | strip
+
+    assign custom_color_map_key = custom_color_map_key | append: ',' | append: custom_color_key
+    assign custom_color_map_value = custom_color_map_value | append: ',' | append: custom_color_value
+  endfor
+
+  assign custom_color_map_key = custom_color_map_key | remove_first: ',' | split: ','
+  assign custom_color_map_value = custom_color_map_value | remove_first: ',' | split: ','
+-%}
+
+<template id="quick-add-modal-content-for-id-{{ prod.id }}">
+  <div
+    class="quick-add-modal__content modal-content"
+    style="--option-count: {{ option_count }}"
+    role="dialog"
+  >
+    <div class="quick-add-modal__header">
+      <div class="quick-add-modal__heading ff-heading fs-heading-5-base">
+        {{ 'products.quick_add.choose_options' | t }}
+
+        <span class="product-item__quick-add-count fs-body-100 t-opacity-60">
+          ({{ 'products.quick_add.items_in_cart_html' | t: item_count: item_in_cart, product_id: prod.id }})
+        </span>
+      </div>
+
+      <div class="quick-add-modal__title fs-body-50 t-opacity-70">{{ prod.title }}</div>
+    </div>
+
+    {% if option_count > 1 -%}
+      <div class="quick-add-modal__filters">
+        <div
+          class="quick-add-modal__filters-heading fs-accent"
+          data-filter-expand="false"
+          data-filters-active="false"
+        >
+          <div class="quick-add-modal__filters-heading-text">{{ 'products.quick_add.filter_heading' | t }}</div>
+
+          {% render 'icon', icon: 'chevron-small' %}
+        </div>
+
+        <div class="quick-add-modal__filters-wrapper">
+          {% for option in prod.options_with_values -%}
+            <div class="quick-add-modal__filter-option">
+              <div class="quick-add-modal__filter-option-name">{{ option.name }}&#58;</div>
+
+              <div class="quick-add-modal__filter-option-values" data-filter-values>
+                {% for value in option.values -%}
+                  {% liquid
+                    assign custom_swatch_image = value | handle | append: '.png'
+                    assign option_name = option.name | downcase
+                  -%}
+
+                  <label
+                    for="{{ option.name | escape | handleize }}--{{ value | escape | handleize }}"
+                    class="quick-add-modal__filter-value-content"
+                    data-filter-value
+                  >
+                    <input
+                      type="radio"
+                      id="{{ option.name | escape | handleize }}--{{ value | escape | handleize }}"
+                      name="{{ option.name | escape | handleize }}"
+                      class="quick-add-modal__filter-value visually-hidden"
+                      value="{{ value | escape | handle }}"
+                      data-filter-value-input
+                    >
+
+                    <div class="quick-add-modal__filter-value-content-inner">
+                      {% if swatch_options contains option_name -%}
+                        {% liquid
+                          if custom_color_map_key contains value
+                            for color_name in custom_color_map_key
+                              if color_name == value
+                                assign filter_swatch_style = 'background-color: [[bc]];' | replace: '[[bc]]', custom_color_map_value[forloop.index0]
+                              endif
+                            endfor
+                          else
+                            assign color_value = value | downcase | replace: ' ', ''
+                            assign filter_swatch_style = 'background-color: [[bc]];' | replace: '[[bc]]', color_value
+                          endif
+
+                          if images[custom_swatch_image] != blank
+                            assign image_url = custom_swatch_image | file_url
+                            assign filter_swatch_style = filter_swatch_style | append: ' background-image: url([[csi]]);' | replace: '[[csi]]', image_url
+                          endif
+                        -%}
+
+                        <div class="filter-item__swatch-wrapper">
+                          <div
+                            class="quick-add-modal__filter-swatch filter-item__swatch"
+                            data-shape="round"
+                            style="{{ filter_swatch_style }}"
+                          ></div>
+                        </div>
+                      {%- endif %}
+
+                      {{ value }}
+                    </div>
+                  </label>
+                {%- endfor %}
+
+                <button
+                  type="button"
+                  class="quick-add-modal__filter-option-reset"
+                  data-filter-reset
+                >
+                  {% render 'icon', icon: 'reset' %}
+
+                  <span class="link-hover">{{ 'products.quick_add.filter_reset' | t }}</span>
+                </button>
+              </div>
+            </div>
+          {%- endfor %}
+        </div>
+      </div>
+    {%- endif %}
+
+    <div class="quick-add-modal__variants">
+      <div class="quick-add-modal__variant-header fs-accent">
+        <div class="quick-add-modal__variant-image">{{ 'products.quick_add.image_heading' | t }}</div>
+
+        <div class="quick-add-modal__variant-options">
+          {% for option in prod.options -%}
+            <div class="quick-add-modal__variant-option">{{ option }}</div>
+          {%- endfor %}
+
+          <div class="quick-add-modal__variant-price">{{ 'products.quick_add.price_heading' | t }}</div>
+        </div>
+        <div class="quick-add-modal__variant-row-column-add-to-cart">{{ 'products.product.quantity' | t }}</div>
+      </div>
+
+      {% for variant in prod.variants -%}
+        {%- assign item_in_cart = cart | item_count_for_variant: variant.id -%}
+
+        <div
+          id="{{ variant.title | escape | handle }}"
+          class="quick-add-modal__variant"
+          data-input-item
+          data-item-type="variant"
+          data-variant-id="{{ variant.id }}"
+          data-quantity-in-cart="{{ item_in_cart }}"
+          {% unless variant.available %}
+            aria-disabled="true" disabled
+          {% endunless %}
+        >
+          <div class="quick-add-modal__variant-image">
+            {% liquid
+              assign variant_image = prod.featured_media
+
+              if variant.featured_media
+                assign variant_image = variant.featured_media
+              endif
+            -%}
+
+            {% render 'image',
+              image: variant_image,
+              wrapper_class: '',
+              aspect_ratio: settings.product_listing_aspect_ratio,
+              object_fit: settings.product_listing_media_fit,
+              include_placeholder: true,
+              sizes: sizes,
+              src_set_type: 'grid'
+            -%}
+          </div>
+
+          <div class="quick-add-modal__variant-options">
+            {% for option in variant.options -%}
+              <div class="quick-add-modal__variant-option">{{ option }}</div>
+            {%- endfor %}
+
+            <div class="quick-add-modal__variant-options-mobile">
+              {% for option in variant.options -%}
+                {%- unless forloop.first -%}/{%- endunless %}
+                {{ option }}
+              {%- endfor %}
+            </div>
+
+            <div class="quick-add-modal__variant-price ff-product-price">{{ variant.price | money }}</div>
+          </div>
+
+          <div class="quick-add-modal__variant-row-column-add-to-cart">
+            {%- if variant.available -%}
+              <div class="product-item__quick-add-wrapper quantity-input">
+                {% render 'quantity-widget',
+                  variant: variant,
+                  item_in_cart: item_in_cart,
+                  hover_style: false,
+                  wrapper_class: 'quick-add-modal__variant-quantity-widget-desktop'
+                %}
+                {% render 'quantity-widget',
+                  variant: variant,
+                  item_in_cart: item_in_cart,
+                  hover_style: true,
+                  wrapper_class: 'quick-add-modal__variant-quantity-widget-mobile'
+                %}
+                <button
+                  type="button"
+                  class="product-item__quick-add-button btn btn--small btn--full btn--tertiary"
+                  data-add-quantity
+                >
+                  {{ 'products.quick_add.add' | t }}
+                  <div class="btn__loading-wrap">
+                    <div class="btn__loading-bar"></div>
+                  </div>
+                </button>
+              </div>
+            {%- else -%}
+              <div class="quick-add-modal__variant-sold-out">{{ 'products.inventory.sold_out' | t }}</div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor %}
+    </div>
+
+    <div class="quick-add-modal__footer visually-hidden">
+      <div class="quick-add-modal__footer-caption">
+        {{ 'products.quick_add.footer_caption' | t }}
+        {% render 'icon', icon: 'arrow-short', class: 'quick-add-modal__footer-caption-icon' %}
+      </div>
+    </div>
+  </div>
+</template>

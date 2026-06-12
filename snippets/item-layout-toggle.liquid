@@ -1,0 +1,43 @@
+{% liquid
+  comment
+    Renders the item layout toggle (to toggle between grid and list mode).
+
+    Required parameters:
+      - default_grid_mode: { String } Whch grid mode the collection items should display in by default.
+  endcomment
+
+  assign is_grid = true
+  assign is_list = false
+
+  if default_grid_mode == 'list'
+    assign is_grid = false
+    assign is_list = true
+  endif
+-%}
+
+<div
+  class="item-layout-toggle"
+  data-item-layout-toggle
+>
+  <button
+    type="button"
+    class="item-layout-toggle__button"
+    data-is-active="{{ is_grid }}"
+    data-item-layout-toggle-button
+    data-layout-type="grid"
+    aria-label="{{ 'collections.general.layout_grid_toggle_label' | t }}"
+  >
+    {% render 'icon', icon: 'grid' %}
+  </button>
+
+  <button
+    type="button"
+    class="item-layout-toggle__button"
+    data-is-active="{{ is_list }}"
+    data-item-layout-toggle-button
+    data-layout-type="list"
+    aria-label="{{ 'collections.general.layout_list_toggle_label' | t }}"
+  >
+    {% render 'icon', icon: 'list' %}
+  </button>
+</div>

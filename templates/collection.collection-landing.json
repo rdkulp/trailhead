@@ -1,0 +1,162 @@
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_breadcrumbs": true,
+        "show_collection_description": true,
+        "collection_description_truncate_num_lines": "2",
+        "show_collection_image": true,
+
+        "background_image_focal_point": "center",
+        "background_image_mobile_focal_point": "image_presentation",
+        "image_height_type": "custom",
+        "custom_height_desktop": "350px",
+        "custom_height_mobile": "250px",
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "flex-start_flex-end",
+        "image_overlay_tint_opacity": 50,
+        "image_overlay_tint_style": "gradient_up",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "grid": {
+      "type": "grid",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "width": "33",
+            "height": 480,
+            "mobile_height": 340,
+
+            "background_image_focal_point": "bottom",
+            "background_image_mobile_focal_point": "bottom",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "Save $40",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Face & Body Bundle",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+
+            "button_label": "Shop now",
+            "button_style": "solid",
+            "image_overlay_tint_opacity": 40,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "width": "33",
+            "height": 360,
+            "mobile_height": 360,
+
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "Save $12",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Clear Glow Bundle",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+
+            "button_label": "Shop now",
+            "button_style": "solid",
+            "image_overlay_tint_opacity": 40,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "width": "33",
+            "height": 300,
+            "mobile_height": 320,
+
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "Save $9",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Sunscreen Bundle",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+
+            "button_label": "Shop now",
+            "button_style": "solid",
+            "image_overlay_tint_opacity": 30,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        }
+      },
+      "block_order": ["item-1", "item-2", "item-3"],
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "",
+        "subheading": "",
+        "maximum_content_width": 650,
+        "full_width": false,
+        "grid_spacing": 17,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 56,
+        "section_style_enable_animation": true
+      }
+    },
+    "main-collection-product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "num_columns": "4",
+        "num_rows": "12",
+        "show_item_count": true,
+        "enable_grid_mode": false,
+        "default_grid_mode": "grid",
+        "enable_sticky_filter_sidebar": true,
+        "show_sort": true,
+        "show_filters": true,
+        "filter_search_groups": "",
+        "collapse_filter_sidebar": false,
+        "collapse_filter_groups_desktop": false,
+        "truncate_filter_list": true,
+        "truncate_filter_list_amount": 7,
+        "show_swatch_filters": true,
+        "show_chip_filters": true,
+        "chip_layout": "2col",
+        "pagination": "click",
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": ["banner", "grid", "main-collection-product-grid"]
+}

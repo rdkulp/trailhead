@@ -1,0 +1,12 @@
+{% comment %}
+  Outputs the meta description of the current page.
+  
+  Optional parameters:
+    - content: { String } Custom content for the meta description. If present, overrides the description for the current resource.
+{% endcomment %}
+
+{% assign meta_description_content = content | default: page_description %}
+
+{% if meta_description_content != blank %}
+  <meta name="description" content="{{ meta_description_content | strip_html | escape }}">
+{% endif %}

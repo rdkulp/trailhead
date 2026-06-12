@@ -1,0 +1,29 @@
+{% liquid
+  comment
+    Renders a hidden discount display for each variant of a given product.
+
+    We need to be able to access these displays dynamically in the header and price product blocks.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - discount_format: { String } The discount string format. Can be:
+        - "sale_text"
+        - "percent_off"
+        - "minus_percent"
+        - "save_percent"
+        - "amount_off"
+        - "minus_amount"
+        - "save_amount"
+
+    Optional parameters:
+      - use_data_attribute: { Boolean } Whether to include the 'data-discount-display' data
+        attribute on the wrapper.
+      - wrapper_class: { String } A custom class to apply to the wrapper.
+  endcomment
+
+  for variant in prod.variants
+    echo '<div hidden class="visually-hidden" variant-discount-display variant-id="[[vid]]">' | replace: '[[vid]]', variant.id
+    render 'get-display-discount', prod: prod, variant: variant, hidden: true, format: discount_format, use_data_attribute: use_data_attribute, wrapper_class: wrapper_class
+    echo '</div>'
+  endfor
+-%}

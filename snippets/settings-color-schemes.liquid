@@ -1,0 +1,21 @@
+{%- comment -%}
+    Use this within an element tag directly
+
+    <div {% render 'settings-color-schemes', local_settings: section.settings' %}" >
+
+  Pass in
+
+  * local_settings: shopify settings object for block or section
+  * id_prefix (optional)
+{%- endcomment -%}
+
+{%- assign global_settings = settings -%}
+
+{%- capture 'override_with_custom_colors_key' -%}{%- render 'get-prefixed-id', id: "override_with_custom_colors", prefix: id_prefix -%}{%- endcapture -%}
+
+{%- assign use_local_colors = local_settings[override_with_custom_colors_key] -%}
+
+{% unless use_local_colors %}
+  {%- capture 'color_scheme_key' -%}{%- render 'get-prefixed-id', id: "color_scheme", prefix: id_prefix -%}{%- endcapture -%}
+  data-color-scheme="{{ local_settings[color_scheme_key] }}"
+{% endunless %}

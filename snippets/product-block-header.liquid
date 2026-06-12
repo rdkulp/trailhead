@@ -1,0 +1,225 @@
+{% liquid
+  comment
+    Renders the product header content.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - block_settings: { Object } The settings object to use.
+      - current_variant: { Object } The current variant object.
+      - is_quick: { Boolean } Whether the content is being rendered inside a quick view.
+
+    Optional parameters:
+      - is_featured: { Boolean } Whether the content is being rendered inside a featured product.
+      - is_top: { Boolean } Whether the content is for mobile, and set to the top.
+      - featured_media: { Object } The media object for the feautured media.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+  endcomment
+-%}
+
+{%- capture product_rating -%}
+  {% if block_settings.show_product_rating and prod != blank -%}
+    {% render 'product-rating',
+      prod: prod,
+      show_rating_count: block_settings.show_rating_count,
+      rating_style: block_settings.rating_style,
+      show_when_zero_ratings: true,
+      text_class: "fs-body-75",
+      count_link_url: "#shopify-product-reviews",
+      count_link_class: "product__rating-count-potential-link"
+    -%}
+  {%- endif %}
+{%- endcapture -%}
+
+<div
+  class="
+    product__block product__block--product-header
+    {% if block_settings.show_divider %} product__block--with-divider{% endif %}
+  "
+  data-header-block-is-top="{{ is_top }}"
+  {% if is_quick -%}
+    data-header-position-mobile="{{ section.settings.header_position_mobile }}"
+  {%- endif %}
+  {{ shopify_attributes }}
+>
+  {% if is_quick and featured_media != blank -%}
+    <div class="product__block--product-header-image-wrap">
+      <div class="product__media">
+        {% for media in prod.media -%}
+          {% liquid
+            if forloop.index < initial_variant_media_position or forloop.index > next_variant_media_index
+              continue
+            endif
+
+            assign media_aspect_ratio = section.settings.image_aspect_ratio
+
+            if media.media_type == 'model'
+              assign media_aspect_ratio = 'square'
+            endif
+          -%}
+
+          <div
+            class="product__media-item {% unless media.id == featured_media.id %} hidden{% endunless %}"
+            data-media-item-id="{{ media.id }}"
+            data-media-type="{{ media.media_type }}"
+            data-aspect-ratio="{{ media_aspect_ratio }}"
+            data-product-media-wrapper
+            data-enable-multiple-variant-media="{{ section.settings.enable_multiple_variant_media }}"
+            data-initial-media-id="{{ featured_media.id }}"
+          >
+            {% render 'media',
+              media: media,
+              fallback_alt: prod.title,
+              enable_product_lightbox: section.settings.enable_product_lightbox,
+              loop_video: section.settings.enable_video_looping,
+              aspect_ratio: media_aspect_ratio,
+              sizes: '100vw'
+            -%}
+          </div>
+        {%- else -%}
+          <div class="product__media-item placeholder-image">
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {%- endfor %}
+      </div>
+
+      {% if section.settings.show_thumbnails -%}
+        {% render 'product-thumbnails',
+          prod: prod,
+          featured_media: featured_media,
+          aspect_ratio: section.settings.image_aspect_ratio,
+          thumbnail_size: 'small',
+          thumbnail_position: 'bottom',
+          initial_variant_media_position: initial_variant_media_position,
+          next_variant_media_index: next_variant_media_index,
+          enable_multiple_variant_media: enable_multiple_variant_media
+        -%}
+      {%- endif %}
+    </div>
+  {%- endif %}
+
+  <div class="product__block--product-header-inner">
+    {% comment %} Limit h1 tags coming in from quick view, featured product, and mobile layout {% endcomment %}
+    {% liquid
+      capture tag_type
+        if is_quick or is_featured or is_top
+          echo 'h2'
+        else
+          echo 'h1'
+        endif
+      endcapture
+    %}
+    {% if prod != blank -%}
+      {% if block_settings.show_sale_badge or block_settings.show_custom_badges or block_settings.show_new_badge -%}
+        {% render 'product-badges',
+          prod: prod,
+          show_sale_badge: block_settings.show_sale_badge,
+          show_new_badge: block_settings.show_new_badge,
+          show_custom_badges: block_settings.show_custom_badges,
+          show_sold_out_badge: false
+        -%}
+      {%- endif %}
+
+      <{{ tag_type }} class="product__title ff-heading fs-heading-2-base">{{ prod.title }}</{{ tag_type }}>
+
+      {% if block_settings.show_vendor or block_settings.show_sku -%}
+        <div
+          class="product__vendor_and_sku"
+          data-showing-sku="{% if block_settings.show_sku and current_variant.sku != blank %}true{% else %}false{% endif %}"
+          data-showing-vendor="{% if block_settings.show_vendor and prod.vendor != blank %}true{% else %}false{% endif %}"
+        >
+          {% if block_settings.show_vendor -%}
+            <div class="product__vendor fs-body-100">
+              <span class="product__vendor-prefix t-opacity-70">{{ 'products.product.by' | t }}</span>
+              {{ prod.vendor | link_to_vendor }}
+            </div>
+          {%- endif %}
+
+          {% if block_settings.show_sku -%}
+            <div class="product__sku fs-body-50 t-opacity-70" data-product-sku>
+              {% if current_variant.sku != blank -%}
+                {{ 'products.product.sku_with_value' | t: value: current_variant.sku }}
+              {%- endif %}
+            </div>
+          {%- endif %}
+        </div>
+      {%- endif %}
+    {%- else -%}
+      <{{ tag_type }} class="product__title ff-heading fs-heading-2-base">
+        {{- 'sections.featured_product.placeholder.title' | t -}}
+      </{{ tag_type }}>
+
+      {% if block_settings.show_vendor -%}
+        <div
+          class="product__vendor_and_sku"
+          data-showing-vendor="true"
+        >
+          <div class="product__vendor fs-body-100 t-opacity-70">
+            {{ 'sections.featured_product.placeholder.vendor' | t }}
+          </div>
+        </div>
+      {%- endif %}
+    {%- endif %}
+
+    {% if block_settings.show_price or block_settings.show_product_rating -%}
+      <div class="product__price-and-ratings">
+        {% if block_settings.show_price -%}
+          {% liquid
+            assign price_class = 'product__price ff-product-price'
+
+            if is_quick
+              assign price_class = price_class | append: ' fs-body-200'
+            else
+              assign price_class = price_class | append: ' fs-body-300'
+            endif
+          -%}
+
+          <div class="{{ price_class }}">
+            {% render 'product-price',
+              prod: prod,
+              current_variant: current_variant,
+              show_discount: block_settings.show_discount,
+              discount_format: block_settings.discount_format
+            -%}
+          </div>
+        {%- endif %}
+
+        {% if is_quick != true -%}
+          {{ product_rating }}
+        {%- endif %}
+      </div>
+    {%- endif %}
+
+    {% liquid
+      if block_settings.show_shop_pay
+        render 'shop-pay-payment-terms', prod: prod
+      endif
+    -%}
+
+    {% if is_quick -%}
+      {% if product_rating != blank or block_settings.show_link -%}
+        <div class="product__ratings-and-link">
+          {{- product_rating -}}
+
+          {% if block_settings.show_link -%}
+            <a
+              class="quick-view__view-product-details-link btn btn--text-link"
+              href="{{ prod.url | within: collection }}"
+            >
+              {{ 'products.product.quick_view_product_link' | t }}
+              {% render 'icon', icon: 'arrow-short' %}
+            </a>
+          {%- endif %}
+        </div>
+      {%- endif %}
+    {%- endif %}
+  </div>
+
+  {% if block_settings.show_discount and prod != blank -%}
+    {% render 'hidden-variant-discount-display',
+      prod: prod,
+      discount_format: block_settings.discount_format,
+      use_data_attribute: true,
+      wrapper_class: 'product__price-displayed-discount'
+    -%}
+  {%- endif %}
+</div>

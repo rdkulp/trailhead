@@ -1,0 +1,49 @@
+{% liquid
+  comment
+    Renders promoted collection items for a meganav.
+
+    Required parameters:
+      - meganav_settings: { Object } The settings object for the associated meganav block.
+      - show_animations: { Boolean } Whether animations are enabled.
+  endcomment
+
+  assign column_count = meganav_settings.promo_column_count
+-%}
+
+<div class="meganav__secondary">
+  {% unless meganav_settings.promo_heading_text == blank -%}
+    <h4 class="meganav__secondary--heading fs-accent-bold">{{ meganav_settings.promo_heading_text }}</h4>
+  {%- endunless %}
+
+  <div
+    class="meganav__secondary--inner meganav-promoted-collections-inner"
+    data-column-count="{{ column_count }}"
+    data-title-style="{{ meganav_settings.collection_title_style }}"
+  >
+    {% for nav_collection in meganav_settings.collections -%}
+      {%
+        render 'meganav-promoted-collections-item',
+        meganav_settings: meganav_settings,
+        promo_width: meganav_settings.promo_width,
+        promo_column_count: column_count,
+        nav_collection: nav_collection,
+        collection_title_style: meganav_settings.collection_title_style,
+        image_source: meganav_settings.image_source,
+        image_aspect_ratio: meganav_settings.image_aspect_ratio
+      -%}
+    {%- else -%}
+      {% for num in (1..column_count) -%}
+        {%
+          render 'meganav-promoted-collections-item',
+          meganav_settings: meganav_settings,
+          promo_width: meganav_settings.promo_width,
+          promo_column_count: column_count,
+          collection_title_style: meganav_settings.collection_title_style,
+          image_source: meganav_settings.image_source,
+          image_aspect_ratio: meganav_settings.image_aspect_ratio,
+          placeholder: true
+        -%}
+      {%- endfor %}
+    {%- endfor %}
+  </div>
+</div>

@@ -1,0 +1,763 @@
+{%- liquid
+  assign min_height = section.settings.min_height
+  assign min_height_mobile = section.settings.min_height_mobile
+  assign image_sizes = '(min-width: 1800px) 1800px, calc(100vw - calc(2 * 16px))'
+
+  if section.settings.full_width
+    assign image_sizes = '100vw'
+  endif
+
+  if section.settings.background_image != blank
+    capture image_overlay_style_for_content
+      render 'settings-image-overlay-style-for-content', local_settings: section.settings
+    endcapture
+  endif
+
+  assign section_class = 'sales-banner section'
+
+  if settings.enable_section_animations and section.settings.section_style_enable_animation
+    assign section_class = section_class | append: ' animation animation--sales-banner'
+  endif
+-%}
+
+<div
+  class="{{ section_class }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="sales-banner"
+  data-layout="{{ section.settings.layout }}"
+  style="
+    --min-height: {{ min_height }}px;
+    --min-height-mobile: {{ min_height_mobile }}px;
+    {% render 'settings-color-schemes-style', local_settings: section.settings %}
+    {% render 'settings-section-style-style' %}
+    {{ image_overlay_style_for_content }}
+  "
+>
+  <div
+    class="
+      section-inner
+      {% if section.settings.full_width %}section-inner--full-width{% endif %}
+    "
+  >
+    <div class="sales-banner__inner">
+      {% if section.settings.background_image != blank -%}
+        {% render 'settings-background-image', local_settings: section.settings, sizes: image_sizes %}
+
+        <div
+          class="image-overlay animation--image-overlay"
+          {%- render 'settings-image-overlay', local_settings: section.settings -%}
+        ></div>
+      {%- endif %}
+
+      <div class="sales-banner__content">
+        <div class="sales-banner__columns">
+          <div class="sales-banner__columns-inner">
+            <div class="sales-banner__column">
+              <div class="sales-banner__column-inner">
+                <div
+                  class="sale-promotion sale-promotion--{{ section.settings.sale_unit }}"
+                  style="
+                    --promotion-amount-text-size: {{ section.settings.sale_font_size }}px;
+                    --promotion-amount-text-size-mobile: {{ section.settings.sale_font_size_mobile }}px;
+                    --terms-vertical-offset: {{ section.settings.terms_vertical_offset }}px;
+                  "
+                >
+                  <p class="sale-promotion__sale ff-heading">
+                    {% if section.settings.sale_type != blank -%}
+                      <span class="sale-promotion__type fs-heading-5-base animation--item">
+                        {{- section.settings.sale_type -}}
+                      </span>
+                    {%- endif %}
+
+                    <span class="sale-promotion__sale-grid ff-heading">
+                      {%- capture currency_symbol -%}
+                        {% if section.settings.sale_unit == 'per_month'
+                          or section.settings.sale_unit == 'per_year'
+                          or section.settings.sale_unit == 'dollars'
+                        -%}
+                          <span class="sale-promotion__unit-currency animation--item">
+                            {%- render 'currency-symbol' -%}
+                          </span>
+                        {%- endif %}
+                      {%- endcapture -%}
+
+                      {% liquid
+                        if section.settings.currency_symbol_position == 'before'
+                          echo currency_symbol
+                        endif
+                      -%}
+
+                      <span class="sale-promotion__amount animation--item animation--order-1">
+                        {{- section.settings.sale_amount -}}
+                      </span>
+
+                      {% liquid
+                        if section.settings.currency_symbol_position == 'after'
+                          echo currency_symbol
+                        endif
+                      -%}
+
+                      <span class="sale-promotion__unit sale-promotion__unit--{{ section.settings.sale_unit }} animation--item">
+                        {%- case section.settings.sale_unit -%}
+                          {%- when 'percent_off' -%}
+                            <span class="sale-promotion__unit-percent">
+                              {{- 'sections.sales_banner.sale_units.percent' | t -}}
+                            </span>
+
+                            <span class="sale-promotion__unit-off">
+                              {{- 'sections.sales_banner.sale_units.off' | t -}}
+                            </span>
+                          {%- when 'percent' -%}
+                            <span class="sale-promotion__unit-percent">
+                              {{- 'sections.sales_banner.sale_units.percent' | t -}}
+                            </span>
+                          {%- when 'per_month' -%}
+                            <span class="sale-promotion__per-month">
+                              {{ 'sections.sales_banner.sale_units.per_month' | t }}
+                            </span>
+                          {%- when 'per_year' -%}
+                            <span class="sale-promotion__per-year">
+                              {{ 'sections.sales_banner.sale_units.per_year' | t }}
+                            </span>
+                        {%- endcase -%}
+                      </span>
+                    </span>
+                  </p>
+
+                  {% if section.settings.terms_and_conditions != blank -%}
+                    <p class="sale-promotion__terms fs-body-75 animation--item">
+                      {{ section.settings.terms_and_conditions }}
+                    </p>
+                  {%- endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="sales-banner__column animation--banner-divider">
+              <div class="sales-banner__column-inner section-blocks animation--container">
+                {% if section.settings.heading != blank -%}
+                  {% liquid
+                    capture heading_font_class
+                      render 'settings-text-size', type: 'heading', size: section.settings.heading_font_size
+                    endcapture
+                  -%}
+
+                  <{{ section.settings.heading_tag }} class="ff-heading {{ heading_font_class }} section-blocks__heading">
+                    {{ section.settings.heading }}
+                  </{{ section.settings.heading_tag }}>
+                {%- endif %}
+
+                {% if section.settings.text != blank -%}
+                  <div class="section-blocks__text">{{ section.settings.text }}</div>
+                {%- endif %}
+
+                {% if section.settings.button_1_button_label != blank
+                  or section.settings.button_2_button_label != blank
+                -%}
+                  <div class="sales-banner__button-group section-blocks__button">
+                    {% if section.settings.button_1_button_label -%}
+                      {% render 'button',
+                        label: section.settings.button_1_button_label,
+                        link: section.settings.button_1_button_link,
+                        button_size: 'small',
+                        button_style: section.settings.button_1_button_style,
+                        wrapper_class: 'sales-banner__button'
+                      -%}
+                    {%- endif %}
+
+                    {% if section.settings.button_2_button_label -%}
+                      {% render 'button',
+                        label: section.settings.button_2_button_label,
+                        link: section.settings.button_2_button_link,
+                        button_size: 'small',
+                        button_style: section.settings.button_2_button_style,
+                        wrapper_class: 'sales-banner__button'
+                      -%}
+                    {%- endif %}
+                  </div>
+                {%- endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.sales_banner.name",
+  "tag": "section",
+  "class": "shopify-section--sales-banner shopify-section--full-width",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "t:shared.settings.banners.min_height.label",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "t:shared.settings.banners.min_height_mobile.label",
+      "default": 500
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:shared.settings.section_style.full_width.label",
+      "default": true
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "t:sections.sales_banner.settings.layout.label",
+      "options": [
+        {
+          "value": "two-columns",
+          "label": "t:sections.sales_banner.settings.layout.option__two_columns"
+        },
+        {
+          "value": "one-column",
+          "label": "t:sections.sales_banner.settings.layout.option__one_column"
+        }
+      ],
+      "default": "two-columns"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.sales_banner.settings.header_sale.content"
+    },
+    {
+      "type": "text",
+      "id": "sale_type",
+      "label": "t:sections.promotion_sections_shared.settings.sale_type.label",
+      "default": "up to"
+    },
+    {
+      "type": "text",
+      "id": "sale_amount",
+      "label": "t:sections.promotion_sections_shared.settings.sale_amount.label",
+      "default": "60"
+    },
+    {
+      "type": "select",
+      "id": "sale_unit",
+      "label": "t:sections.promotion_sections_shared.settings.sale_unit.label",
+      "options": [
+        {
+          "value": "percent_off",
+          "label": "t:sections.promotion_sections_shared.settings.sale_unit.option_percent_off"
+        },
+        {
+          "value": "per_month",
+          "label": "t:sections.promotion_sections_shared.settings.sale_unit.option_per_month"
+        },
+        {
+          "value": "per_year",
+          "label": "t:sections.promotion_sections_shared.settings.sale_unit.option_per_year"
+        },
+        {
+          "value": "dollars",
+          "label": "t:sections.promotion_sections_shared.settings.sale_unit.option_dollars"
+        },
+        {
+          "value": "percent",
+          "label": "t:sections.promotion_sections_shared.settings.sale_unit.option_percent"
+        },
+        {
+          "value": "none",
+          "label": "t:sections.promotion_sections_shared.settings.sale_unit.option_none"
+        }
+      ],
+      "default": "percent_off"
+    },
+    {
+      "type": "text",
+      "id": "terms_and_conditions",
+      "label": "t:sections.sales_banner.settings.terms_and_conditions.label",
+      "default": "* Optional legal note"
+    },
+    {
+      "type": "range",
+      "id": "terms_vertical_offset",
+      "label": "t:sections.sales_banner.settings.terms_vertical_offset.label",
+      "unit": "px",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "sale_font_size",
+      "label": "t:sections.sales_banner.settings.sale_font_size.label",
+      "unit": "px",
+      "min": 80,
+      "max": 200,
+      "step": 2,
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "sale_font_size_mobile",
+      "label": "t:sections.sales_banner.settings.sale_font_size_mobile.label",
+      "unit": "px",
+      "min": 40,
+      "max": 150,
+      "step": 2,
+      "default": 150
+    },
+    {
+      "type": "radio",
+      "id": "currency_symbol_position",
+      "label": "t:sections.sales_banner.settings.currency_symbol_position.label",
+      "options": [
+        {
+          "value": "before",
+          "label": "t:sections.sales_banner.settings.currency_symbol_position.option__before"
+        },
+        {
+          "value": "after",
+          "label": "t:sections.sales_banner.settings.currency_symbol_position.option__after"
+        }
+      ],
+      "default": "before"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.banners.header_content.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:shared.settings.banners.heading.label",
+      "default": "Announce your sale"
+    },
+    {
+      "id": "heading_tag",
+      "type": "select",
+      "label": "t:shared.settings.heading_tag.label",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "info": "t:shared.settings.heading_tag.info",
+      "default": "h3"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "label": "t:shared.settings.text_size.heading.label",
+      "info": "t:shared.settings.text_size.info",
+      "default": 3
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:shared.settings.banners.text.label",
+      "default": "<p>Highlight sale campaigns, discounts, and promotions.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.header__button_1.content"
+    },
+    {
+      "id": "button_1_button_link",
+      "type": "url",
+      "label": "t:shared.settings.button_link.label",
+      "default": "/collections"
+    },
+    {
+      "id": "button_1_button_label",
+      "type": "text",
+      "label": "t:shared.settings.button_label.label",
+      "default": "Button"
+    },
+    {
+      "type": "select",
+      "id": "button_1_button_style",
+      "label": "t:shared.settings.button_style.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:shared.settings.button_style.option_primary",
+          "group": "t:shared.settings.button_style.option_group_theme_colors"
+        },
+        {
+          "value": "secondary",
+          "label": "t:shared.settings.button_style.option_secondary",
+          "group": "t:shared.settings.button_style.option_group_theme_colors"
+        },
+        {
+          "value": "tertiary",
+          "label": "t:shared.settings.button_style.option_tertiary",
+          "group": "t:shared.settings.button_style.option_group_theme_colors"
+        },
+        {
+          "value": "solid",
+          "label": "t:shared.settings.button_style.option_solid",
+          "group": "t:shared.settings.button_style.option_group_local_colors"
+        },
+        {
+          "value": "outline",
+          "label": "t:shared.settings.button_style.option_outline",
+          "group": "t:shared.settings.button_style.option_group_local_colors"
+        },
+        {
+          "value": "text",
+          "label": "t:shared.settings.button_style.option_text",
+          "group": "t:shared.settings.button_style.option_group_local_colors"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.header__button_2.content"
+    },
+    {
+      "id": "button_2_button_link",
+      "type": "url",
+      "label": "t:shared.settings.button_link.label",
+      "default": "/collections"
+    },
+    {
+      "id": "button_2_button_label",
+      "type": "text",
+      "label": "t:shared.settings.button_label.label",
+      "default": "Button"
+    },
+    {
+      "type": "select",
+      "id": "button_2_button_style",
+      "label": "t:shared.settings.button_style.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:shared.settings.button_style.option_primary",
+          "group": "t:shared.settings.button_style.option_group_theme_colors"
+        },
+        {
+          "value": "secondary",
+          "label": "t:shared.settings.button_style.option_secondary",
+          "group": "t:shared.settings.button_style.option_group_theme_colors"
+        },
+        {
+          "value": "tertiary",
+          "label": "t:shared.settings.button_style.option_tertiary",
+          "group": "t:shared.settings.button_style.option_group_theme_colors"
+        },
+        {
+          "value": "solid",
+          "label": "t:shared.settings.button_style.option_solid",
+          "group": "t:shared.settings.button_style.option_group_local_colors"
+        },
+        {
+          "value": "outline",
+          "label": "t:shared.settings.button_style.option_outline",
+          "group": "t:shared.settings.button_style.option_group_local_colors"
+        },
+        {
+          "value": "text",
+          "label": "t:shared.settings.button_style.option_text",
+          "group": "t:shared.settings.button_style.option_group_local_colors"
+        }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.sales_banner.settings.header_colors.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "t:shared.settings.color_scheme.select.label",
+      "info": "t:shared.settings.color_scheme.info",
+      "default": "sale",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:shared.settings.color_scheme.select.option_default",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "inverse",
+          "label": "t:shared.settings.color_scheme.select.option_inverse",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "soft",
+          "label": "t:shared.settings.color_scheme.select.option_soft",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "accent",
+          "label": "t:shared.settings.color_scheme.select.option_accent",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "sale",
+          "label": "t:shared.settings.color_scheme.select.option_sale",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "color_scheme_1",
+          "label": "t:shared.settings.color_scheme.select.option_scheme_1",
+          "group": "t:shared.settings.color_scheme.select.group_schemes"
+        },
+        {
+          "value": "color_scheme_2",
+          "label": "t:shared.settings.color_scheme.select.option_scheme_2",
+          "group": "t:shared.settings.color_scheme.select.group_schemes"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "override_with_custom_colors",
+      "label": "t:shared.settings.color_scheme.override",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "override_color_text",
+      "label": "t:shared.settings.color_scheme.color_text",
+      "default": "#393939"
+    },
+    {
+      "type": "color",
+      "id": "override_color_background",
+      "label": "t:shared.settings.color_scheme.color_background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.background_image.header"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:shared.settings.background_image.paragraph"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:shared.settings.background_image.image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "t:shared.settings.background_image.image_mobile.label"
+    },
+    {
+      "id": "background_image_focal_point",
+      "type": "select",
+      "label": "t:shared.settings.focal_point.label",
+      "options": [
+        {
+          "label": "t:shared.settings.focal_point.option_image_presentation",
+          "value": "image_presentation"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_center",
+          "value": "center"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_top",
+          "value": "top"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_left",
+          "value": "left"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_right",
+          "value": "right"
+        }
+      ],
+      "default": "image_presentation"
+    },
+    {
+      "id": "background_image_mobile_focal_point",
+      "type": "select",
+      "label": "t:shared.settings.mobile_focal_point.label",
+      "options": [
+        {
+          "label": "t:shared.settings.focal_point.option_image_presentation",
+          "value": "image_presentation"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_center",
+          "value": "center"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_top",
+          "value": "top"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_left",
+          "value": "left"
+        },
+        {
+          "label": "t:shared.settings.focal_point.option_right",
+          "value": "right"
+        }
+      ],
+      "default": "image_presentation"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.image_overlay.header"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:shared.settings.image_overlay.note_background"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:shared.settings.image_overlay.note_global_settings"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_tint_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "t:shared.settings.image_overlay.tint_opacity.label",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "image_overlay_tint_style",
+      "label": "t:shared.settings.image_overlay.tint_style.label",
+      "default": "solid",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:shared.settings.image_overlay.tint_style.option_solid"
+        },
+        {
+          "value": "gradient_down",
+          "label": "t:shared.settings.image_overlay.tint_style.option_gradient_down"
+        },
+        {
+          "value": "gradient_right",
+          "label": "t:shared.settings.image_overlay.tint_style.option_gradient_right"
+        },
+        {
+          "value": "gradient_left",
+          "label": "t:shared.settings.image_overlay.tint_style.option_gradient_left"
+        },
+        {
+          "value": "gradient_up",
+          "label": "t:shared.settings.image_overlay.tint_style.option_gradient_up"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "image_overlay_override_with_custom_colors",
+      "label": "t:shared.settings.color_scheme.override",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "image_overlay_override_color_text",
+      "label": "t:shared.settings.color_scheme.color_text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "image_overlay_override_color_tint",
+      "label": "t:shared.settings.color_scheme.color_tint",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header_style.content"
+    },
+    {
+      "id": "section_style_spacing_top",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_top.label",
+      "default": 36
+    },
+    {
+      "id": "section_style_spacing_bottom",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_bottom.label",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "section_style_enable_animation",
+      "default": true,
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.sales_banner.presets.name"
+    }
+  ]
+}
+{% endschema %}

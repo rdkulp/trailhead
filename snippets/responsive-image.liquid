@@ -1,0 +1,126 @@
+{% liquid
+  comment
+    Renders an image.
+
+    Required parameters:
+      - image: { Object } The image to be rendered.
+      - sizes: { String } A list of responsive image sizes (for the 'sizes' attributes).
+
+    Optional parameters:
+      - tag_name: { String } An HTML element tag to use instead of 'img' (ie. 'picture', or 'source').
+      - media: { String } A media query for the 'media' attribute if 'source' is used for the 'tag_name'.
+      - fallback_width: { Number } A width to be used for browsers that don't support srcset.
+      - aspect_ratio: { String } The aspect ratio of the image.
+      - focal_point: { String } The source of the focal point of the image. Can be:
+        - 'image_presentation': The focal point comes from the image itself.
+        - 'center'
+        - 'top'
+        - 'right'
+        - 'bottom'
+        - 'left'
+      - focal_alignment: { String } The focal alignment ('object-position') of the image (based on the focal point
+        source). Used for cropping.
+      - wrapper_class: { String } A custom class to be applied to the image wrapper.
+      - prioritize_loading: { Boolean } If 'true', the `loading="lazy"` attribute won't be added to the image.
+      - fallback_alt: { String } Alt text to use if the image doesn't have any.
+      - no_crop: { Boolean } If 'true', the image will be loaded in full, and then cropped in CSS (rather than
+        letting Shopify serve a cropped image).
+      - object_fit: { String } The 'object-fit' CSS property to use for the image.
+      - src_set_type: { String } A string noting the kind of environment the image is being rendered in to help
+        with more performant srcset generation. If this parameter isn't specified, a comprehensive srcset range
+        will be used. Can be:
+        - 'grid'
+        - 'full-width'
+  endcomment
+
+  assign tag_name = tag_name | default: 'img'
+  assign fallback_width = fallback_width | default: 320
+
+  assign src_attr = 'src'
+  assign src_set_attr = 'srcset'
+
+  if lazy
+    assign src_attr = 'data-src'
+    assign src_set_attr = 'data-srcset'
+  endif
+
+  case src_set_type
+    when 'grid'
+      # Assumption: Even with a 2-per row grid on large screen, grid items will not be more than 900px @2x wide
+      assign src_set_widths_raw = '150,200,240,280,300,360,400,450,500,550,600,650,700,750,800,850,900,950,1000,1100,1200,1300,1400,1500,1600,1700,1800'
+    when 'full-width'
+      # Assumption: The smallest phone will be  350px @ 2x
+      assign src_set_widths_raw = '700,750,800,850,900,950,1000,1100,1200,1300,1400,1500,1600,1800,2000,2200,2400,2600,2800,3000,3500,4000,4500,5000,5500,6000'
+    else
+      assign src_set_widths_raw = '100,150,200,240,280,300,360,400,450,500,550,600,650,700,750,800,850,900,950,1000,1100,1200,1300,1400,1500,1600,1800,2000,2200,2400,2600,2800,3000,3500,4000,4500,5000,5500,6000'
+  endcase
+
+  if object_fit != 'contain' and aspect_ratio != blank and aspect_ratio != 'natural'
+    case aspect_ratio
+      when 'portrait'
+        assign crop_height_ratio = 1.5
+      when 'landscape'
+        assign crop_height_ratio = 0.666666
+      when 'square'
+        assign crop_height_ratio = 1
+      when 'portrait_alt'
+        assign crop_height_ratio = 1.25
+      when 'landscape_alt'
+        assign crop_height_ratio = 0.8
+      when 'landscape_wide_alt'
+        assign crop_height_ratio = 0.5625
+    endcase
+  endif
+
+  assign image_crop = 'center'
+
+  if focal_alignment != blank and focal_alignment != 'center'
+    assign image_crop = focal_alignment
+  endif
+
+  assign src_set_widths = src_set_widths_raw | split: ','
+  assign src_set_string = ''
+
+  for width_string in src_set_widths
+    assign width = width_string | plus: 0
+
+    if image.width < width
+      break
+    endif
+
+    if crop_height_ratio and focal_point != 'image_presentation'
+      assign crop_height = width | times : crop_height_ratio
+
+      if image.height < crop_height
+        break
+      endif
+    endif
+
+    capture src_set_string
+      if src_set_string != blank
+        echo src_set_string | append: ', '
+      endif
+
+      if crop_height_ratio and focal_point != 'image_presentation' and no_crop != true
+        echo image | image_url: width: width, height: crop_height, crop: image_crop | append: ' [[w]]w' | replace: '[[w]]', width
+      else
+        echo image | image_url: width: width | append: ' [[w]]w' | replace: '[[w]]', width
+      endif
+    endcapture
+  endfor
+
+  assign alt = image.alt | default: fallback_alt
+-%}
+
+<{{ tag_name }}
+  alt="{{ alt | escape }}"
+  class="image__img"
+  {% if prioritize_loading %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+  width="{{ image.width }}"
+  height="{{ image.height }}"
+  {% unless tag_name == "source" %}{{ src_attr }}="{{ image | image_url: width: fallback_width }}"{% endunless %}
+  {% if media %}media="{{ media }}"{% endif %}
+  {{ src_set_attr }}="{{ src_set_string }}"
+  sizes="{{ sizes }}"
+  onload="javascript: this.closest('.image').classList.add('loaded')"
+/>

@@ -1,0 +1,17 @@
+{% liquid
+  comment
+    Renders the required CSS variables for the "Image height type" setting.
+
+    Use this within the style attribute of the desired element. You should also include the
+    following data attribute on the same element:
+
+      data-image-height-type="{{ section.settings.image_height_type }}"
+
+  Required:
+    - local_settings: { Object } Shopify settings object for block or section that is using the generator
+
+  endcomment
+
+  echo '--custom-height-desktop: [[chd]];' | replace: '[[chd]]', local_settings.custom_height_desktop
+  echo ' --custom-height-mobile: [[chm]];' | replace: '[[chm]]', local_settings.custom_height_mobile
+-%}

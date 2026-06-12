@@ -1,0 +1,429 @@
+{% doc %}
+  @prompt
+    Create a map section for the homepage that displays two location pins for physical store locations. The section should include an embedded interactive map (using Google Maps embed or similar), with two customizable pin locations that merchants can configure with addresses or coordinates. Each pin should have an editable label/name and address. The section should be visually clean and fit well on a homepage layout., when I try and paste the map url I get a message from the text box that says no results found, can you make it so there is a new line between the address and the phone number?
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-store-map-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 0;
+  }
+
+  .ai-store-map-container-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-store-map-header-{{ ai_gen_id }} {
+    padding: {{ block.settings.content_padding }}px;
+    text-align: center;
+  }
+
+  .ai-store-map-title-{{ ai_gen_id }} {
+    margin: 0 0 8px;
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-store-map-description-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+  }
+
+  .ai-store-map-iframe-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: {{ block.settings.map_aspect_ratio }}%;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .ai-store-map-iframe-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .ai-store-map-locations-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.content_padding }}px;
+    padding: {{ block.settings.content_padding }}px;
+  }
+
+  .ai-store-map-location-{{ ai_gen_id }} {
+    padding: 20px;
+    background-color: {{ block.settings.location_card_bg }};
+    border-radius: {{ block.settings.location_card_radius }}px;
+    border: 1px solid {{ block.settings.location_card_border }};
+  }
+
+  .ai-store-map-location-name-{{ ai_gen_id }} {
+    margin: 0 0 8px;
+    font-size: {{ block.settings.location_name_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-store-map-location-address-{{ ai_gen_id }} {
+    margin: 0 0 12px;
+    font-size: {{ block.settings.location_address_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+
+  .ai-store-map-location-phone-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.location_address_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+  }
+
+  .ai-store-map-placeholder-{{ ai_gen_id }} {
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    position: relative;
+  }
+
+  .ai-store-map-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+    max-height: 400px;
+  }
+
+  .ai-store-map-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-store-map-locations-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-store-map-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-store-map-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-store-map-container-{{ ai_gen_id }}">
+    {% if block.settings.title != blank or block.settings.description != blank %}
+      <div class="ai-store-map-header-{{ ai_gen_id }}">
+        {% if block.settings.title != blank %}
+          <h2 class="ai-store-map-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        {% if block.settings.description != blank %}
+          <p class="ai-store-map-description-{{ ai_gen_id }}">{{ block.settings.description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.map_embed_url != blank %}
+      <div class="ai-store-map-iframe-wrapper-{{ ai_gen_id }}">
+        <iframe
+          class="ai-store-map-iframe-{{ ai_gen_id }}"
+          src="{{ block.settings.map_embed_url }}"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Store locations map"
+        ></iframe>
+      </div>
+    {% else %}
+      <div class="ai-store-map-placeholder-{{ ai_gen_id }}">
+        {{ 'image' | placeholder_svg_tag }}
+        <div class="ai-store-map-empty-state-{{ ai_gen_id }}">
+          Next, add your Google Maps embed URL
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_location_cards %}
+      <div class="ai-store-map-locations-{{ ai_gen_id }}">
+        {% if block.settings.location_1_name != blank or block.settings.location_1_address != blank or block.settings.location_1_phone != blank %}
+          <div class="ai-store-map-location-{{ ai_gen_id }}">
+            {% if block.settings.location_1_name != blank %}
+              <h3 class="ai-store-map-location-name-{{ ai_gen_id }}">{{ block.settings.location_1_name }}</h3>
+            {% endif %}
+            {% if block.settings.location_1_address != blank %}
+              <p class="ai-store-map-location-address-{{ ai_gen_id }}">{{ block.settings.location_1_address }}</p>
+            {% endif %}
+            {% if block.settings.location_1_phone != blank %}
+              <p class="ai-store-map-location-phone-{{ ai_gen_id }}">{{ block.settings.location_1_phone }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if block.settings.location_2_name != blank or block.settings.location_2_address != blank or block.settings.location_2_phone != blank %}
+          <div class="ai-store-map-location-{{ ai_gen_id }}">
+            {% if block.settings.location_2_name != blank %}
+              <h3 class="ai-store-map-location-name-{{ ai_gen_id }}">{{ block.settings.location_2_name }}</h3>
+            {% endif %}
+            {% if block.settings.location_2_address != blank %}
+              <p class="ai-store-map-location-address-{{ ai_gen_id }}">{{ block.settings.location_2_address }}</p>
+            {% endif %}
+            {% if block.settings.location_2_phone != blank %}
+              <p class="ai-store-map-location-phone-{{ ai_gen_id }}">{{ block.settings.location_2_phone }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Store locations map",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Visit our stores"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Find us at one of our two locations"
+    },
+    {
+      "type": "header",
+      "content": "Map settings"
+    },
+    {
+      "type": "paragraph",
+      "content": "To get your Google Maps embed URL: 1) Go to Google Maps, 2) Search for your locations, 3) Click 'Share', 4) Click 'Embed a map', 5) Copy the URL from the iframe src attribute"
+    },
+    {
+      "type": "text",
+      "id": "map_embed_url",
+      "label": "Map embed URL"
+    },
+    {
+      "type": "range",
+      "id": "map_aspect_ratio",
+      "label": "Map height",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Location 1"
+    },
+    {
+      "type": "text",
+      "id": "location_1_name",
+      "label": "Name",
+      "default": "Downtown Store"
+    },
+    {
+      "type": "textarea",
+      "id": "location_1_address",
+      "label": "Address",
+      "default": "123 Main Street\nNew York, NY 10001"
+    },
+    {
+      "type": "text",
+      "id": "location_1_phone",
+      "label": "Phone number",
+      "default": "(555) 123-4567"
+    },
+    {
+      "type": "header",
+      "content": "Location 2"
+    },
+    {
+      "type": "text",
+      "id": "location_2_name",
+      "label": "Name",
+      "default": "Uptown Store"
+    },
+    {
+      "type": "textarea",
+      "id": "location_2_address",
+      "label": "Address",
+      "default": "456 Park Avenue\nNew York, NY 10022"
+    },
+    {
+      "type": "text",
+      "id": "location_2_phone",
+      "label": "Phone number",
+      "default": "(555) 987-6543"
+    },
+    {
+      "type": "header",
+      "content": "Location cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_location_cards",
+      "label": "Show location cards",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "location_card_bg",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "location_card_border",
+      "label": "Card border",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "location_card_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#161a15"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Container border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "label": "Content padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "location_name_size",
+      "label": "Location name size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "location_address_size",
+      "label": "Location address size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store locations map"
+    }
+  ]
+}
+{% endschema %}

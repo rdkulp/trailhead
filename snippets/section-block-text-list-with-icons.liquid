@@ -1,0 +1,112 @@
+{% liquid
+  comment
+    Renders a text list with icons. The display, and options, are slightly different depending on the 'type'.
+
+    Required parameters:
+      - type: {String} A string noting which type of block to render. Can be:
+        - 'default': When added as a block to general homepage sections
+        - 'product': When added as a block to product sections
+      - block: {Object} The parent block.
+  endcomment
+
+  assign icon_border_color_name = 'accent'
+  assign icon_text_color = '--color-accent-contrasting'
+
+  if block.settings.icon_border_color == 'current_text'
+    assign icon_text_color = '--color-background'
+
+    if block.settings.icon_border_style == 'filled'
+      assign icon_border_color_name = 'text'
+    else
+      assign icon_border_color_name = 'text-alpha-30'
+    endif
+  endif
+-%}
+
+{% capture items -%}
+    {%- assign item_count = 0 -%}
+
+    {% for i in (1..6) -%}
+      {% liquid
+        assign text_setting_string = 'text_' | append: i
+        assign icon_setting_string = 'icon_' | append: i
+        assign custom_icon_image_setting_string = 'custom_icon_image_' | append: i
+        assign icon_alignment_string = 'icon_alignment_' | append: i
+
+        assign text_setting = block.settings[text_setting_string]
+        assign icon_setting = block.settings[icon_setting_string]
+        assign custom_icon_image_setting = block.settings[custom_icon_image_setting_string]
+        assign icon_alignment_setting = block.settings[icon_alignment_string]
+
+        if text_setting != blank and icon_setting != blank or custom_icon_image_setting != blank
+          assign item_count = item_count | plus: 1
+        endif
+      -%}
+
+      {% render 'text-list-with-icons-item'
+        text: text_setting,
+        icon: icon_setting,
+        icon_border_type: block.settings.icon_border,
+        icon_alignment: icon_alignment_setting,
+        custom_icon_image: custom_icon_image_setting,
+        truncate_num_lines: block.settings.truncate_num_lines,
+        block: block
+      -%}
+    {%- endfor %}
+{%- endcapture %}
+
+{% capture content -%}
+  {% liquid
+    assign layout = 'list'
+
+    if block.settings.layout == 'grid' and item_count > 3
+      assign layout = 'grid'
+    endif
+  -%}
+
+  <div
+    class="text-list-with-icons__items icon-modifiers"
+    style="
+      --icon-border-color: var(--color-{{ icon_border_color_name }});
+      --icon-text-color: var({{ icon_text_color }});
+      --icon-max-width: {{ block.settings.icon_size | default: 16 }}px;
+      --icon-mobile-max-width: {{ block.settings.icon_size_mobile | default: 16 }}px;
+    "
+    data-layout="{{ layout }}"
+    data-icon-border="{{ block.settings.icon_border }}"
+    data-icon-fill="{{ block.settings.icon_border_style }}"
+    data-with-box="{{ block.settings.add_box }}"
+    data-with-dividers="{{ block.settings.add_dividers }}"
+  >
+    {{ items }}
+  </div>
+{%- endcapture %}
+
+{% if block.settings.display_as_collapsible_row -%}
+  {%- assign title = block.settings.title | default: block.settings.collapsible_row_title -%}
+
+  {%
+    render 'product-block-accordion',
+    block: block,
+    heading: title,
+    content: content,
+  -%}
+{%- else -%}
+  {% liquid
+    assign list_class = 'section-blocks__text-list-with-icons'
+
+    if type == 'product' or type == 'featured_product'
+      assign list_class = list_class | append: ' product__block product__block--medium'
+    endif
+  -%}
+
+  <div class="{{ list_class }}" data-type="{{ type }}">
+    <div class="text-list-with-icons" {{ block.shopify_attributes }}>
+      {% if block.settings.title != blank -%}
+        <h3 class="ff-heading fs-heading-6-base">{{ block.settings.title }}</h3>
+      {%- endif %}
+
+      {{ content }}
+    </div>
+  </div>
+{%- endif %}

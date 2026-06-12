@@ -1,0 +1,40 @@
+{%- liquid
+  case label_style
+    when 'body'
+      assign style = 'fs-body-100'
+    when 'accent'
+      assign style = 'fs-accent'
+    when 'accent_bold'
+      assign style = 'fs-accent-bold'
+    when 'body_bold'
+      assign style = 'fs-body-bold'
+    else
+      assign style = 'fs-body-100'
+  endcase
+-%}
+
+{% if text != blank and text != '' %}
+  <div
+    class="product-blocks__product-labels-item {{ style }}"
+    style="--icon-size: {{ icon_size }}px;"
+  >
+    {%- if custom_icon_image != blank -%}
+      <div
+        class="product-blocks__product-labels-item-custom-icon-image-wrapper"
+      >
+        {%-
+          render 'image',
+          image: custom_icon_image,
+          sizes: icon_size,
+        -%}
+      </div>
+    {%- else -%}
+      {% if icon and icon != 'none' %}
+        {% render 'icon-editorial', class: 'product-blocks__product-labels-item-icon', icon: icon, size: icon_size %}
+      {% endif %}
+    {% endif %}
+    <span class="product-blocks__product-labels-item-text">
+      {{ text }}
+    </span>
+  </div>
+{% endif %}

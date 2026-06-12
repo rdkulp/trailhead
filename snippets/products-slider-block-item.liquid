@@ -1,0 +1,76 @@
+{% liquid
+  comment
+    Renders a products slider block item.
+
+    Required parameters:
+      - slider_item_product: { Object } The slider item's product object.
+      - text-alignment: { String } The horizontal text alignment of the product details and
+        "Shop now" button.
+      - thumbnail_aspect_ratio: { String } The product image aspect ratio.
+      - show_vendor: { Boolean } Whether to show the vendor.
+      - show_price: { Boolean } Whether to show the price.
+      - show_button: { Boolean } Whether to show the "Shop now" button.
+      - button_style: { String } The button style.
+      - placeholder_name: { String } The name of the placeholder image to use.
+  endcomment
+
+  assign text_alignment_letter = text_alignment | slice: 0
+  assign item_class = 'product-slider__product ta-' | append: text_alignment_letter
+-%}
+
+<div class="{{ item_class }}">
+  {% comment %}
+    TODO: When we add this parent section back, make sure to use 'grid-slider-item-image-sizes' to pass a 'sizes'
+    attribute to this snippet.
+  {% endcomment %}
+  {%
+    render 'image'
+    image: slider_item_product.featured_image,
+    wrapper_class: 'product-slider-product__image',
+    aspect_ratio: thumbnail_aspect_ratio,
+    include_placeholder: true,
+    placeholder_name: placeholder_name,
+  %}
+
+  {% if show_vendor and slider_item_product.vendor -%}
+    <span class="product-slider-product__vendor fs-body-75 t-opacity-60">{{ slider_item_product.vendor }}</span>
+  {%- endif %}
+
+  {%- assign product_title_string = 'homepage.onboarding.product_title' | t -%}
+
+  <span class="product-slider-product__title fs-product fs-product-title">
+    {{ slider_item_product.title | default: product_title_string }}
+  </span>
+
+  {% if show_price -%}
+    {% liquid
+      assign price_class = 'product-slider-product__price t-opacity-60'
+
+      if settings.prices_font == 'heading'
+        assign price_class = price_class | append: ' ff-heading'
+      endif
+    -%}
+
+    <div class="{{ price_class }}">
+      {% if slider_item_product -%}
+        {% if slider_item_product.compare_at_price > slider_item_product.price -%}
+          <span class="product-slider-product-price__compare-price fs-body-60">
+            {{- slider_item_product.compare_at_price | money -}}
+          </span>
+        {%- endif %}
+
+        <span class="product-slider-product-price__price fs-body-60">{{ slider_item_product.price | money }}</span>
+      {%- else -%}
+        <span class="product-slider-product-price__price fs-body-60">{{ 9999 | money }}</span>
+      {%- endif %}
+    </div>
+  {%- endif %}
+
+  {% if show_button -%}
+    <div class="product-slider-product__button" data-text-alignment="{{ text_alignment }}">
+      <button type="button" class="btn btn--{{ button_style }}">
+        {{ 'shared.product_listings.shop_now' | t }}
+      </button>
+    </div>
+  {%- endif %}
+</div>

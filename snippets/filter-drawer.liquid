@@ -1,0 +1,115 @@
+{% liquid
+  comment
+    Renders the filter drawer.
+
+    Required parameters:
+      - resource: { Object } The resource being filtered (ie. collection or search).
+      - section_settings: { Object } The parent section's settings.
+      - active_filter_count: { Number } The number of active filters.
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+  endcomment
+
+  assign filters_valid = false
+
+  if resource.filters != empty and section_settings.show_filters
+    assign filters_valid = true
+  endif
+
+  assign filters_active = false
+
+  if active_filter_count > 0
+    assign filters_active = true
+  endif
+
+  assign results_count = 0
+
+  if resource.products_count != blank
+    assign results_count = resource.products_count
+  elsif resource.results_count != blank
+    assign results_count = resource.results_count
+  endif
+
+  assign filters_enabled = false
+
+  if section_settings.show_item_count or filters_valid
+    assign filters_enabled = true
+  endif
+-%}
+
+{% if filters_enabled -%}
+  {% if filters_valid -%}
+    <div
+      class="filter-drawer"
+      id="filter-drawer"
+      data-filter-drawer
+      data-filters-active="{{ filters_active }}"
+      aria-hidden="true"
+    >
+      <div class="filter-drawer__inner">
+        <div class="filter-drawer__content">
+          <div class="filter-drawer__header-form-wrapper" data-filter-form-wrapper>
+            <div class="filter-drawer__header">
+              <button
+                type="button"
+                class="filter-drawer__close"
+                aria-label="{{ 'general.accessibility.close_modal' | t }}"
+                data-close-drawer
+              >
+                {% render 'icon-button', icon: 'modal-drawer-close', icon_size: 24 %}
+              </button>
+
+              <h4
+                id="modal-{{ 'filters.title' | t }}"
+                class="filter-drawer__title ff-heading fs-heading-4-base"
+                data-filter-drawer-title
+              >
+                {{ 'filters.title' | t }}
+
+                {%- if filters_active -%}
+                  <span class="filter-drawer__title-count fs-heading-6-base">({{ active_filter_count }})</span>
+                {%- endif -%}
+              </h4>
+
+              <button
+                type="button"
+                class="filter-drawer__clear-all fs-body-100"
+                data-clear-all-filters
+              >
+                {{ 'filters.clear_all' | t }}
+              </button>
+            </div>
+
+            {% render 'filter-form',
+              resource: resource,
+              scope: 'drawer',
+              section_settings: section_settings,
+              custom_color_key_map: custom_color_key_map,
+              custom_color_value_map: custom_color_value_map
+            %}
+          </div>
+
+          <div class="filter-drawer__footer">
+            <button
+              type="button"
+              class="filter-drawer__button-apply btn btn--primary"
+              data-filter-drawer-apply
+            >
+              <span class="filter-drawer__button-apply-text">
+                {{ 'filters.view_results' | t }}
+
+                <span class="filter-drawer__apply-count">({{ results_count }})</span>
+              </span>
+
+              <span class="filter-drawer__button-apply-loading" data-loading>
+                {% render 'loader', foreground_color_var: '--color-btn-text' %}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-drawer__wash" data-filter-drawer-wash></div>
+    </div>
+  {%- endif %}
+{%- endif %}

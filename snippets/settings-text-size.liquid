@@ -1,0 +1,33 @@
+{%- liquid
+  comment
+    Returns the appropriate text-size class depending on the text "type" and "size".
+
+    Required parameters:
+
+    - type: { String } A string noting the text "type". Can be:
+      - "heading"
+      - "text"
+      - "accent"
+    - size: { Number } A number representing the text "size" (from the text size setting). Ranges from 1-8.
+  endcomment
+
+  assign index = size | minus: 1
+
+  case type
+    when 'heading'
+      assign heading_font_size_list = 'fs-heading-5-base, fs-heading-4-base, fs-heading-3-base, fs-heading-2-base, fs-heading-1-base, fs-heading-display-3, fs-heading-display-2, fs-heading-display-1'
+      assign heading_font_sizes = heading_font_size_list | split: ', '
+
+      echo heading_font_sizes[index]
+    when 'text'
+      assign text_font_size_list = 'fs-body-60, fs-body-75, fs-body-100, fs-body-150, fs-body-200, fs-body-250, fs-body-300, fs-body-350'
+      assign text_font_sizes = text_font_size_list | split: ', '
+
+      echo text_font_sizes[index]
+    when 'accent'
+      assign accent_font_size_list = 'fs-body-20, fs-body-25, fs-body-50, fs-body-60, fs-body-75, fs-body-100, fs-body-150, fs-body-200'
+      assign accent_font_sizes = accent_font_size_list | split: ', '
+
+      echo accent_font_sizes[index]
+  endcase
+-%}

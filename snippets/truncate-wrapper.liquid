@@ -1,0 +1,80 @@
+{%- comment -%}
+  Renders content in a container where it's truncated after a specific number of lines, and can be
+  expanded/collapsed with a button.
+
+  Required parameters:
+    - content: { String } The content to be rendered.
+    - num_lines: { Number } The number of lines to show before truncation.
+    - parent_id: { String } A number that can be associated with unique aria controls
+
+  Optional parameters:
+    - button_type: { String } The button type. Can be:
+      - 'text': Text buttons with "Show more"/"Show less"
+      - 'ellipsis': A "horizontal ellipsis"
+        - Content can only be expanded with this button type.
+    - button_inline: { Boolean } Whether the button should be inline with the content, or below it.
+{%- endcomment -%}
+
+{% liquid
+  assign truncate_class = 'truncate-wrapper truncate-wrapper--disabled'
+  assign num_lines = num_lines | default: 3
+  assign button_type = button_type | default: 'text'
+  assign button_inline = button_inline | default: false
+  assign button_class = 'truncate-wrapper__toggle btn'
+
+  if button_inline
+    assign truncate_class = truncate_class | append: ' truncate-wrapper--inline-button'
+    assign button_class = button_class | append: ' btn--small'
+  endif
+
+  if button_type == 'text'
+    assign button_class = button_class | append: ' btn--text'
+  endif
+
+  assign parent_id = parent_id | append: '-truncate'
+-%}
+
+{% capture button_content -%}
+  {% if button_type == 'text' -%}
+    <span class="truncate-wrapper__label truncate-wrapper__label--more">
+      {{- 'shared.truncation.show_more' | t -}}
+    </span>
+
+    <span class="truncate-wrapper__label truncate-wrapper__label--less">
+      {{- 'shared.truncation.show_less' | t -}}
+    </span>
+  {%- else -%}
+    {% comment %} TODO: Either design to update to 24x24 or icon liquid needs refactoring {% endcomment %}
+    <svg class="truncate-wrapper__icon" width="32" height="22" viewBox="0 0 32 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.181641" width="32" height="16" rx="8" fill="var(--ellipses-button-background)" fill-opacity="0.05" stroke="var(--ellipses-button-border)"/>
+      <rect x="6.18164" y="6" width="4" height="4" rx="2" fill="currentColor"/>
+      <rect x="14.1816" y="6" width="4" height="4" rx="2" fill="currentColor"/>
+      <rect x="22.1816" y="6" width="4" height="4" rx="2" fill="currentColor"/>
+    </svg>
+  {%- endif %}
+{%- endcapture %}
+
+<div
+  class="{{ truncate_class }}"
+  style="--num-lines: {{ num_lines }};"
+  data-content-expanded="false"
+  data-truncate-wrapper
+>
+  <div
+    class="truncate-wrapper__content rte non-page-rte"
+    data-truncate-wrapper-content
+    id="{{ parent_id }}"
+  >
+    {{ content }}
+  </div>
+
+  <button
+    type="button"
+    class="{{ button_class }}"
+    aria-controls="{{ parent_id }}"
+    aria-expanded="false"
+    data-truncate-toggle
+  >
+    {{ button_content }}
+  </button>
+</div>

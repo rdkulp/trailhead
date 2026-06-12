@@ -1,0 +1,87 @@
+{% liquid
+  comment
+    Renders a meganav.
+
+    Required parameters:
+      - meganav_settings: { Object } The settings object for the associated meganav block.
+      - meganav_type: { String } The type of meganav. Can be:
+        - 'meganav_simple'
+        - 'meganav_image_with_text'
+        - 'meganav_collection_images'
+        - 'meganav_promo_collections'
+        - 'meganav_promo_products'
+      - link: { Object } The current menu link.
+      - show_animations: { Boolean } Whether animations are enabled.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+  endcomment
+
+  assign show_collection_images = false
+
+  if meganav_type == 'meganav_collection_images'
+    assign show_collection_images = true
+  endif
+-%}
+
+{%- capture meganav_primary -%}
+  <div class="meganav__primary">
+    {% render 'meganav-nav',
+      meganav_settings: meganav_settings,
+      link: link,
+      show_collection_images: show_collection_images,
+      show_animations: settings.enable_section_animations
+    -%}
+  </div>
+{%- endcapture -%}
+
+{% liquid
+  capture meganav_secondary
+    case meganav_type
+      when 'meganav_image_with_text'
+        render 'meganav-promo-image-with-text', meganav_settings: meganav_settings, show_animations: settings.enable_section_animations
+      when 'meganav_promo_products'
+        render 'meganav-promoted-products', meganav_settings: meganav_settings, show_animations: settings.enable_section_animations
+      when 'meganav_promo_collections'
+        render 'meganav-promoted-collections', meganav_settings: meganav_settings, show_animations: settings.enable_section_animations
+    endcase
+  endcapture
+-%}
+
+<div
+  class="
+    meganav
+    {% if settings.enable_section_animations %}
+      animation
+      animation--dropdown
+    {% endif %}
+  "
+  data-submenu
+  data-hidden="true"
+  data-menu-handle="{{ menu }}"
+  data-meganav-type="{{ meganav_type }}"
+  style="
+    --nav-column-count: {{ meganav_settings.nav_column_count }};
+    {%- if meganav_settings.promo_width -%}
+    --secondary-width: {{ meganav_settings.promo_width }}%;
+    {%- endif -%}
+  "
+  {{ shopify_attributes }}
+>
+  <div class="meganav-inner">
+    {% if meganav_settings.header_area_heading != blank -%}
+      <header class="meganav__header">
+        <h3 class="ff-heading fs-heading-3-base">{{ meganav_settings.header_area_heading }}</h3>
+
+        {% if meganav_settings.header_link_link != blank and meganav_settings.header_link_label != blank -%}
+          <a class="btn btn--text-link ff-body" href="{{ meganav_settings.header_link_link }}">
+            {{- meganav_settings.header_link_label -}}
+          </a>
+        {%- endif %}
+      </header>
+    {%- endif %}
+
+    <div class="meganav__content ff-body">
+      {{ meganav_primary }}
+      {{ meganav_secondary }}
+    </div>
+  </div>
+</div>

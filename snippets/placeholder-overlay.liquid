@@ -1,0 +1,11 @@
+{%- comment -%}
+  This renders a placeholder overlay for use on top of 'settings-background-image'
+{%- endcomment -%}
+
+<div
+  class="image-overlay image-overlay__placeholder"
+  style="
+    --overlay-opacity: 50%;
+    --color-overlay-tint: {{ settings.color_image_overlay_tint }};
+  "
+></div>

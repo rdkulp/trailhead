@@ -1,0 +1,850 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product--default",
+      "blocks": {
+        "product_header": {
+          "type": "product_header",
+          "settings": {
+            "show_divider": false,
+            "show_vendor": true,
+            "show_sku": true,
+            "show_price": false,
+            "show_discount": false,
+            "discount_format": "percent_off",
+            "show_shop_pay": false,
+            "show_product_rating": false,
+            "show_rating_count": false,
+            "rating_style": "regular",
+            "show_sale_badge": false,
+            "show_new_badge": true,
+            "show_custom_badges": true,
+            "product_header_always_top_mobile": "above"
+          }
+        },
+        "product_labels": {
+          "type": "product_labels",
+          "settings": {
+            "heading": "",
+            "icon_size": 16,
+            "label_style": "block_heading",
+            "outline": false,
+            "icon_1": "checkmark-thin",
+            "text_1": "All Natural",
+            "icon_2": "checkmark-badge",
+            "text_2": "Cruelty Free",
+            "icon_3": "checkmark-badge",
+            "text_3": "Fragrance Free",
+            "icon_4": "none",
+            "text_4": "",
+            "icon_5": "none",
+            "text_5": "",
+            "icon_6": "none",
+            "text_6": ""
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "variant_popup_option": "Size",
+            "variant_popup_icon": "measuring-tape",
+            "variant_popup_text": "Size guide",
+            "variant_popup_page": "",
+            "swatch_size": "large",
+            "siblings_show_product_image": true,
+            "siblings_option_name": "Color",
+            "chip_layout": "4col"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "label": "Price:",
+            "show_discount": true,
+            "discount_format": "percent_off",
+            "show_shop_pay": false
+          }
+        },
+        "inventory_counter": {
+          "type": "inventory-counter",
+          "settings": {
+            "label": "",
+            "inventory_max": "100",
+            "low_inventory_threshold": "40",
+            "indicator_style": "text",
+            "show_status_bar": true,
+            "show_inventory_transfer": true,
+            "show_untracked_quantity": false
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "enable_sticky_atc_bar_desktop": true,
+            "enable_sticky_atc_bar_mobile": true,
+            "drop_shadow": "shadow",
+            "show_quantity_selector": true,
+            "show_quantity_in_cart": true,
+            "show_pickup_availability": true
+          }
+        },
+        "text-list-with-icons": {
+          "type": "text-list-with-icons",
+          "settings": {
+            "column_placement": "right",
+            "title": "",
+            "add_box": false,
+            "add_dividers": false,
+            "truncate_num_lines": "0",
+            "icon_border": "none",
+            "icon_border_style": "filled",
+            "icon_border_color": "accent",
+            "icon_size": 22,
+            "icon_size_mobile": 20,
+            "icon_1": "delivery-truck-left",
+            "icon_alignment_1": "icon_center",
+            "text_1": "<p>Free Shipping on orders over $50</p>",
+            "icon_2": "back-30",
+            "icon_alignment_2": "icon_top",
+            "text_2": "<p>Free returns or exchanges within 30 days of purchase.</p>",
+            "icon_3": "package",
+            "icon_alignment_3": "icon_center",
+            "text_3": "<p>Delivered within 7-10 business days</p>",
+            "icon_4": "smile-heart-eyes",
+            "icon_alignment_4": "icon_top",
+            "text_4": "<p>Satisfaction guaranteed. 30 days to try it & love it</p>",
+            "icon_5": "none",
+            "icon_alignment_5": "icon_center",
+            "text_5": "",
+            "icon_6": "none",
+            "icon_alignment_6": "icon_center",
+            "text_6": "",
+            "display_as_collapsible_row": false,
+            "expand_by_default": false
+          }
+        },
+        "image_with_text_fxPgaN": {
+          "type": "image_with_text",
+          "settings": {
+            "column_placement": "right",
+            "add_box": false,
+            "vertical_alignment": "center",
+            "image_size": 30,
+            "image_size_mobile": 25,
+            "image_position": "left",
+            "accent": "",
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent",
+            "title": "Hydrating Glow Mist Top Up",
+            "heading_font_size": 1,
+            "text": "<p>This award-winning SPF50+ Mist top up is perfect for topping up your SPF over your makeup (or wear on it's own) for glowy, protected skin all day long.</p>",
+            "text_font_size": 2,
+            "link": "",
+            "link_text": "View details",
+            "display_as_collapsible_row": false,
+            "expand_by_default": false,
+            "collapsible_row_title": "Collapsible row"
+          }
+        },
+        "image_with_text_BXzmyV": {
+          "type": "image_with_text",
+          "settings": {
+            "column_placement": "right",
+            "add_box": false,
+            "vertical_alignment": "center",
+            "image_size": 30,
+            "image_size_mobile": 25,
+            "image_position": "left",
+            "accent": "",
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent",
+            "title": "Glow Sunscreen Cream",
+            "heading_font_size": 1,
+            "text": "<p>This award-winning SPF50+ Mist top up is perfect for topping up your SPF over your makeup (or wear on it's own) for glowy, protected skin all day long.</p>",
+            "text_font_size": 2,
+            "link": "",
+            "link_text": "View details",
+            "display_as_collapsible_row": false,
+            "expand_by_default": false,
+            "collapsible_row_title": "Collapsible row"
+          }
+        },
+        "image_with_text_i8eKiC": {
+          "type": "image_with_text",
+          "settings": {
+            "column_placement": "right",
+            "add_box": false,
+            "vertical_alignment": "center",
+            "image_size": 30,
+            "image_size_mobile": 25,
+            "image_position": "left",
+            "accent": "",
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent",
+            "title": "Makeup Bag",
+            "heading_font_size": 1,
+            "text": "<p>This award-winning SPF50+ Mist top up is perfect for topping up your SPF over your makeup (or wear on it's own) for glowy, protected skin all day long.</p>",
+            "text_font_size": 2,
+            "link": "",
+            "link_text": "View details",
+            "display_as_collapsible_row": false,
+            "expand_by_default": false,
+            "collapsible_row_title": "Collapsible row"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "column_placement": "left",
+            "title": "Overview",
+            "text_font_class": "fs-body-100",
+            "truncate_num_lines": "4",
+            "display_as_collapsible_row": true,
+            "expand_by_default": true
+          }
+        },
+        "accordion-1": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "left",
+            "expand_by_default": false,
+            "heading": "Ingredients",
+            "content": "<p><strong>ACTIVE</strong>  Zinc Oxide 22.75% <br/><strong>INACTIVE</strong> Castor Oil, Ozokerite, C12 - C15 Alkyl Benzoate, Coco  caprylate caprate, Candelilla Wax, Carnauba Wax , Ozokerite, Mica, Theobroma seed butter</p>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "accordion-2": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "left",
+            "expand_by_default": false,
+            "heading": "How to use",
+            "content": "<p>Apply your usual SPF liberally onto a clean face. Swipe balms onto cheeks, lips & eyelids for layered SPF. Use over foundation, on cheeks & under eyeshadow. Perfect for no makeup, makeup days. </p><p>Avoid contact with eyes, wear protective clothing, hats and eyewear when exposed to the sun. Avoid prolonged exposure in the sun. Remember,  sunscreen is only one component of sun protection.</p>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "customer_support": {
+          "type": "customer_support",
+          "settings": {
+            "column_placement": "left",
+            "add_box": false,
+            "text_alignment": "left",
+            "header": "",
+            "text": "<p>Make it easy for customers to get in touch with you when they need help by providing clear links and contact information.</p>",
+            "image_size": 75,
+            "image_size_mobile": 75,
+            "image_circle_crop_enable": true,
+            "image_position": "left",
+            "button_1_text": "Call us",
+            "button_1_link": "",
+            "button_1_icon": "phone",
+            "button_1_button_style": "secondary",
+            "button_2_text": "Send us an email",
+            "button_2_link": "",
+            "button_2_icon": "envelope",
+            "button_2_button_style": "secondary",
+            "display_as_collapsible_row": true,
+            "expand_by_default": false,
+            "collapsible_row_title": "Got questions?"
+          }
+        },
+        "share": { "type": "share", "settings": { "enable_os_share": true } },
+        "spacer-1": {
+          "type": "spacer",
+          "settings": { "column_placement": "right", "space": 12 }
+        },
+        "complementary_products": {
+          "type": "complementary_products",
+          "disabled": true,
+          "settings": {
+            "column_placement": "right",
+            "heading": "Frequently paired with",
+            "enable_slider_desktop": true,
+            "enable_slider_mobile": true,
+            "max_products": 6,
+            "product_source": "app-recommendations",
+            "product_list": []
+          }
+        },
+        "spacer-2": {
+          "type": "spacer",
+          "settings": { "column_placement": "left", "space": 12 }
+        },
+        "payments_and_trust": {
+          "type": "payments_and_trust",
+          "settings": {
+            "column_placement": "left",
+            "add_box": false,
+            "content_alignment": "left",
+            "show_payment_icons": true,
+            "payment_heading": "",
+            "payment_heading_icon": "none",
+            "payment_text": "<p>100% Secure Payments: Your details are protected and safe with us.</p>",
+            "payment_text_position": "above",
+            "trust_heading": "",
+            "trust_heading_icon": "none",
+            "trust_text": "",
+            "trust_text_position": "above",
+            "image_size": 100,
+            "display_as_collapsible_row": false,
+            "expand_by_default": false,
+            "collapsible_row_title": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_header",
+        "product_labels",
+        "variant_picker",
+        "price",
+        "inventory_counter",
+        "buy_buttons",
+        "text-list-with-icons",
+        "image_with_text_fxPgaN",
+        "image_with_text_BXzmyV",
+        "image_with_text_i8eKiC",
+        "description",
+        "accordion-1",
+        "accordion-2",
+        "customer_support",
+        "share",
+        "spacer-1",
+        "complementary_products",
+        "spacer-2",
+        "payments_and_trust"
+      ],
+      "settings": {
+        "enable_sticky_product_details": false,
+        "show_breadcrumbs": true,
+        "show_navigation_buttons": false,
+        "gallery_size": "large",
+        "thumbnail_position": "bottom",
+        "thumbnail_size": "medium",
+        "enable_video_looping": true,
+        "enable_product_lightbox": true,
+        "show_thumbs_in_product_lightbox": true,
+        "image_aspect_ratio": "square",
+        "enable_multiple_variant_media": false,
+        "enable_gift_card_recipient": true,
+        "show_recommended_products_on_desktop": false,
+        "show_recommended_products_on_mobile": false,
+        "max_recommended_products": 3,
+        "enable_quick_view_recommended_products": true,
+        "recommended_products_heading": "You may like",
+        "section_style_enable_animation": true
+      }
+    },
+    "recommendations": {
+      "type": "recommended-products",
+      "disabled": true,
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "You may also like",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "button_2_button_link": "",
+        "button_2_button_label": "",
+        "button_2_button_style": "tertiary",
+        "button_position": "header",
+        "maximum_products": 8,
+        "num_columns": "4",
+        "num_columns_mobile": "2",
+        "enable_slider_desktop": true,
+        "enable_slider_mobile": true,
+        "section_style_spacing_top": 40,
+        "section_style_spacing_bottom": 40,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich-text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Your worth, our standard—Always the best.",
+            "heading_tag": "h3",
+            "heading_font_size": 4
+          }
+        },
+        "text": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Use this text area to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>",
+            "text_font_size": 3
+          }
+        },
+        "button": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_link": "",
+            "button_label": "Read more",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": ["heading", "text", "button"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "full",
+        "custom_content_width": 650,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 64,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "icon-with-text-columns": {
+      "type": "icon-with-text-columns",
+      "blocks": {
+        "column-1": {
+          "type": "column",
+          "settings": {
+            "icon": "cruelty-free",
+            "link": "",
+            "accent": "",
+            "heading": "Leaping Bunny Certified",
+            "text": "<p>Products and individual ingredients are never tested on animals</p>"
+          }
+        },
+        "column-2": {
+          "type": "column",
+          "settings": {
+            "icon": "water-drop-ripple",
+            "link": "",
+            "accent": "",
+            "heading": "Clean Ingredients",
+            "text": "<p>Infused with the perfect ratio of clean, safe ingredients.</p>"
+          }
+        },
+        "column-3": {
+          "type": "column",
+          "settings": {
+            "icon": "earth",
+            "link": "",
+            "accent": "",
+            "heading": "Climate Positive",
+            "text": "<p>Our products are forumlated with ingredients that are reef safe</p>"
+          }
+        }
+      },
+      "block_order": ["column-1", "column-2", "column-3"],
+      "settings": {
+        "icon_border": "circle",
+        "icon_border_style": "filled",
+        "icon_border_color": "accent",
+        "icon_size": 28,
+        "icon_size_mobile": 24,
+        "accent_font_size": 3,
+        "heading_font_size": 2,
+        "text_font_size": 3,
+        "desktop_alignment": "above_center",
+        "columns_per_row": 3,
+        "content_width": "custom",
+        "custom_width": 990,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 76,
+        "section_style_enable_animation": true
+      }
+    },
+    "image-hero": {
+      "type": "image-hero",
+      "blocks": {
+        "accent": {
+          "type": "accent",
+          "settings": {
+            "text": "What is Vegan collagen?",
+            "accent_font_size": 5,
+            "accent_divider_enable": false,
+            "accent_divider_color": "current"
+          }
+        },
+        "divider": {
+          "type": "divider",
+          "settings": { "thickness": 1, "space_above": 20, "space_below": 20 }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Vegan collagen is a plant-based alternative to traditional animal-derived collagen. Sourced from cruelty-free and sustainable ingredients, it promotes skin elasticity, hydration, and overall well-being without compromising your values. Embrace the beauty of plant-powered collagen for a radiant, ethically conscious glow.</p>",
+            "text_font_size": 5
+          }
+        },
+        "text-list-with-icons": {
+          "type": "text-list-with-icons",
+          "settings": {
+            "icon_border": "none",
+            "icon_border_style": "outlined",
+            "icon_border_color": "accent",
+            "icon_size": 16,
+            "icon_size_mobile": 16,
+            "icon_1": "checkmark-badge",
+            "icon_alignment_1": "icon_center",
+            "text_1": "<p>Skin Hydrating</p>",
+            "icon_2": "checkmark-badge",
+            "icon_alignment_2": "icon_center",
+            "text_2": "<p>Supports skin elasticity</p>",
+            "icon_3": "checkmark-badge",
+            "icon_alignment_3": "icon_center",
+            "text_3": "<p>Versatile and allergen-friendly</p>",
+            "icon_4": "none",
+            "icon_alignment_4": "icon_center",
+            "text_4": "",
+            "icon_5": "none",
+            "icon_alignment_5": "icon_center",
+            "text_5": "",
+            "icon_6": "none",
+            "icon_alignment_6": "icon_center",
+            "text_6": ""
+          }
+        }
+      },
+      "block_order": ["accent", "divider", "text", "text-list-with-icons"],
+      "settings": {
+        "enable_full_width": true,
+        "image_height_type": "custom",
+        "custom_height_desktop": "650px",
+        "custom_height_mobile": "80vh",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 450,
+        "text_position": "flex-start_center",
+        "text_position_mobile": "flex-start_flex-end",
+        "image_overlay_tint_opacity": 10,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": true,
+        "text_box_style": "solid_thin",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "collapsible-row-list": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Are your products vegan?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "How do I use your product?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "But what is vegan collagen and how does it work?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "How long does the product last for?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Is everything recyclable?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        }
+      },
+      "block_order": ["item-1", "item-2", "item-3", "item-4", "item-5"],
+      "settings": {
+        "center_content": false,
+        "preheading": "FAQs",
+        "heading": "Have questions? We've got answers.",
+        "heading_font_size": 5,
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "header_position": "left",
+        "item_heading_font": "heading",
+        "content_width": "custom",
+        "custom_width": 1200,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 68,
+        "section_style_spacing_bottom": 12,
+        "section_style_enable_animation": true
+      }
+    },
+    "multi-column": {
+      "type": "multi-column",
+      "blocks": {
+        "column-1": {
+          "type": "column",
+          "settings": {
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "heading_font_size": 2,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        },
+        "column-2": {
+          "type": "column",
+          "settings": {
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "",
+            "heading_tag": "h3",
+            "heading_font_size": 2,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "View FAQ",
+            "button_style": "secondary"
+          }
+        }
+      },
+      "block_order": ["column-1", "column-2"],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "num_columns": "2",
+        "column_spacing": 40,
+        "row_spacing": 24,
+        "column_alignment": "left",
+        "row_alignment": "top",
+        "num_columns_mobile": "1",
+        "column_spacing_mobile": 4,
+        "row_spacing_mobile": 4,
+        "column_alignment_mobile": "center",
+        "row_alignment_mobile": "top",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 72,
+        "section_style_enable_animation": true
+      }
+    },
+    "image-with-content": {
+      "type": "image-with-content",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Daily radiance, crafted just for you",
+            "heading_tag": "h3",
+            "heading_font_size": 5
+          }
+        },
+        "spacer": { "type": "spacer", "settings": { "space": 8 } },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Crafted with care and precision, our products are formulated with you in mind. We prioritize your well-being, delivering skincare solutions that align with your values and enhance your natural beauty. Discover a thoughtful approach to self-care with formulations tailored for your unique needs.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading", "spacer", "text"],
+      "settings": {
+        "media_width": 45,
+        "media_position_desktop": "right",
+        "media_position_mobile": "above",
+        "media_1_type": "image",
+        "media_1_aspect_ratio": "square",
+        "mobile_media_1_aspect_ratio": "square",
+        "media_1_focal_point": "center",
+        "mobile_media_1_focal_point": "center",
+        "media_caption": "",
+        "enable_media_2": false,
+        "media_2_type": "image",
+        "media_2_aspect_ratio": "square",
+        "mobile_media_2_aspect_ratio": "square",
+        "media_2_focal_point": "center",
+        "mobile_media_2_focal_point": "center",
+        "content_width": "custom",
+        "custom_width": 485,
+        "content_alignment": "left",
+        "color_scheme": "accent",
+        "override_with_custom_colors": false,
+        "override_color_text": "#141415",
+        "override_color_background": "#f0ea9c",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial-1": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Chloe W.",
+            "testimonial": "<p>\"I wanted to express my gratitude for creating a lip balm that goes beyond the ordinary. Not only does it keep my lips soft and moisturized, but the subtle hint of natural ingredients is delightful. The fact that it's vegan makes it even more appealing. It's clear that a lot of thought and care went into developing this product, and I'm thrilled to have it in my beauty arsenal.\"</p>",
+            "show_rating": true,
+            "rating": 4.5,
+            "featured_product": ""
+          }
+        },
+        "testimonial-2": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Jessica S.",
+            "testimonial": "<p>\"As someone who has struggled to find the right skincare match, stumbling upon your brand was a game-changer. The attention to detail in the formulation is evident, and my skin has never felt more balanced and nourished. John Davidson, I can't thank you enough for developing a product that understands and caters to diverse skincare needs.\"</p>",
+            "show_rating": true,
+            "rating": 5,
+            "featured_product": ""
+          }
+        },
+        "testimonial-3": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Alex B.",
+            "testimonial": "<p>\"Sunscreen has always been a tricky product for me. I've tried countless options, but they either felt too heavy or didn't provide adequate protection. Emily Rodriguez, your sunscreen is a revelation! It's lightweight, non-greasy, and I appreciate the commitment to cruelty-free ingredients. It's now an essential part of my daily routine, and I'm grateful to have found a product that genuinely works.\"</p>",
+            "show_rating": true,
+            "rating": 5,
+            "featured_product": ""
+          }
+        },
+        "testimonial-4": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Taylor L.",
+            "testimonial": "<p>\"I've struggled to find a mist that delivers both hydration and a refreshing feel. Your mist not only meets but exceeds my expectations. The scent is invigorating, and I love how it revitalizes my skin throughout the day. It's become a little luxury in my routine, and I'm so glad to have discovered it. Thank you for creating such a fantastic product\"</p>",
+            "show_rating": true,
+            "rating": 4,
+            "featured_product": ""
+          }
+        },
+        "testimonial-5": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Sarah M.",
+            "testimonial": "<p>\"I was skeptical about trying yet another skincare product, but after incorporating this into my routine, I'm genuinely amazed. The texture of my skin has improved, and I've noticed a radiant glow that I haven't experienced with other brands. Sarah Mitchell, your product has become my go-to for achieving that healthy, natural look without any compromises. Thank you for creating something that truly works.\"</p>",
+            "show_rating": true,
+            "rating": 4,
+            "featured_product": ""
+          }
+        }
+      },
+      "block_order": [
+        "testimonial-1",
+        "testimonial-2",
+        "testimonial-3",
+        "testimonial-4",
+        "testimonial-5"
+      ],
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "What our customers say",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_link": "",
+        "button_label": "Button",
+        "button_style": "primary",
+        "button_position": "header",
+        "num_columns": "4",
+        "truncate_num_lines": "4",
+        "show_verified_review_badges": false,
+        "product_thumbnail_size": 60,
+        "text_alignment": "left",
+        "enable_text_box": true,
+        "text_box_style": "border_thin",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "color_rating": "product_rating",
+        "color_scheme": "accent",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations",
+    "rich-text",
+    "icon-with-text-columns",
+    "image-hero",
+    "collapsible-row-list",
+    "multi-column",
+    "image-with-content",
+    "testimonials"
+  ]
+}

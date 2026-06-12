@@ -1,0 +1,43 @@
+{% liquid
+  comment
+    Renders navigation buttons for the scroll slider.
+
+    Note: The buttons are set to be absolutely positioned, so make sure your parent container
+    has "position: relative;".
+
+    Optional parameters:
+      is_small: { Boolean } Whether the nav buttons should be small.
+  endcomment
+
+  assign is_small = is_small | default: false
+-%}
+
+<div
+  class="scroll-slider-nav-button-wrapper scroll-slider-nav-button-wrapper--prev"
+  data-is-small="{{ is_small }}"
+>
+  <button
+    type="button"
+    class="scroll-slider-nav-button scroll-slider-nav-button--prev hidden"
+    title="{{ 'general.accessibility.previous' | t }}"
+    data-scroll-slider-prev-button
+    name="prev"
+  >
+    {% render 'icon', icon: 'arrow-short' %}
+  </button>
+</div>
+
+<div
+  class="scroll-slider-nav-button-wrapper scroll-slider-nav-button-wrapper--next"
+  data-is-small="{{ is_small }}"
+>
+  <button
+    type="button"
+    class="scroll-slider-nav-button scroll-slider-nav-button--next hidden"
+    title="{{ 'general.accessibility.next' | t }}"
+    data-scroll-slider-next-button
+    name="next"
+  >
+    {% render 'icon', icon: 'arrow-short' %}
+  </button>
+</div>

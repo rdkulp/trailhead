@@ -1,0 +1,170 @@
+{% liquid
+  comment
+    Renders navigation links.
+
+    Required parameters:
+      - menu: { Object } The associated menu links.
+      - interaction_type: { String } The interaction type to expand dropdown items. Can be:
+        - 'click'
+        - 'hover'
+
+    Optional parameters:
+      - announcement_bar_links: { Boolean } Whether the navigation is being rendered as part of
+        the announcement bar.
+      - blocks: { Object } The parent section's blocks (used for header meganavs).
+      - featured_link_label: { String } The featured link label (used for the header).
+  endcomment
+
+  assign handleized_featured_link_label = featured_link_label | handleize
+  assign links_list_class = 'navigation__links-list'
+
+  if announcement_bar_links
+    assign links_list_class = links_list_class | append: ' fs-body-50'
+  else
+    assign links_list_class = links_list_class | append: ' fs-navigation-base'
+  endif
+-%}
+
+<ul class="{{ links_list_class }}">
+  {% for link in menu -%}
+    {% liquid
+      assign has_children = false
+
+      if link.links.size > 0
+        assign has_children = true
+      endif
+
+      assign show_meganav = false
+
+      if blocks.size > 0
+        for block in blocks
+          assign meganav_trigger_handle = block.settings.title | handle | strip
+
+          if link.handle == meganav_trigger_handle and has_children
+            assign show_meganav = true
+            assign meganav_settings = block.settings
+            assign meganav_type = block.type
+            assign meganav_handle = meganav_trigger_handle
+            assign meganav_shopify_attributes = block.shopify_attributes
+          endif
+        endfor
+      endif
+    -%}
+
+    <li
+      {% if has_children %}
+        data-submenu-parent
+      {% endif %}
+    >
+      {% if has_children -%}
+        {% liquid
+          assign child_is_active = false
+
+          for link in link.links
+            if link.active
+              assign child_is_active = true
+              break
+            elsif link.links.size > 0
+              for link in link.links
+                if link.active
+                  assign child_is_active = true
+                  break
+                endif
+              endfor
+            endif
+          endfor
+
+          assign submenu_trigger_class = 'navigation__submenu-trigger'
+
+          if interaction_type == 'click'
+            assign submenu_trigger_class = submenu_trigger_class | append: ' no-transition'
+          endif
+
+          if announcement_bar_links
+            assign submenu_trigger_class = submenu_trigger_class | append: ' fs-body-50'
+          else
+            assign submenu_trigger_class = submenu_trigger_class | append: ' fs-navigation-base'
+          endif
+
+          if child_is_active
+            assign submenu_trigger_class = submenu_trigger_class | append: ' active'
+          endif
+
+          if link.handle == handleized_featured_link_label
+            assign submenu_trigger_class = submenu_trigger_class | append: ' featured-link'
+          endif
+        -%}
+
+        <a
+          href="{{ link.url }}"
+          class="{{ submenu_trigger_class }}"
+          data-link
+          data-parent
+          {% if show_meganav %}
+            data-meganav-trigger
+            data-meganav-type="{{ meganav_type }}"
+            data-meganav-handle="{{ meganav_handle }}"
+          {% else %}
+            data-dropdown-trigger
+          {% endif %}
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <span class="link-hover">
+            {{ link.title }}
+          </span>
+
+          <span class="navigation__links-icon">
+            {% render 'icon', icon: 'chevron-small' %}
+          </span>
+        </a>
+
+        {% if has_children -%}
+          {% if show_meganav -%}
+            <template data-template-key="meganav:{{ link.handle }}">
+              {% render 'meganav',
+                menu: link.handle,
+                meganav_settings: meganav_settings,
+                link: link,
+                shopify_attributes: meganav_shopify_attributes,
+                meganav_type: meganav_type
+              -%}
+            </template>
+          {%- else -%}
+            {% render 'navigation-submenu',
+              menu: link.links,
+              interaction_type: interaction_type,
+              depth: 1,
+              announcement_bar_links: announcement_bar_links
+            -%}
+          {%- endif %}
+        {%- endif %}
+      {%- else -%}
+        {% liquid
+          assign link_class = ''
+
+          if link.active
+            assign link_class = link_class | append: ' active'
+          endif
+
+          if link.handle == handleized_featured_link_label
+            assign link_class = link_class | append: ' featured-link'
+          endif
+        -%}
+
+        <a
+          href="{{ link.url }}"
+          class="{{ link_class }}"
+          data-link
+          {% if link.active -%}
+            aria-current="page"
+          {%- endif %}
+        >
+          <span class="link-hover">
+            {{ link.title }}
+          </span>
+        </a>
+      {%- endif %}
+    </li>
+  {%- endfor %}
+</ul>

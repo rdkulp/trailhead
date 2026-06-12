@@ -1,0 +1,74 @@
+{% liquid
+  comment
+    Renders a text list with icons item.
+
+    Required parameters:
+      - text: { String } The text to be displayed.
+      - icon: { String } The name of the icon to be displayed.
+      - icon_border_type: { String } The icon's border type. Can be:
+        - 'none'
+        - 'circle'
+        - 'square'
+      - custom_icon_image: { Object } A custom image to display instead of an icon.
+      - truncate_num_lines: { Number } The number of lines to show before truncating the text.
+      - block { Object } The parent block
+
+    Optional parameters:
+      - icon_alignment: { String } Either 'icon_top' or 'icon_center' for per row alignment control.
+  endcomment
+
+  assign truncate = false
+
+  if truncate_num_lines != blank and truncate_num_lines != '0'
+    assign truncate = true
+  endif
+-%}
+
+{% if text != blank -%}
+  <div
+    class="text-list-with-icons__item fs-body-100"
+    {% if icon_alignment != blank %}
+      data-icon-alignment="{{ icon_alignment }}"
+    {% endif %}
+  >
+    {%- unless icon == 'none' -%}
+      {% liquid
+        capture icon_content
+          if custom_icon_image != blank
+            assign aspect_ratio = 'natural'
+
+            if icon_border_type == 'circle'
+              assign aspect_ratio = 'square'
+            endif
+
+            render 'image', wrapper_class: 'icon-modifiers__icon', image: custom_icon_image, sizes: image_sizes, src_set_type: grid, aspect_ratio: aspect_ratio
+          elsif icon != 'none'
+            render 'icon-editorial', class: 'icon-modifiers__icon', icon: icon
+          endif
+        endcapture
+      -%}
+
+      <div class="text-list-with-icons__icon-wrapper">
+        {% if icon_content != blank -%}
+          <div class="text-list-with-icons__icon icon-modifiers__wrapper">
+            {{ icon_content }}
+          </div>
+        {%- endif %}
+      </div>
+    {%- endunless -%}
+
+    <div class="text-list-with-icons-item__text ta-l rte non-page-rte">
+      {% if truncate -%}
+        {% render 'truncate-wrapper',
+          content: text,
+          num_lines: truncate_num_lines,
+          button_type: 'ellipsis',
+          button_inline: true,
+          parent_id: block.id
+        -%}
+      {%- else -%}
+        {{ text }}
+      {%- endif %}
+    </div>
+  </div>
+{%- endif %}

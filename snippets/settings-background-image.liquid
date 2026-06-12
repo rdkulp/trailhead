@@ -1,0 +1,97 @@
+{% liquid
+  comment
+    Renders a background image.
+
+    Required parameters:
+      - local_settings: { Object } The settings object for the associated section or block.
+
+    Optional parameters:
+      - wrapper_class: { String } A custom class to apply to the wrapper element.
+      - wrapper_class_mobile: { String } A custom class to apply to the wrapper element (for mobile).
+      - sizes: { String } Image sizes to be used as the srcset for the 'image' snippet
+      - src_set_type: { String } A string noting the `srcset` type to help generate a more peformant
+        `srcset`. Can be:
+        - 'grid'
+        - 'full-width' (default)
+      - animate: { Boolean } Whether the image should be animated. Defaults to 'true'.
+      - placeholder_name: { String } The name of the Shopify placeholder SVG to use if no image is
+        supplied. Defaults to 'lifestyle-2'.
+      - placeholder_aspect_ratio: { String } A string noting the aspect ratio of the placeholder
+        image. Defaults to 'square'.
+      - background_image_fallback: { Object } A fallback image for the case that no image is
+        specified. Used for the collection banner.
+      - absolutely_position_image: { Boolean } Whether the image should be absolutely positioned in
+        the container.
+          - Defaults to 'true'.
+          - If this parameter isn't specified, we check for an `image_height_type`
+            setting in the local settings to infer a value.
+      - prioritize_loading: { Boolean } Passed to image snippet
+  endcomment
+
+  assign image_mobile = local_settings.background_image_mobile
+  assign image_desktop = local_settings.background_image | default: background_image_fallback
+  assign placeholder_name = placeholder_name | default: 'lifestyle-2'
+
+  unless aspect_ratio == 'externally_set'
+    assign placeholder_aspect_ratio = placeholder_aspect_ratio | default: 'square'
+  endunless
+
+  assign sizes = sizes | default: '100vw'
+  assign src_set_type = src_set_type | default: 'full-width'
+  assign animate = animate | default: true, allow_false: true
+
+  if absolutely_position_image == null
+    assign absolutely_position_image = true
+
+    if local_settings.image_height_type == 'adapt_to_image'
+      assign absolutely_position_image = false
+    endif
+  endif
+
+  assign image_wrapper = 'background-image'
+  assign mobile_image_wrapper = 'background-image background-image--mobile'
+
+  if wrapper_class != blank
+    assign image_wrapper = image_wrapper | append: ' ' | append: wrapper_class
+    assign mobile_image_wrapper = mobile_image_wrapper | append: ' ' | append: wrapper_class
+  endif
+
+  if wrapper_class_mobile != blank
+    assign mobile_image_wrapper = mobile_image_wrapper | append: ' ' | append: wrapper_class_mobile
+  endif
+-%}
+
+<div
+  class="background-image-container image-hero__image-container"
+  data-has-mobile-image="{% if local_settings.background_image_mobile != blank %}true{% else %}false{% endif %}"
+  data-absolutely-position-image="{{ absolutely_position_image }}"
+>
+  {%- if local_settings.background_image_mobile != blank -%}
+    {%- render 'image',
+      wrapper_class: mobile_image_wrapper,
+      image: image_mobile,
+      sizes: sizes,
+      focal_point: local_settings.background_image_mobile_focal_point,
+      object_fit: local_settings.background_image_media_fit,
+      placeholder_name: placeholder_name,
+      animate: animate,
+      src_set_type: src_set_type,
+      prioritize_loading: prioritize_loading
+    -%}
+  {%- endif -%}
+
+  {%- render 'image',
+    wrapper_class: image_wrapper,
+    image: image_desktop,
+    sizes: sizes,
+    focal_point: local_settings.background_image_focal_point,
+    object_fit: local_settings.background_image_media_fit,
+    include_placeholder: true,
+    placeholder_natural_fallback_ratio: placeholder_aspect_ratio,
+    placeholder_name: placeholder_name,
+    animate: animate,
+    src_set_type: src_set_type,
+    aspect_ratio: aspect_ratio,
+    prioritize_loading: prioritize_loading
+  -%}
+</div>

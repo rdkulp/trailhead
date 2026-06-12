@@ -1,0 +1,62 @@
+{% liquid
+  comment
+    Renders the 'View all' tile for various collection-related sections.
+
+    Required parameters:
+      - local_settings: { Object } The settings object for the parent section.
+  endcomment
+-%}
+
+{%- if local_settings.show_view_all_tile -%}
+  {% liquid
+    assign has_image = false
+
+    if local_settings.background_image != blank
+      assign has_image = true
+    endif
+  -%}
+
+  <div class="collection-view-all-tile-wrapper">
+    <div
+      class="collection-view-all-tile featured-collection-slider-grid-item animation--item"
+      data-color-scheme="{{ local_settings.color_scheme }}"
+      data-has-image="{{ has_image }}"
+      style="{% render 'settings-color-schemes-style', local_settings: local_settings %}"
+    >
+      {%- if has_image -%}
+        {% render 'settings-background-image',
+          local_settings: local_settings,
+          wrapper_class: 'collection-view-all-tile__image',
+          wrapper_class_mobile: 'collection-view-all-tile__image--mobile',
+          sizes: '(min-width: 960px) 50vw, 100vw'
+        %}
+        <div
+          class="collection-view-all-tile__overlay image-overlay animation--image-overlay"
+          {%- render 'settings-image-overlay', local_settings: local_settings -%}
+        ></div>
+        {%- capture image_overlay_style_for_content -%}
+          {%- render 'settings-image-overlay-style-for-content', local_settings: local_settings -%}
+        {%- endcapture -%}
+      {%- endif -%}
+
+      {% render 'settings-overlay-content',
+        local_settings: local_settings,
+        accent_font_size: 3,
+        heading_font_size: 2,
+        text_font_size: 3,
+        image_overlay_style_for_content: image_overlay_style_for_content,
+        wrapper_class: 'collection-view-all-tile__overlay-content',
+        show_view_all_button: true,
+        view_all_button_url: local_settings.collection.url,
+        view_all_button_label: local_settings.collection.title
+      %}
+      {%- unless local_settings.collection == blank -%}
+        <a
+          href="{{ local_settings.collection.url }}"
+          class="collection-view-all-tile__media-link"
+          aria-label="{{ local_settings.collection.title }}"
+        ></a>
+      {%- endunless -%}
+    </div>
+  </div>
+{%- endif -%}

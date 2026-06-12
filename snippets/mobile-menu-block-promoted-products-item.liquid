@@ -1,0 +1,94 @@
+{% liquid
+  comment
+    Renders a mobile menu promoted product item.
+
+    Required parameters:
+      - prod: { Product } The associated product object.
+      - layout: { String } The product item layout. Can be:
+        - "list"
+        - "columns"
+      - image_size: { String } The image size. Can be:
+        - "small"
+        - "large"
+      - image_aspect_ratio: { String } The image's aspect ratio.
+      - show_product_vendor: { Boolean } Whether to show the product vendor.
+      - show_product_subtitles: { Boolean} Whether to show product subtitles.
+      - show_product_prices: { Boolean } Whether to show prices.
+
+    Optional parameters:
+      - placeholder: { Boolean } Whether a placeholder is being rendered.
+  endcomment
+
+  if layout == 'list'
+    assign image_width = '79px'
+
+    if image_size == 'large'
+      assign image_width = '110px'
+    endif
+  else
+    assign image_width = '136px'
+
+    if image_size == 'large'
+      assign image_width = '196px'
+    endif
+  endif
+%}
+
+{% if image_aspect_ratio == 'use_theme_settings' %}
+  {% assign image_aspect_ratio = settings.product_listing_aspect_ratio %}
+{% endif %}
+
+{% liquid
+  assign placeholder_product_title = 'general.onboarding.product_title' | t
+  assign placeholder_product_subtitle = 'general.onboarding.product_subtitle' | t
+  assign placeholder_vendor = 'general.onboarding.product_vendor' | t
+%}
+
+{%- capture tag_name -%}
+  {%- if placeholder -%}div{%- else -%}a{%- endif -%}
+{%- endcapture -%}
+{%- capture conditional_attributes -%}
+  {%- unless placeholder -%}
+    href="{{ prod.url }}"
+    aria-label="{{ prod.title }}"
+  {%- endunless -%}
+{%- endcapture -%}
+
+<{{ tag_name }}
+  {{ conditional_attributes }}
+  class="mobile-menu-promoted-products-item"
+>
+  <div class="mobile-menu-promoted-products-item-image-wrap" style="width: {{ image_width }}">
+    {%- render 'image',
+      image: prod.featured_media,
+      sizes: image_width,
+      aspect_ratio: image_aspect_ratio,
+      include_placeholder: true
+    -%}
+  </div>
+
+  <div class="mobile-menu-promoted-products-item-text-wrap">
+    {% if show_product_vendor %}
+      {% if prod.vendor or placeholder %}
+        <h5 class="ff-body fs-body-60 mobile-menu-promoted-products-item-text-vendor t-subdued">
+          {{ prod.vendor | default: placeholder_vendor }}
+        </h5>
+      {% endif %}
+    {% endif %}
+    <h3 class="ff-body fs-body-100 mobile-menu-promoted-products-item-text-title">
+      {{ prod.title | default: placeholder_product_title }}
+    </h3>
+    {% if show_product_subtitles %}
+      {% if placeholder or prod.metafields.descriptors.subtitle != blank %}
+        <h4 class="ff-body fs-body-75 mobile-menu-promoted-products-item-text-subtitle t-subdued">
+          {{ prod.metafields.descriptors.subtitle | default: placeholder_product_subtitle }}
+        </h4>
+      {% endif %}
+    {% endif %}
+    {% if show_product_prices %}
+      <p class="fs-body-60 mobile-menu-promoted-products-item-text-price">
+        {%- render 'product-item-price', prod: prod, placeholder: placeholder -%}
+      </p>
+    {% endif %}
+  </div>
+</{{ tag_name }}>

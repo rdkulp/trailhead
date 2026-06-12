@@ -1,0 +1,59 @@
+{% liquid
+  comment
+    Renders the filter sidebar.
+
+    Required parameters:
+      - resource: { Object } The resource being filtered (ie. collection or search).
+      - section_settings: { Object } The parent section's settings.
+      - active_filter_count: { Number } The number of active filters.
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+  endcomment
+
+  assign filters_valid = false
+
+  if resource.filters != empty and section_settings.show_filters
+    assign filters_valid = true
+  endif
+
+  assign filters_enabled = false
+
+  if section_settings.show_item_count or filters_valid
+    assign filters_enabled = true
+  endif
+-%}
+
+{% if filters_enabled -%}
+  {% if filters_valid -%}
+    {% liquid
+      assign filter_sidebar_class = 'filter-sidebar'
+
+      if settings.enable_section_animations and section_settings.section_style_enable_animation
+        assign filter_sidebar_class = filter_sidebar_class | append: ' animation--filter-sidebar'
+        assign default_open = false
+
+        unless section_settings.collapse_filter_sidebar
+          assign default_open = true
+        endunless
+      endif
+    -%}
+
+    <div
+      class="{{ filter_sidebar_class }}"
+      id="filter-sidebar"
+      data-filter-sidebar
+      data-filter-form-wrapper
+      data-default-open="{{ default_open }}"
+      aria-hidden="{{ section_settings.collapse_filter_sidebar }}"
+    >
+      {% render 'filter-form',
+        resource: resource,
+        section_settings: section_settings,
+        scope: 'sidebar',
+        active_filter_count: active_filter_count,
+        custom_color_key_map: custom_color_key_map,
+        custom_color_value_map: custom_color_value_map
+      -%}
+    </div>
+  {%- endif %}
+{%- endif %}

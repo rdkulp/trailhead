@@ -1,0 +1,125 @@
+<form action="{{ routes.cart_url }}" method="post" data-form novalidate data-scroll-lock-ignore>
+  <div class="purchase-confirmation-popup__header">
+    <h3 class="purchase-confirmation-popup__heading ff-heading fs-heading-5-base animation--item">
+      {{ 'cart.general.confirmation_popup_heading' | t }}
+    </h3>
+
+    <button
+      class="purchase-confirmation-popup__close-button"
+      aria-label="{{ 'general.accessibility.close_modal' | t }}"
+    >
+      {%- render 'icon-button', icon: 'modal-drawer-close', icon_size: 24 -%}
+    </button>
+  </div>
+
+  {% for item in cart.items -%}
+    <div
+      class="purchase-confirmation-popup__item hidden animation--item"
+      data-product-key="{{ item.key }}"
+    >
+      <div class="purchase-confirmation-popup__product">
+        <div class="purchase-confirmation-popup__product-image">
+          {% render 'image',
+            image: item.image,
+            sizes: '120px',
+            aspect_ratio: settings.product_listing_aspect_ratio,
+            include_placeholder: true
+          -%}
+        </div>
+
+        <div class="purchase-confirmation-popup__product-details">
+          <h4 class="purchase-confirmation-popup__product-title fs-product-title">
+            {{ item.product.title }}
+          </h4>
+
+          {% unless item.product.has_only_default_variant -%}
+            <p class="purchase-confirmation-popup__product-variant fs-body-50 t-opacity-50">{{ item.variant.title }}</p>
+          {%- endunless %}
+
+          {% if item.selling_plan_allocation -%}
+            <p class="purchase-confirmation-popup__product-subscriptions fs-body-50 t-opacity-50">
+              {{ item.selling_plan_allocation.selling_plan.name }}
+            </p>
+          {%- endif %}
+
+          {%- assign property_count = item.properties | size -%}
+
+          {% if property_count > 0 -%}
+            <div class="purchase-confirmation-popup__item-properties fs-body-60 t-opacity-80">
+              {% liquid
+                for p in item.properties
+                  # Don't show property if property name begins with an underscore, or if property is blank.
+                  assign first_char = p.first | slice: 0
+
+                  unless p.last == blank or first_char == '_'
+                    capture property_content
+                      echo p.first | append: ': '
+
+                      if p.last contains '/uploads/'
+                        echo p.last | split: '/' | last | link_to: p.last
+                      else
+                        echo p.last
+                      endif
+                    endcapture
+
+                    echo '<p>'
+                    echo property_content | newline_to_br
+                    echo '</p>'
+                  endunless
+                endfor
+              -%}
+            </div>
+          {%- endif %}
+
+          <div class="purchase-confirmation-popup__product-price-wrapper ff-product-price fs-body-75">
+            {% liquid
+              assign is_sale_price = false
+              assign final_price = item.original_price | money
+
+              # First priority is to Shopify discounts, then compare at sale prices
+              if item.original_line_price > item.final_line_price or item.variant.compare_at_price > item.variant.price
+                assign is_sale_price = true
+
+                if item.original_line_price > item.final_line_price
+                  assign original_price = item.original_price | money
+                  assign final_price = item.final_price | money
+                else
+                  assign original_price = item.variant.compare_at_price | money
+                endif
+              endif
+
+              if section.settings.show_product_currency
+                assign final_price = final_price | append: ' ' | append: cart.currency.iso_code
+                assign original_price = original_price | append: ' ' | append: cart.currency.iso_code
+              endif
+            -%}
+
+            {%- if is_sale_price -%}
+              <s class="purchase-confirmation-popup__product-title-price">{{ original_price }}</s>
+            {%- endif -%}
+
+            <span
+              class="quick-cart__item-price"
+              data-is-sale="{{ is_sale_price }}"
+            >
+              {{ final_price }}
+            </span>
+
+            {% render 'unit-price', item: item %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endfor %}
+
+  <div class="purchase-confirmation-popup__footer animation--container">
+    <a
+      href="{{ routes.cart_url }}"
+      class="purchase-confirmation-popup__view-cart btn btn--full btn--primary no-transition"
+    >
+      {{ 'cart.general.view_cart' | t: cart_total: cart.item_count }}
+    </a>
+
+    {% render 'free-shipping-bar' %}
+  </div>
+</form>

@@ -1,0 +1,650 @@
+{%- liquid
+  assign font_heading = settings.font_heading
+  assign font_body = settings.font_body
+  assign font_logo = settings.font_logo
+
+  assign font_heading_bold = font_heading | font_modify: 'weight', '+300'
+  assign font_heading_light = font_heading | font_modify: 'weight', '-300'
+  assign font_body_bold = font_body | font_modify: 'weight', '+300'
+  assign font_body_italic = font_body | font_modify: 'style', 'italic'
+  assign font_body_bold_italic = font_body_bold | font_modify: 'style', 'italic'
+-%}
+
+<style>
+  {{ font_logo | font_face: font_display: 'swap' }}
+  {{ font_heading | font_face: font_display: 'swap' }}
+  {{ font_heading_bold | font_face: font_display: 'swap' }}
+  {{ font_heading_light | font_face: font_display: 'swap' }}
+  {{ font_body | font_face: font_display: 'swap' }}
+  {{ font_body_bold | font_face: font_display: 'swap' }}
+  {{ font_body_italic | font_face: font_display: 'swap' }}
+  {{ font_body_bold_italic | font_face: font_display: 'swap' }}
+
+  :root {
+    {% comment %}
+      ------------------------------------------------------------------------
+      COLORS
+      ------------------------------------------------------------------------
+    {% endcomment %}
+    {% liquid
+      assign brightness_background = settings.color_background_body | color_brightness
+      if brightness_background > 127
+        assign color_background_meta = settings.color_background_body | color_darken: 3
+      else
+        assign color_background_meta = settings.color_background_body | color_lighten: 3
+      endif
+
+      assign brightness_primary_button = settings.color_button_primary_background | color_brightness
+      if brightness_primary_button > 60
+        assign color_background_button_primary_hover = settings.color_button_primary_background | color_darken: 7
+      else
+        assign color_background_button_primary_hover = settings.color_button_primary_background | color_lighten: 7
+      endif
+
+      assign brightness_secondary_button = settings.color_button_secondary_background | color_brightness
+      if brightness_secondary_button > 60
+        assign color_background_button_secondary_hover = settings.color_button_secondary_background | color_darken: 7
+      else
+        assign color_background_button_secondary_hover = settings.color_button_secondary_background | color_lighten: 7
+      endif
+    %}
+
+    {% comment %}
+      ---------------------------------------
+      GENERAL
+      ---------------------------------------
+    {% endcomment %}
+    --color-text: {{ settings.color_text }};
+    {%- render 'text-color-alpha-vars', color: settings.color_text -%}
+    --color-text-link: {{ settings.color_text_link }};
+    --color-text-error: #D02F2E; {% comment %} TO-DO: switch to something dynamic {% endcomment %}
+    --color-text-success: #478947; {% comment %} TO-DO: switch to something dynamic {% endcomment %}
+    --color-background-success: {{'#478947' | color_modify: 'alpha', 0.1 }}; {% comment %} TO-DO: switch to something dynamic {% endcomment %}
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    --color-background: {{ settings.color_background_body }};
+    --color-background-alpha-80: {{ settings.color_background_body | color_modify: 'alpha', 0.8 }};
+    {% comment %} TODO: rename these to be -alpha-xx like above {% endcomment %}
+    --color-background-semi-transparent-80: {{ settings.color_background_body | color_modify: 'alpha', 0.8 }};
+    --color-background-semi-transparent-90: {{ settings.color_background_body | color_modify: 'alpha', 0.9 }};
+
+    --color-background-transparent: {{ settings.color_background_body | color_modify: 'alpha', 0 }};
+    --color-border: {{ settings.color_border }};
+    --color-border-meta: {{ settings.color_border | color_modify: 'alpha', 0.6 }};
+    --color-overlay: rgba(0, 0, 0, 0.8);
+
+    --color-accent: {{ settings.color_accent }};
+    --color-accent-contrasting: {{ settings.color_accent_contrasting }};
+
+    --color-background-meta: {{ color_background_meta }};
+    --color-background-meta-alpha: {{ color_background_meta | color_modify: 'alpha', 0.6 }};
+    --color-background-darker-meta: {{ color_background_meta | color_darken: 5 }};
+    --color-background-darker-meta-alpha: {{ color_background_meta | color_darken: 5 | color_modify: 'alpha', 0.6 }};
+    --color-background-placeholder: {{ color_background_meta | color_darken: 5 }};
+    --color-background-placeholder-lighter: {{ color_background_meta | color_darken: 2 }};
+    --color-foreground-placeholder: {{ settings.color_text | color_modify: 'alpha', 0.4 }};
+
+    {% comment %}
+      ---------------------------------------
+      BUTTONS - PRIMARY
+      ---------------------------------------
+    {% endcomment %}
+    --color-button-primary-text: {{ settings.color_button_primary_text }};
+    --color-button-primary-text-alpha-30: {{ settings.color_button_primary_text | color_modify: 'alpha', 0.3 }};
+    --color-button-primary-background: {{ settings.color_button_primary_background }};
+    --color-button-primary-background-alpha: {{ settings.color_button_primary_background | color_modify: 'alpha', 0.6 }};
+    --color-button-primary-background-darken-5: {{ settings.color_button_primary_background | color_darken: 5 }};
+    --color-button-primary-background-hover: {{ color_background_button_primary_hover }};
+
+    {% comment %}
+      ---------------------------------------
+      BUTTONS - SECONDARY
+      ---------------------------------------
+    {% endcomment %}
+    --color-button-secondary-text: {{ settings.color_button_secondary_text }};
+    --color-button-secondary-text-alpha-30: {{ settings.color_button_secondary_text | color_modify: 'alpha', 0.3 }};
+    --color-button-secondary-background: {{ settings.color_button_secondary_background }};
+    --color-button-secondary-background-alpha: {{ settings.color_button_secondary_background | color_modify: 'alpha', 0.6 }};
+    --color-button-secondary-background-darken-5: {{ settings.color_button_secondary_background | color_darken: 5 }};
+    --color-button-secondary-background-hover: {{ color_background_button_secondary_hover }};
+    --color-border-button-secondary: {{ settings.color_button_secondary_background }};
+
+    {% comment %}
+      ---------------------------------------
+      BUTTONS - TERTIARY
+      ---------------------------------------
+    {% endcomment %}
+    --color-button-tertiary-text: var(--color-text);
+    --color-button-tertiary-text-alpha-30: {{ settings.color_text | color_modify: 'alpha', 0.3 }};
+    --color-button-tertiary-text-disabled: var(--color-text-alpha-50);
+    --color-button-tertiary-background: var(--color-background);
+    --color-button-tertiary-background-darken-5: {{ settings.color_background_body | color_darken: 5 }};
+    --color-border-button-tertiary: var(--color-text-alpha-40);
+    --color-border-button-tertiary-hover: var(--color-text-alpha-80);
+    --color-border-button-tertiary-disabled: var(--color-text-alpha-20);
+
+    {% comment %}
+      ---------------------------------------
+      BUTTONS - FLOATING ACTION BUTTONS
+      ---------------------------------------
+    {% endcomment %}
+    --color-background-button-fab: {{ settings.color_button_floating_action_background }};
+    --color-foreground-button-fab: {{ settings.color_button_floating_action_foreground }};
+    --color-foreground-button-fab-alpha-05: {{ settings.color_button_floating_action_foreground | color_modify: 'alpha', 0.05 }};
+
+    {% comment %}
+      ---------------------------------------
+      DIVIDER
+      ---------------------------------------
+    {% endcomment %}
+    --divider-height: 1px;
+    --divider-margin-top: 20px;
+    --divider-margin-bottom: 20px;
+
+    {% comment %}
+      ---------------------------------------
+      FORMS
+      ---------------------------------------
+    {% endcomment %}
+    --color-border-input: {{ settings.color_form_input_text | color_modify: 'alpha', 0.4 }};
+    --color-text-input: {{ settings.color_form_input_text }};
+    --color-text-input-alpha-3: {{ settings.color_form_input_text | color_modify: 'alpha', 0.03 }};
+    --color-text-input-alpha-5: {{ settings.color_form_input_text | color_modify: 'alpha', 0.05 }};
+    --color-text-input-alpha-10: {{ settings.color_form_input_text | color_modify: 'alpha', 0.1 }};
+    --color-background-input: {{ settings.color_form_background }};
+
+    {% if settings.popup_forms_color_style == 'transparent' %}
+      --color-border-input-popups-drawers: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.4 }};
+      --color-text-input-popups-drawers: {{ settings.color_popups_drawer_text }};
+      --color-text-input-popups-drawers-alpha-5: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.05 }};
+      --color-text-input-popups-drawers-alpha-10: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.1 }};
+      --color-background-input-popups-drawers: {{ settings.color_popups_drawer_background }};
+    {% else %}
+      --color-border-input-popups-drawers: {{ settings.color_form_input_text | color_modify: 'alpha', 0.4 }};
+      --color-text-input-popups-drawers: {{ settings.color_form_input_text }};
+      --color-text-input-popups-drawers-alpha-5: {{ settings.color_form_input_text | color_modify: 'alpha', 0.05 }};
+      --color-text-input-popups-drawers-alpha-10: {{ settings.color_form_input_text | color_modify: 'alpha', 0.1 }};
+      --color-background-input-popups-drawers: {{ settings.color_form_background }};
+    {% endif %}
+
+    {% comment %} Shopify pay specific variable {% endcomment %}
+    --payment-terms-background-color: {{ color_background_meta }};
+
+
+    {% comment %}
+      ---------------------------------------
+      PRODUCT BADGES
+      ---------------------------------------
+    {% endcomment %}
+    --color-background-sale-badge: {{ settings.color_background_sale_badge }};
+    --color-text-sale-badge: {{ settings.color_text_sale_badge }};
+    --color-border-sale-badge: {{ settings.color_background_sale_badge }};
+    --color-background-sold-badge: {{ settings.color_background_sold_badge }};
+    --color-text-sold-badge: {{ settings.color_text_sold_badge }};
+    --color-border-sold-badge: {{ settings.color_background_sold_badge }};
+    --color-background-new-badge: {{ settings.color_background_new_badge }};
+    --color-text-new-badge: {{ settings.color_text_new_badge }};
+    --color-border-new-badge: {{ settings.color_background_new_badge }};
+
+    {% comment %}
+      ---------------------------------------
+      HEADER
+      ---------------------------------------
+    {% endcomment %}
+    --color-text-header: {{ settings.color_header_text }};
+    --color-text-header-half-transparent: {{ settings.color_header_text | color_modify: 'alpha', 0.5 }};
+    --color-background-header: {{ settings.color_header_background }};
+    --color-background-header-transparent: {{ settings.color_header_background | color_modify: 'alpha', 0 }};
+    --color-shadow-header: rgba(0, 0, 0, 0.15);
+    --color-background-cart-dot: {{ settings.color_header_cart_dot }};
+    --color-text-cart-dot: {{ settings.color_header_cart_dot_text }};
+    --color-background-search-field: {{ settings.color_header_search_field_background }};
+    --color-border-search-field: {{ settings.color_header_search_field_border }};
+    --color-text-search-field: {{ settings.color_header_search_field_text }};
+
+
+    {% comment %}
+      ---------------------------------------
+      MAIN MENU
+      ---------------------------------------
+    {% endcomment %}
+    --color-text-main-menu: {{ settings.color_main_menu_text }};
+    --color-background-main-menu: {{ settings.color_main_menu_background }};
+
+
+    {% comment %}
+      ---------------------------------------
+      FOOTER
+      ---------------------------------------
+    {% endcomment %}
+    --color-background-footer: {{ settings.color_background_footer }};
+    --color-text-footer: {{ settings.color_text_footer }};
+    --color-text-footer-subdued: {{ settings.color_text_footer | color_modify: 'alpha', 0.7 }};
+
+
+    {% comment %}
+      ---------------------------------------
+      PRODUCTS
+      ---------------------------------------
+    {% endcomment %}
+    --color-products-sale-price: {{ settings.color_products_sale_price }};
+    --color-products-sale-price-alpha-05: {{ settings.color_products_sale_price | color_modify: 'alpha', 0.05 }};
+    --color-products-rating-star: {{ settings.color_products_rating_star }};
+
+    {% comment %}
+      ---------------------------------------
+      PRODUCTS INVENTORY STATUS
+      ---------------------------------------
+    {% endcomment %}
+    --color-products-stock-good: {{ settings.color_products_stock_good }};
+    --color-products-stock-medium: {{ settings.color_products_stock_medium }};
+    --color-products-stock-bad: {{ settings.color_products_stock_bad }};
+
+    {% comment %}
+      ---------------------------------------
+      FREE SHIPPING BAR
+      ---------------------------------------
+    {% endcomment %}
+    --color-free-shipping-bar-below-full: {{ settings.color_free_shipping_bar_below_full }};
+    --color-free-shipping-bar-full: {{ settings.color_free_shipping_bar_full }};
+
+    {% comment %}
+      ---------------------------------------
+      POPUPS & DRAWERS
+      ---------------------------------------
+    {% endcomment %}
+    --color-text-popups-drawers: {{ settings.color_popups_drawer_text }};
+    --color-text-popups-drawers-alpha-03: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.03 }};
+    --color-text-popups-drawers-alpha-05: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.05 }};
+    --color-text-popups-drawers-alpha-10: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.1 }};
+    --color-text-popups-drawers-alpha-20: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.2 }};
+    --color-text-popups-drawers-alpha-30: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.3 }};
+    --color-text-popups-drawers-alpha-60: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.6 }};
+    --color-text-popups-drawers-alpha-80: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.8 }};
+    --color-text-popups-drawers-no-transparency-alpha-10: {{ settings.color_popups_drawer_text | color_mix: settings.color_popups_drawer_background, 10 }};
+    --color-sale-price-popups-drawers: {{ settings.color_popups_drawer_sale_price }};
+    --color-sale-price-popups-drawers-alpha-05: {{ settings.color_popups_drawer_sale_price | color_modify: 'alpha', 0.05 }};
+    --color-links-popups-drawers: {{ settings.color_popups_drawer_links }};
+    --color-background-popups-drawers: {{ settings.color_popups_drawer_background }};
+    --color-background-popups-drawers-alpha-0: {{ settings.color_popups_drawer_background | color_modify: 'alpha', 0 }};
+    --color-background-popups-drawers-alt: {{ settings.color_popups_drawer_alternate_background }};
+    --color-border-popups-drawers: {{ settings.color_popups_drawer_text | color_modify: 'alpha', 0.15 }};
+    --color-border-popups-drawers-alt: {{ settings.color_popups_drawer_alternate_background | color_darken: 10 }};
+
+    {% comment %}
+      ------------------------------------------------------------------------
+      TYPOGRAPHY
+      ------------------------------------------------------------------------
+    {% endcomment %}
+
+    {% liquid
+      # fonts that opt in to be capitialized will be adjusted to 10% less font size
+      assign capitalized_font_adjustment_multiplier = 0.93
+
+      # This represents 4% and will be used whereever a font is capitalized
+      assign capitalized_letter_spacing = '0.04em'
+    %}
+
+    {% comment %}
+      ---------------------------------------
+      LOGO TYPOGRAPHY
+      ---------------------------------------
+    {% endcomment %}
+    --font-logo: {{ font_logo.family }}, {{ font_logo.fallback_families }};
+    --font-logo-weight: {{ font_logo.weight }};
+    --font-logo-style: {{ font_logo.style }};
+    {% if settings.capitalize_logo %}
+      --logo-text-transform: uppercase;
+    {% endif %}
+    --logo-letter-spacing: {{ settings.logo_letter_spacing | times: 0.001 | append: 'em' }};
+
+    --logo-font-size: {% render 'font-size-clamp' multiplier: 1, desktop_size: settings.logo_base_size, mobile_scale: settings.logo_mobile_base_scale %};
+
+    {% comment %}
+      ---------------------------------------
+      HEADING TYPOGRAPHY
+      ---------------------------------------
+    {% endcomment %}
+    --line-height-heading: 1.15;
+    --line-height-subheading: 1.30;
+    --font-heading: {{ font_heading.family }}, {{ font_heading.fallback_families }};
+    --font-heading-weight: {{ font_heading.weight }};
+    --font-heading-bold-weight: {{ font_heading_bold.weight | default: 'bold' }};
+    --font-heading-style: {{ font_heading.style }};
+    --font-heading-base-size: {{ settings.heading_base_size | append: 'px' }};
+    {% if settings.capitalize_headings %}
+      --font-heading-text-transform: uppercase;
+      --font-heading-base-letter-spacing: {{ capitalized_letter_spacing }};
+    {% endif %}
+
+    {% liquid
+      assign heading_display_1_multiplier = 1.5
+      assign heading_display_2_multiplier = 1.333
+      assign heading_display_3_multiplier = 1.1666
+      assign heading_1_multiplier = 1
+      assign heading_2_multiplier = 0.875
+      assign heading_3_multiplier = 0.775
+      assign heading_4_multiplier = 0.65
+      assign heading_5_multiplier = 0.55
+      assign heading_6_multiplier = 0.5
+    %}
+
+    --font-size-heading-display-1: {% render 'font-size-clamp' multiplier: heading_display_1_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-display-2: {% render 'font-size-clamp' multiplier: heading_display_2_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-display-3: {% render 'font-size-clamp' multiplier: heading_display_3_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-1-base: {% render 'font-size-clamp' multiplier: heading_1_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-2-base: {% render 'font-size-clamp' multiplier: heading_2_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-3-base: {% render 'font-size-clamp' multiplier: heading_3_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-4-base: {% render 'font-size-clamp' multiplier: heading_4_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-5-base: {% render 'font-size-clamp' multiplier: heading_5_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+    --font-size-heading-6-base: {% render 'font-size-clamp' multiplier: heading_6_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+
+    {% comment %}
+      ---------------------------------------
+      BODY TYPOGRAPHY
+      ---------------------------------------
+    {% endcomment %}
+    --line-height-body: 1.5;
+    --font-body: {{ font_body.family }}, {{ font_body.fallback_families }};
+    --font-body-weight: {{ font_body.weight }};
+    --font-body-style: {{ font_body.style }};
+    --font-body-italic: {{ font_body_italic.style | default: 'italic' }};
+    --font-body-bold-weight: {{ font_body_bold.weight | default: 'bold' }};
+    --font-body-base-size: {{ settings.body_base_size | append: 'px' }};
+
+    {% liquid
+      assign body_400_multiplier = 1.666
+      assign body_350_multiplier = 1.555
+      assign body_300_multiplier = 1.444
+      assign body_250_multiplier = 1.333
+      assign body_200_multiplier = 1.222
+      assign body_150_multiplier = 1.111
+      assign body_100_multiplier = 1
+      assign body_75_multiplier = 0.888
+      assign body_60_multiplier = 0.8222
+      assign body_50_multiplier = 0.777
+      assign body_25_multiplier = 0.722
+      assign body_20_multiplier = 0.666
+    %}
+
+    --font-size-body-400: {% render 'font-size-clamp' multiplier: body_400_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-350: {% render 'font-size-clamp' multiplier: body_350_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-300: {% render 'font-size-clamp' multiplier: body_300_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-250: {% render 'font-size-clamp' multiplier: body_250_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-200: {% render 'font-size-clamp' multiplier: body_200_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-150: {% render 'font-size-clamp' multiplier: body_150_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-100: {% render 'font-size-clamp' multiplier: body_100_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-75: {% render 'font-size-clamp' multiplier: body_75_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    --font-size-body-60: {% render 'font-size-clamp' multiplier: body_60_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+    --font-size-body-50: {% render 'font-size-clamp' multiplier: body_50_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+    --font-size-body-25: {% render 'font-size-clamp' multiplier: body_25_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+    --font-size-body-20: {% render 'font-size-clamp' multiplier: body_20_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+
+    {% comment %}
+      ---------------------------------------
+      NAVIGATION TYPOGRAPHY LOGIC
+      ---------------------------------------
+    {% endcomment %}
+
+    --font-size-navigation-base: {{ settings.navigation_base_size | append: 'px' }};
+
+    {% comment %} Navigation font {% endcomment %}
+    {% if settings.navigation_font == 'body' %}
+      --font-navigation: var(--font-body);
+
+      {% if settings.bold_navigation -%}
+        --font-weight-navigation: var(--font-body-bold-weight);
+      {%- else -%}
+        --font-weight-navigation: var(--font-body-weight);
+      {%- endif %}
+    {% else %}
+      --font-navigation: var(--font-heading);
+
+      {% if settings.bold_navigation -%}
+        --font-weight-navigation: var(--font-heading-bold-weight);
+      {%- else -%}
+        --font-weight-navigation: var(--font-heading-weight);
+      {%- endif %}
+    {% endif %}
+
+    {% if settings.capitalize_navigation %}
+      --font-navigation-base-text-transform: uppercase;
+      --font-navigation-base-letter-spacing: {{ capitalized_letter_spacing }};
+    {% endif %}
+
+    {% comment %}
+      ---------------------------------------
+      BUTTON TYPOGRAPHY
+      ---------------------------------------
+    {% endcomment %}
+
+    --line-height-button: 1.4;
+
+    {% comment %}
+      Different button sizes have different font sizes (ie. X-Small: 75, Small: 100, Normal: 150).
+      If buttons are capitalized they will be scaled down by 10%. Mobile scale will always relate
+      to body mobile scale regardless of font.
+    {% endcomment %}
+    {% if settings.capitalize_buttons %}
+      --font-button-text-transform: uppercase;
+      {% liquid
+        assign button_multiplier = body_100_multiplier | times: capitalized_font_adjustment_multiplier
+        assign small_button_multiplier = body_75_multiplier | times: capitalized_font_adjustment_multiplier
+        assign x-small_button_multiplier = body_75_multiplier | times: capitalized_font_adjustment_multiplier
+      %}
+      --font-size-button: {% render 'font-size-clamp' multiplier: button_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-button-small: {% render 'font-size-clamp' multiplier: small_button_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-button-x-small: {% render 'font-size-clamp' multiplier: x-small_button_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    {% else %}
+      --font-size-button: var(--font-size-body-100);
+      --font-size-button-small: var(--font-size-body-75);
+      --font-size-button-x-small: var(--font-size-body-75);
+    {% endif %}
+
+    {% comment %} Button font {% endcomment %}
+    --font-weight-text-button: var(--font-body-weight);
+
+    {% if settings.buttons_font == 'body' %}
+      --font-button: var(--font-body);
+
+      {% comment %} Handle button font body weight  {% endcomment %}
+      {% if settings.bold_buttons %}
+        --font-weight-button: var(--font-body-bold-weight);
+      {% else %}
+        --font-weight-button: {{ font_body.weight }};
+      {% endif %}
+    {% else %}
+      --font-button: var(--font-heading);
+
+      {% comment %} Button font heading weight {% endcomment %}
+      {% if settings.bold_buttons %}
+        --font-weight-button: var(--font-heading-bold-weight);
+      {% else %}
+        --font-weight-button: {{ font_heading.weight }};;
+      {% endif %}
+    {% endif %}
+
+    {% comment %}
+      Button letter spacing is only added if capitalized or if bold and
+      capitalized. The spacing is slightly less if bold and capitalized.
+    {% endcomment %}
+    {% if settings.capitalize_buttons %}
+      --font-button-letter-spacing: {{ capitalized_letter_spacing }};
+    {% endif %}
+
+    {% comment %}
+      ---------------------------------------
+      PRODUCT LISTING TYPOGRAPHY
+      ---------------------------------------
+    {% endcomment %}
+
+    {% comment %} Product listing font {% endcomment %}
+    {% if settings.product_listing_title_font == 'body' %}
+      --font-product-listing-title: var(--font-body);
+    {% else %}
+      --font-product-listing-title: var(--font-heading);
+    {% endif %}
+
+    {% comment %}
+      If buttons are capitalized they will be scaled down by 10%.
+      Mobile scale will always relate to body mobile scale regardless of font
+    {% endcomment %}
+    {% if settings.capitalize_product_listing_title %}
+      --font-product-listing-title-text-transform: uppercase;
+      --font-product-listing-title-letter-spacing: {{ capitalized_letter_spacing }};
+      --font-size-product-listing-title: {% render 'font-size-clamp' multiplier: capitalized_font_adjustment_multiplier, desktop_size: settings.product_listing_title_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    {% else %}
+      --font-size-product-listing-title: {% render 'font-size-clamp' multiplier: 1, desktop_size: settings.product_listing_title_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    {% endif %}
+
+    {% comment %}
+      ---------------------------------------
+      PRODUCT BADGES TYPOGRAPHY
+      ---------------------------------------
+    {% endcomment %}
+
+    {% comment %} Product badge font {% endcomment %}
+    {% if settings.product_badges_font == 'body' %}
+      --font-product-badge: var(--font-body);
+
+      {% comment %} Product badge font body weight  {% endcomment %}
+      {% if settings.bold_product_badges %}
+        --font-weight-badge: var(--font-body-bold-weight);
+      {% else %}
+        --font-weight-badge: {{ font_body.weight }};
+      {% endif %}
+    {% else %}
+      --font-product-badge: var(--font-heading);
+
+      {% comment %} Product badge font heading weight  {% endcomment %}
+      {% if settings.bold_product_badges %}
+        --font-weight-badge: var(--font-heading-bold-weight);
+      {% else %}
+        --font-weight-badge: {{ font_heading.weight }};;
+      {% endif %}
+    {% endif %}
+
+    {% comment %} Product badge text transform  {% endcomment %}
+    {% if settings.uppercase_product_badges %}
+      --font-product-badge-text-transform: uppercase;
+      --font-size-product-badge: var(--font-size-body-25);
+
+      {% comment %}
+        Product badge letter spacing is only added if capitalized or if bold and
+        capitalized. The spacing is slightly less if bold and capitalized.
+      {% endcomment %}
+      --font-product-badge-letter-spacing: {{ capitalized_letter_spacing }};
+    {% else %}
+      --font-product-badge-text-transform: none;
+      --font-size-product-badge: var(--font-size-body-50);
+    {% endif %}
+
+    {% comment %}
+      ---------------------------------------
+      PRODUCT PRICES TYPOGRAPHY
+      ---------------------------------------
+    {% endcomment %}
+    {% if settings.prices_font == 'body' %}
+      --font-product-price: var(--font-body);
+
+      {% comment %} Product price font body weight  {% endcomment %}
+      {% if settings.bold_prices %}
+        --font-weight-product-price: var(--font-body-bold-weight);
+      {% else %}
+        --font-weight-product-price: {{ font_body.weight }};
+      {% endif %}
+    {% else %}
+      --font-product-price: var(--font-heading);
+
+      {% comment %} Product price font heading weight  {% endcomment %}
+      {% if settings.bold_prices %}
+        --font-weight-product-price: var(--font-heading-bold-weight);
+      {% else %}
+        --font-weight-product-price: {{ font_heading.weight }};;
+      {% endif %}
+    {% endif %}
+  }
+
+  {% comment %} Handle browsers that don't support clamp {% endcomment %}
+  @supports not (font-size: clamp(10px, 3.3vw, 20px)) {
+    :root {
+      --logo-font-size: {% render 'font-size-clamp-fallback' multiplier: 1, desktop_size: settings.logo_base_size, mobile_scale: settings.logo_mobile_base_scale %};
+
+      --font-size-heading-display-1: {% render 'font-size-clamp-fallback' multiplier: heading_display_1_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-display-2: {% render 'font-size-clamp-fallback' multiplier: heading_display_2_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-display-3: {% render 'font-size-clamp-fallback' multiplier: heading_display_3_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-1-base: {% render 'font-size-clamp-fallback' multiplier: heading_1_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-2-base: {% render 'font-size-clamp-fallback' multiplier: heading_2_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-3-base: {% render 'font-size-clamp-fallback' multiplier: heading_3_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-4-base: {% render 'font-size-clamp-fallback' multiplier: heading_4_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-5-base: {% render 'font-size-clamp-fallback' multiplier: heading_5_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+      --font-size-heading-6-base: {% render 'font-size-clamp-fallback' multiplier: heading_6_multiplier, desktop_size: settings.heading_base_size, mobile_scale: settings.heading_mobile_base_scale %};
+
+      --font-size-body-400: {% render 'font-size-clamp-fallback' multiplier: body_400_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-350: {% render 'font-size-clamp-fallback' multiplier: body_350_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-300: {% render 'font-size-clamp-fallback' multiplier: body_300_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-250: {% render 'font-size-clamp-fallback' multiplier: body_250_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-200: {% render 'font-size-clamp-fallback' multiplier: body_200_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-150: {% render 'font-size-clamp-fallback' multiplier: body_150_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-100: {% render 'font-size-clamp-fallback' multiplier: body_100_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-75: {% render 'font-size-clamp-fallback' multiplier: body_75_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-body-60: {% render 'font-size-clamp-fallback' multiplier: body_60_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+      --font-size-body-50: {% render 'font-size-clamp-fallback' multiplier: body_50_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+      --font-size-body-25: {% render 'font-size-clamp-fallback' multiplier: body_25_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+      --font-size-body-20: {% render 'font-size-clamp-fallback' multiplier: body_20_multiplier, desktop_size: settings.body_base_size, mobile_scale: 100 %};
+
+    {% if settings.capitalize_buttons %}
+      --font-size-button: {% render 'font-size-clamp-fallback' multiplier: button_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-button-small: {% render 'font-size-clamp-fallback' multiplier: small_button_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+      --font-size-button-x-small: {% render 'font-size-clamp-fallback' multiplier: x-small_button_multiplier, desktop_size: settings.body_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    {% endif %}
+
+    {% if settings.capitalize_product_listing_title %}
+      --font-size-product-listing-title: {% render 'font-size-clamp-fallback' multiplier: capitalized_font_adjustment_multiplier, desktop_size: settings.product_listing_title_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    {% else %}
+      --font-size-product-listing-title: {% render 'font-size-clamp-fallback' multiplier: 1, desktop_size: settings.product_listing_title_base_size, mobile_scale: settings.body_mobile_base_scale %};
+    {% endif %}
+    }
+  }
+
+  {% comment %}
+    ---------------------------------------
+    PRODUCT BADGE COLOR INDEXING
+    ---------------------------------------
+  {% endcomment %}
+  {% liquid
+    for i in (1..4)
+      assign tag_name_setting_key = 'custom_product_badge_group_[[index]]_tag_names' | replace: '[[index]]', i
+      assign text_color_setting_key = 'custom_product_badge_group_[[index]]_text_color' | replace: '[[index]]', i
+      assign background_color_setting_key = 'custom_product_badge_group_[[index]]_background_color' | replace: '[[index]]', i
+
+      assign tags = settings[tag_name_setting_key] | split: ','
+
+      if tags != blank
+        assign border_color = settings[text_color_setting_key]
+
+        if settings.badge_style == 'solid'
+          assign border_color = settings[background_color_setting_key]
+        endif
+
+        for tag in tags
+          assign formatted_tag = tag | strip | handleize
+          assign current_selector = '.product-badge[data-handle="[[bh]]"] .product-badge__inner' | replace: '[[bh]]', formatted_tag
+
+          unless forloop.last
+            assign current_selector = current_selector | append: ','
+          endunless
+
+          echo current_selector
+        endfor
+
+        echo '{'
+        echo 'color: [[tcs]];' | replace: '[[tcs]]', settings[text_color_setting_key]
+        echo ' background-color: [[bcs]];' | replace: '[[bcs]]', settings[background_color_setting_key]
+        echo ' border-color: [[bcs]];' | replace: '[[bcs]]', border_color
+        echo '}'
+      endif
+    endfor
+  -%}
+</style>

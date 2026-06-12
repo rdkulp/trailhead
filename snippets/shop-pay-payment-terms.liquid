@@ -1,0 +1,22 @@
+{% liquid
+  comment
+    Renders the Shop Pay payment terms.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+  endcomment
+
+  capture payment_terms_id
+    echo 'payment_terms_' | append: prod.id
+  endcapture
+
+  if prod != blank
+    form 'product', prod, id: payment_terms_id, class: 'product-form__shop-pay fs-body-75'
+      if request.design_mode
+        echo 'products.product.design_mode_shop_pay' | t
+      else
+        echo form | payment_terms
+      endif
+    endform
+  endif
+-%}

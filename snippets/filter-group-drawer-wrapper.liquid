@@ -1,0 +1,45 @@
+{% liquid
+  comment
+    Renders filter group content inside a drawer wrapper.
+
+    Required parameters:
+      - filter: { Object } The current filter.
+      - filters: { String } The filter content to be rendered inside the drawer wrapper.
+      - filter_search: { String } The filter search to be rendered inside the drawer wrapper.
+      - has_active_filters: { Boolean } Whether any filters in the group are currently active.
+  endcomment
+-%}
+
+{%- liquid
+  assign group_id = 'filter-group-[[fpn]]--drawer' | replace: '[[fpn]]', filter.param_name | handle
+-%}
+
+<div class="filter-form__group-panel">
+  <div class="filter-form__group-panel-header">
+    <button
+      type="button"
+      class="filter-form__group-panel-toggle"
+      aria-expanded="false"
+      aria-controls="{{ group_id }}"
+      aria-label="{{ 'general.accessibility.close_modal' | t }}"
+      data-filter-group-toggle="{{ filter.label | handle }}"
+      data-filter-group-toggle-drawer-back
+    >
+      {% render 'icon-button', icon: 'arrow-short', icon_size: 20 %}
+    </button>
+
+    <h4 class="filter-form__group-panel-title ff-heading fs-heading-4-base">{{ filter.label }}</h4>
+
+    <button
+      class="filter-form__group-panel-clear fs-body-100"
+      data-filter-group-clear="{{ group_id }}"
+      data-has-active-filters="{{ has_active_filters }}"
+    >
+      {{- 'filters.reset' | t -}}
+    </button>
+  </div>
+
+  {{ filter_search }}
+
+  {{ filters }}
+</div>

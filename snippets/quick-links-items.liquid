@@ -1,0 +1,129 @@
+{%- liquid
+  comment
+    Renders a list of links in either a slider, or flex container
+
+    Required parameters:
+      - local_settings: { Object } Shopify section settings object
+      - is_slider: { Bool } Should links appear in a slider with scroll overflow
+
+    Optional parameters:
+      - hide: { String } 'desktop' / 'mobile', the links can be rendered twice depending on options.
+      If 2 types of links are present we need to signify which is hidden on desktop / mobile.
+  endcomment
+
+  assign wrapper_class = 'quick-links__links-container'
+
+  if hide != blank
+    assign wrapper_class = wrapper_class | append: ' hide-[[h]]' | replace: '[[h]]', hide
+  endif
+
+  assign link_font_size = 'fs-body-75'
+
+  if local_settings.text_size == 'medium'
+    assign link_font_size = 'fs-body-100'
+  elsif local_settings.text_size == 'large'
+    assign link_font_size = 'fs-body-150'
+  endif
+
+  assign link_class = 'quick-links__link ff-[[f]] [[lfs]] animation--item'
+  assign link_class = link_class | replace: '[[f]]', local_settings.link_font | replace: '[[lfs]]', link_font_size
+
+  # Links can either be added from blocks -- "Custom list" or from a Shopify menu "Menu (Shopify admin)"
+  assign link_items = section.blocks
+
+  if local_settings.link_source == 'menu'
+    assign link_items = linklists[local_settings.menu].links
+  endif
+
+  assign flash_message = 'general.flash_alert.no_link' | t
+
+  capture shared_link_data_attributes
+    echo 'data-link-shape="[[ls]]"' | replace: '[[ls]]', local_settings.link_shape
+    echo 'data-link-color="[[lc]]"' | replace: '[[lc]]', local_settings.link_color
+    echo 'data-link-font-size="[[fs]]"' | replace: '[[fs]]', local_settings.text_size
+  endcapture
+-%}
+
+{%- capture links -%}
+  {%- for item in link_items -%}
+    {% liquid
+      assign url = item.settings.url | default: item.url
+      assign label = item.settings.title | default: item.title
+      assign tag_name = 'a'
+
+      if url == blank
+        assign tag_name = 'button'
+      endif
+    -%}
+
+    {%- if label != blank %}
+      <{{ tag_name }}
+        {% if url == blank %}
+          type="button"
+          data-flash-trigger
+          data-flash-message="{{ flash_message }}"
+        {% else %}
+          href="{{ url }}"
+        {% endif %}
+        {{ shared_link_data_attributes }}
+        class="{{ link_class }}"
+      >
+        <span>{{ label }}</span>
+      </{{ tag_name }}>
+    {%- endif -%}
+  {%- else -%}
+    {%- for item in (1..5) -%}
+      {% liquid
+        assign label_key = 'general.onboarding.category_[[k]]' | replace: '[[k]]', forloop.index
+        assign label = label_key | t
+      -%}
+
+      <span {{ shared_link_data_attributes }} class="{{ link_class }}"><span>{{ label }}</span></span>
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if is_slider -%}
+  <div
+    class="{{ wrapper_class }}"
+    data-scroll-container
+    data-at-start="false"
+    data-at-end="false"
+    data-axis="horizontal"
+    data-scroll-offset="300"
+  >
+    <button
+      class="scroll-button"
+      data-position="start"
+      data-direction="backwards"
+      title="{{ 'general.accessibility.previous' | t }}"
+    >
+      {% render 'icon', icon: 'arrow-short' %}
+    </button>
+
+    <div class="quick-links__links-wrapper" data-scroll-container-viewport>
+      <div class="scroll-sentinal scroll-sentinal--start" data-position="start"></div>
+
+      <div class="quick-links__links">
+        {{ links }}
+      </div>
+
+      <div class="scroll-sentinal scroll-sentinal--end" data-position="end"></div>
+    </div>
+
+    <button
+      class="scroll-button"
+      data-position="end"
+      data-direction="forwards"
+      title="{{ 'general.accessibility.next' | t }}"
+    >
+      {% render 'icon', icon: 'arrow-short' %}
+    </button>
+  </div>
+{%- else -%}
+  <div class="{{ wrapper_class }}">
+    <div class="quick-links__links">
+      {{ links }}
+    </div>
+  </div>
+{%- endif -%}

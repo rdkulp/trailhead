@@ -1,0 +1,135 @@
+{% liquid
+  comment
+    Renders a product tab content column. Can contain an image and content, where the content can be:
+      - A heading and text content
+      - Content from a page
+      - Custom Liquid content
+
+    Required parameters:
+      - block_type: { String } The block type. Can be:
+        - 'product_description'
+        - 'one_column'
+        - 'two_column'
+        - 'three_column'
+      - num_columns: { Number } The number of columns.
+      - content_width: { String } A string noting whether the content should be full-width, or a custom
+        width. Can be:
+          - 'full'
+          - 'custom'
+      - custom_width: { Number } The custom width of the column, in pixels.
+      - heading: { String } The heading to use for the content.
+      - heading_font_type: { String } The heading font type. Can be:
+        - 'ff-heading'
+        - 'ff-body'
+      - heading_font_size: { Number } A number representing a font size, within the heading font scale.
+      - text_font_size: { Number } A number representing a font size, within the text font scale.
+
+    Optional parameters:
+      - image: { Object } The image.
+      - image_width: { Number } The width of the image, as a percentage.
+      - image_position: { String } The image position (in relationt to the content). Can be:
+        - 'above_text'
+        - 'below_text'
+      - custom_liquid: { Liquid } The custom liquid to use for the content.
+      - page_for_content: { Object } The page to use for the content.
+      - text:  { String } The text to use for the content.
+      - heading_tag: { String: 'h2' } The HTML heading tag (ie. 'h2', 'h3', etc) defined in section settings. Accepts 'h1' through 'h6'.
+  endcomment
+
+  assign image_order = 1
+  assign content_order = 2
+
+  if image_position == 'below_text'
+    assign image_order = 2
+    assign content_order = 1
+  endif
+
+  assign heading_tag = heading_tag | default: 'h2'
+-%}
+
+<div class="product-tabs__tab-column-wrapper">
+  <div
+    class="product-tabs__tab-column"
+    {% if content_width == 'custom' -%}
+      style="--custom-text-width: {{ custom_width }}px;"
+    {%- endif %}
+  >
+    {% if image != blank -%}
+      <figure
+        class="product-tabs__tab-image-figure"
+        style="
+          --image-max-width: {{ image_width }}%;
+          --image-order: {{ image_order }}
+        "
+      >
+        <div class="product-tabs__tab-image-wrapper">
+          {% capture image_sizes -%}
+            (min-width: 720px) calc(calc(100vw - calc(2 * clamp(24px, 2vw, 36px))) / {{ num_columns }} *
+            {{ image_width | divided_by: 100.0 }}), calc(100vw - calc(2 * 16px))
+          {%- endcapture -%}
+
+          {% render 'image',
+            wrapper_class: 'product-tabs__tab-image',
+            image: image,
+            sizes: image_sizes,
+            include_placeholder: true
+          -%}
+        </div>
+      </figure>
+    {%- endif %}
+
+    <div class="product-tabs__tab-text-container" style="--content-order: {{ content_order }};">
+      {% liquid
+        capture content
+          assign content_type = 'text'
+
+          if block_type == 'product_description'
+            echo product.description
+          else
+            assign content_page = pages[page_for_content]
+
+            if content_page != blank
+              assign content_type = 'page'
+              echo content_page.content
+            elsif custom_liquid != blank
+              assign content_type = 'liquid'
+              echo custom_liquid
+            else
+              echo text
+            endif
+          endif
+        endcapture
+      -%}
+
+      {% if heading != blank -%}
+        {% liquid
+          capture heading_font_class
+            render 'settings-text-size', type: 'heading', size: heading_font_size
+          endcapture
+        -%}
+
+        <{{ heading_tag }} class="product-tabs__tab-heading {{ heading_font_type }} {{ heading_font_class }}">
+          {{ heading }}
+        </{{ heading_tag }}>
+      {%- endif %}
+
+      {% if content != blank -%}
+        {% liquid
+          assign text_class = 'product-tabs__tab-text ff-body rte'
+
+          if content_type != 'page'
+            capture text_font_class
+              render 'settings-text-size', type: 'text', size: text_font_size
+            endcapture
+
+            assign text_class = text_class | append: ' ' | append: text_font_class
+          endif
+        -%}
+
+        <div class="{{ text_class }}">
+          {{ content }}
+        </div>
+      {%- endif %}
+    </div>
+  </div>
+</div>

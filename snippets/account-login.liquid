@@ -1,0 +1,145 @@
+{% liquid
+  comment
+    Componentized version of the login form template to be reused
+
+    Optional parameters:
+      - is_template: { Bool } Used to ensure errors are not hidden only on the login template
+  endcomment
+
+  assign heading_class = heading_class | default: 'ff-heading fs-heading-5-base'
+  assign component_scope = 'component'
+
+  if is_template
+    assign component_scope = 'template'
+  endif
+%}
+
+<div class="login" data-scope="{{ component_scope }}" data-account-login>
+  <div class="login__success-wrapper">
+    <div class="login__success" data-success-message tabindex="-1">
+      <div class="ff-body fs-body-100">
+        {{ 'customer.recover_password.success' | t }}
+      </div>
+    </div>
+  </div>
+
+  <div id="login-form" class="login__wrapper" data-part="login" aria-hidden="false">
+    <header class="login__header">
+      <h4 class="login__heading {{ heading_class }}">{{ 'customer.login.title' | t }}</h4>
+    </header>
+
+    <div class="login__main">
+      {% form 'customer_login', novalidate: 'novalidate', class: 'login__form', id: id %}
+        {% liquid
+          if is_template
+            assign success_msg = 'customer.recover_password.success' | t
+            render 'form-status', form: form, form_id: 'CustomerEmail', success_message: success_msg
+          endif
+        -%}
+
+        <label for="{{ id }}-CustomerEmail">{{ 'customer.login.email' | t }}</label>
+        <input
+          type="email"
+          class="input {% if is_template and form.errors contains 'form' %} has-errors{% endif %}"
+          name="customer[email]"
+          id="{{ id }}-CustomerEmail"
+          autocomplete="email"
+          autocorrect="off"
+          autocapitalize="off"
+          {% if is_template and form.errors contains 'form' %}
+            aria-invalid="true"
+            aria-describedby="ContactForm-email-error"
+          {% endif %}
+        >
+
+        {% if form.password_needed %}
+          <div class="login__label-wrapper">
+            <label for="{{ id }}-CustomerPassword">{{ 'customer.login.password' | t }}</label>
+            <button
+              type="button"
+              class="btn btn--text-link fs-body-75"
+              data-toggle
+              aria-controls="{{ id }}-register-form"
+            >
+              {{ 'customer.login.forgot_password' | t }}
+            </button>
+          </div>
+          <input
+            type="password"
+            class="input {% if is_template and form.errors contains 'form' %} has-errors{% endif %}"
+            value=""
+            name="customer[password]"
+            id="{{ id }}-CustomerPassword"
+          >
+        {% endif %}
+
+        <button type="submit" class="login__button btn btn--primary btn--full">
+          {{ 'customer.login.sign_in' | t }}
+        </button>
+
+        <div class="login__links ff-body fs-body-100">
+          <span>{{ 'customer.login.new_customer' | t }}</span>
+          <a class="link" href="{{ routes.account_register_url }}">{{ 'layout.customer.create_account' | t }}</a>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+
+  <div id="{{ id }}-register-form" class="login__wrapper hide" data-part="reset" aria-hidden="true">
+    <div class="login__header">
+      <h2 class="login__heading ff-heading fs-heading-3-base">{{ 'customer.recover_password.title' | t }}</h2>
+      <p class="login__subheading fs-body-75">{{ 'customer.recover_password.subtext' | t }}</p>
+    </div>
+
+    <div class="login__main">
+      {% form 'recover_customer_password', class: 'login__form' %}
+        {% liquid
+          if is_template
+            assign success_msg = 'customer.recover_password.success' | t
+            assign form_id = id | append: '-RecoverEmail'
+            render 'form-status', form: form, form_id: form_id, success_message: success_msg
+          endif
+        -%}
+
+        <label for="{{ id }}-RecoverEmail">{{ 'customer.recover_password.email' | t }}</label>
+        <input
+          type="email"
+          value=""
+          name="email"
+          id="{{ id }}-RecoverEmail"
+          class="input{% if is_template and form.errors %} has-errors{% endif %}"
+          autocorrect="off"
+          autocapitalize="off"
+          {% if form.errors %}
+            aria-invalid="true"
+            aria-describedby="RecoverEmail-email-error"
+          {%- endif -%}
+        >
+
+        <button type="submit" class="login__button btn btn--primary btn--full">
+          {{ 'customer.recover_password.submit' | t }}
+        </button>
+
+        <div class="login__links ff-body fs-body-100">
+          <button type="button" data-toggle class="btn btn--text-link" aria-controls="login-form">
+            {{ 'customer.recover_password.cancel' | t }}
+          </button>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+
+  {% comment %}
+    If accounts are set as optional, the following will be shown as an option
+    during checkout, not on the default /login page.
+  {% endcomment %}
+  {% if is_template and shop.checkout.guest_login %}
+    <div class="text-center">
+      <h2>{{ 'customer.login.guest_title' | t }}</h2>
+
+      {% form 'guest_login' %}
+        <button type="submit" class="btn btn--primary btn--full">{{ 'customer.login.guest_continue' | t }}</button>
+      {% endform %}
+    </div>
+  {% endif %}
+</div>

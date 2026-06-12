@@ -1,0 +1,96 @@
+{% liquid
+  comment
+    Renders the quick add button.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - quick_add_style: { String } The quick add button style. Can be:
+        - 'icon':
+          - A "+" icon that shows over the image
+        - 'text':
+          - An "Add to cart" button that shows with the text content
+      - item_in_cart: { Number } The total number of variants of the associated product that are
+        in the cart.
+      - parent_id: { String } An ID to be appended to 'quick-add' and passed to quantity-input (should be unique).
+  endcomment
+
+  assign has_multiple_variants = true
+
+  if prod.has_only_default_variant
+    assign has_multiple_variants = false
+  endif
+
+  assign parent_id = 'quick-add-' | append: parent_id
+-%}
+
+<div
+  class="product-item__quick-add-wrapper"
+  data-has-variants="{{ has_multiple_variants }}"
+  data-quantity-in-cart="{{ item_in_cart }}"
+  data-product-id="{{ prod.id }}"
+  data-quick-add-style="{{ quick_add_style }}"
+>
+  {% liquid
+    assign button_class = 'product-item__quick-add btn'
+
+    if quick_add_style == 'icon'
+      assign button_class = button_class | append: ' btn--rounded product-item__disc-button shows-dynamic-count'
+
+      capture add_text
+        render 'icon', icon: 'plus-16'
+      endcapture
+    else
+      assign button_class = button_class | append: ' btn--small btn--full btn--tertiary'
+
+      capture add_text
+        if has_multiple_variants
+          echo 'products.quick_add.choose_options' | t
+        else
+          echo 'product.add_to_cart' | t
+        endif
+      endcapture
+    endif
+
+    assign initial_input_value = item_in_cart
+
+    if item_in_cart == 0
+      assign initial_input_value = 1
+    endif
+  -%}
+
+  <button
+    type="button"
+    class="{{ button_class }}"
+    data-quantity-in-cart="{{ item_in_cart }}"
+    data-variant-id="{{ prod.variants.first.id }}"
+    aria-label="{{ 'product.add_to_cart' | t }}"
+  >
+    <span class="product-item__quick-add__add-text">{{ add_text }}</span>
+
+    <span class="product-item__quick-add__cart-count">
+      {% if quick_add_style == 'icon' -%}
+        <span class="quantity-in-cart-display" data-id="{{ prod.id }}">{{ item_in_cart }}</span>
+      {%- else -%}
+        {{ 'products.quick_add.items_in_cart_html' | t: item_count: item_in_cart, product_id: prod.id }}
+      {%- endif %}
+    </span>
+  </button>
+
+  {% render 'quantity-input',
+    parent_id: parent_id,
+    prod: prod,
+    initial_value: initial_input_value,
+    is_quick_add_button: true,
+    quick_add_style: quick_add_style,
+    wrapper_class: 'quantity-input-wrapper--product-item-quick-add'
+  -%}
+
+  {% liquid
+    # Removing until this experience can be fleshed out.
+    comment
+      if has_multiple_variants
+        render 'quick-add-modal', prod: prod, item_in_cart: item_in_cart
+      endif
+    endcomment
+  -%}
+</div>

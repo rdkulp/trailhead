@@ -1,0 +1,112 @@
+{%- comment -%}
+  Renders color scheme CSS variables.
+
+  Use within the 'style' attribute of an element:
+
+    style="{% render 'settings-color-schemes', local_settings: section.settings, id_prefix: 'text_box' %}"
+
+  Required parameters:
+    - local_settings: { Object } The settings objet for the associated section or block.
+
+  Optional parameters:
+    - id_prefix: { String } The ID prefix to use when referencing settings (used with the 'get-prefixed-id' snippet).
+{%- endcomment -%}
+
+{% liquid
+  assign global_settings = settings
+
+  capture override_with_custom_colors_key
+    render 'get-prefixed-id', id: 'override_with_custom_colors', prefix: id_prefix
+  endcapture
+
+  assign use_local_colors = local_settings[override_with_custom_colors_key]
+-%}
+
+{% # prettier-ignore %}
+{%- if use_local_colors -%}
+  {%- capture color_text_key -%}{% render 'get-prefixed-id', id: "override_color_text", prefix: id_prefix %}{%- endcapture -%}
+  {%- capture color_text_input_key -%}{% render 'get-prefixed-id', id: "override_color_text_input", prefix: id_prefix %}{%- endcapture -%}
+  {%- capture color_background_key -%}{% render 'get-prefixed-id', id: "override_color_background", prefix: id_prefix %}{%- endcapture -%}
+  {%- capture color_accent_key -%}{% render 'get-prefixed-id', id: "override_color_accent", prefix: id_prefix %}{%- endcapture -%}
+  --color-text: {{ local_settings[color_text_key] }};
+  --color-text-link: {{ local_settings[color_text_key] }};
+  {%- unless local_settings[color_text_input_key] == blank %}
+    --color-text-input: {{ local_settings[color_text_input_key] }};
+  {%- endunless -%}
+  --color-background: {{ local_settings[color_background_key] }};
+  {%- unless local_settings[color_accent_key] == blank -%}
+    --color-accent: {{ local_settings[color_accent_key] }};
+  {%- endunless -%}
+  --color-background-alpha-80: {{ local_settings[color_background_key] | color_modify: 'alpha', 0.8 }};
+  {%- render 'text-color-alpha-vars', color: local_settings[color_text_key] -%}
+{%- else -%}
+  {%- capture color_scheme_key -%}{%- render 'get-prefixed-id', id: "color_scheme", prefix: id_prefix -%}{%- endcapture -%}
+
+  {%- case local_settings[color_scheme_key] -%}
+    {%- when 'default' -%}
+      --color-background: {{ global_settings.color_background_body }};
+      --color-background-alpha-80: {{ global_settings.color_background_body | color_modify: 'alpha', 0.8 }};
+      --color-text: {{ global_settings.color_text }};
+      --color-text-input: {{ global_settings.color_text }};
+      --color-text-link: {{ global_settings.color_text_link }};
+      {%- render 'text-color-alpha-vars', color: global_settings.color_text -%}
+      --color-border-input: {{ global_settings.color_form_input_text | color_modify: 'alpha', 0.4 }};
+    {%- when 'inverse' -%}
+      --color-background: {{ global_settings.color_text | color_mix: global_settings.color_background_body, 95 }};
+      --color-background-alpha-80: {{ global_settings.color_text | color_mix: global_settings.color_background_body, 95 | color_modify: 'alpha', 0.8 }};
+      --color-text: {{ global_settings.color_background_body }};
+      --color-text-input: {{ global_settings.color_background_body }};
+      --color-text-link: {{ global_settings.color_background_body }};
+      {%- render 'text-color-alpha-vars', color: global_settings.color_background_body -%}
+      --color-border-input: {{ global_settings.color_background_body | color_modify: 'alpha', 0.4 }};
+    {%- when 'soft' -%}
+      --color-background: {{ global_settings.color_background_body | color_mix: global_settings.color_text, 95 }};
+      --color-background-alpha-80: {{ global_settings.color_background_body | color_mix: global_settings.color_text, 95 | color_modify: 'alpha', 0.8 }};
+      --color-text: {{ global_settings.color_text }};
+      --color-text-input: {{ global_settings.color_text }};
+      --color-text-link: {{ global_settings.color_text }};
+      {%- render 'text-color-alpha-vars', color: global_settings.color_text -%}
+      --color-border-input: {{ global_settings.color_text | color_modify: 'alpha', 0.4 }};
+    {%- when 'accent' -%}
+      --color-background: {{ global_settings.color_accent }};
+      --color-background-alpha-80: {{ global_settings.color_accent | color_modify: 'alpha', 0.8 }};
+      --color-text: {{ global_settings.color_accent_contrasting }};
+      --color-text-input: {{ global_settings.color_accent_contrasting }};
+      --color-text-link: {{ global_settings.color_accent_contrasting }};
+      {%- render 'text-color-alpha-vars', color: global_settings.color_accent_contrasting -%}
+      --color-border-input: {{ global_settings.color_accent_contrasting | color_modify: 'alpha', 0.4 }};
+    {%- when 'sale' -%}
+      --color-background: {{ global_settings.color_products_sale_price }};
+      --color-background-alpha-80: {{ global_settings.color_products_sale_price | color_modify: 'alpha', 0.8 }};
+      --color-text: {{ global_settings.color_background_body }};
+      --color-text-input: {{ global_settings.color_background_body }};
+      --color-text-link: {{ global_settings.color_background_body }};
+      {%- render 'text-color-alpha-vars', color: global_settings.color_background_body -%}
+      --color-border-input: {{ global_settings.color_background_body | color_modify: 'alpha', 0.4 }};
+    {%- when 'color_scheme_1' -%}
+      --color-background: {{ global_settings.color_scheme_1_background_body }};
+      --color-background-alpha-80: {{ global_settings.color_scheme_1_background_body | color_modify: 'alpha', 0.8 }};
+      --color-text: {{ global_settings.color_scheme_1_text }};
+      --color-text-input: {{ global_settings.color_scheme_1_text }};
+      --color-text-link: {{ global_settings.color_scheme_1_text }};
+      {%- render 'text-color-alpha-vars', color: global_settings.color_scheme_1_text -%}
+      --color-border-input: {{ global_settings.color_scheme_1_text | color_modify: 'alpha', 0.4 }};
+    {%- when 'color_scheme_2' -%}
+      --color-background: {{ global_settings.color_scheme_2_background_body }};
+      --color-background-alpha-80: {{ global_settings.color_scheme_2_background_body | color_modify: 'alpha', 0.8 }};
+      --color-text: {{ global_settings.color_scheme_2_text }};
+      --color-text-input: {{ global_settings.color_scheme_2_text }};
+      --color-text-link: {{ global_settings.color_scheme_2_text }};
+      {%- render 'text-color-alpha-vars', color: global_settings.color_scheme_2_text -%}
+      --color-border-input: {{ global_settings.color_scheme_2_text | color_modify: 'alpha', 0.4 }};
+  {%- endcase -%}
+{%- endif -%}
+
+{%- comment -%} form colors: if set to global default, override the above form colors {%- endcomment -%}
+{%- case local_settings.color_forms -%}
+  {%- when 'default' -%}
+    --color-text-input: {{ global_settings.color_form_input_text }}; --color-background-input:
+    {{ global_settings.color_form_background }};
+  {%- when 'transparent' -%}
+    --color-background-input: transparent;
+{%- endcase -%}

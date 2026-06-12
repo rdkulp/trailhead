@@ -1,0 +1,410 @@
+{%- liquid
+  assign menu = section.settings.menu
+  assign links = linklists[menu].links
+  assign scroller_id = 'announcement-bar-' | append: section.id
+
+  assign enable_locale_selector = section.settings.enable_locale_selector
+  assign enable_country_selector = section.settings.enable_country_selector
+  assign show_social_media = section.settings.show_social_media
+
+  assign locale_selector = false
+  assign country_selector = false
+
+  if enable_locale_selector and shop.published_locales.size > 1
+    assign locale_selector = true
+  endif
+
+  if enable_country_selector and localization.available_countries.size > 1
+    assign country_selector = true
+  endif
+
+  assign show_country_flags = section.settings.show_country_flags
+  assign hide_country_flags = true
+
+  if show_country_flags
+    assign hide_country_flags = false
+  endif
+-%}
+
+{%- capture announcements -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign modal_content = block.settings.modal_text
+      assign has_announcement_modal = false
+      if  block.settings.enable_modal and modal_content != blank
+        assign has_announcement_modal = true
+      endif
+
+      capture announcement_item_desktop
+        render 'announcement-item', announcement_text: block.settings.title, announcement_link: block.settings.link, has_announcement_modal: has_announcement_modal, modal_link_style: block.settings.modal_link_style, modal_link_text: block.settings.modal_link_text, loop: forloop.index0
+      endcapture
+
+      assign has_mobile_announcement = false
+      if block.settings.title_mobile != blank and block.settings.title_mobile != block.settings.title
+        assign has_mobile_announcement = true
+
+        capture announcement_item_mobile
+          render 'announcement-item', announcement_text: block.settings.title_mobile, announcement_link: block.settings.link, enable_modal: block.settings.enable_modal, has_announcement_modal: has_announcement_modal, modal_link_style: block.settings.modal_link_style, modal_link_text: block.settings.modal_link_text, loop: forloop.index0
+        endcapture
+      endif
+
+      if block.settings.page_for_modal_content
+        assign content_page = pages[block.settings.page_for_modal_content]
+
+        if content_page and content_page != blank
+          assign modal_content = content_page.content
+        endif
+      endif
+    -%}
+
+    <div
+      class="announcement-bar__item ff-body fs-body-60"
+      {% unless forloop.first %}
+        inert
+      {% endunless %}
+      {{ block.shopify_attributes }}
+      data-index="{{ forloop.index0 }}"
+    >
+      {%- if has_mobile_announcement -%}
+        <div class="announcement-bar__item-inner announcement-bar__item-inner-mobile-only">
+          {{ announcement_item_mobile }}
+        </div>
+      {%- endif -%}
+
+      <div class="announcement-bar__item-inner{% if has_mobile_announcement %} announcement-bar__item-inner-desktop-only{% endif %}">
+        {{ announcement_item_desktop }}
+
+        {% if has_announcement_modal %}
+          <div
+            class="announcement-bar-modal"
+            id="announcement-modal-content-{{ forloop.index0 }}"
+          >
+            <div class="announcement-bar-modal__content">
+              {% if block.settings.modal_heading != blank -%}
+                <{{ block.settings.heading_tag }} class="announcement-bar-modal__heading">{{ block.settings.modal_heading }}</{{ block.settings.heading_tag }}>
+              {%- endif %}
+
+              <div class="announcement-bar-modal__text">
+                {{ modal_content }}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if section.blocks.size > 0 or locale_selector or country_selector or show_social_media -%}
+  <div
+    class="
+      announcement-bar
+      {% if menu == blank and locale_selector or country_selector or show_social_media %}
+        announcement-bar--announcements-desktop-align-left
+      {% elsif menu != blank and locale_selector == false and country_selector == false and show_social_media == false %}
+        announcement-bar--announcements-desktop-align-right
+      {% endif %}
+      {% if section.settings.show_divider %}
+        announcement-bar--has-border
+      {% endif %}
+    "
+    data-section-id="{{ section.id }}"
+    data-scroller-id="{{ scroller_id }}"
+    data-section-type="announcement-bar"
+    data-item-count="{{ section.blocks.size }}"
+    style="
+      --color-background: {{ section.settings.color_background }};
+      --color-gradient-overlay: {{ section.settings.color_background | color_modify: 'alpha', 1 }};
+      --color-gradient-overlay-transparent: {{ section.settings.color_background | color_modify: 'alpha', 0 }};
+      --color-text: {{ section.settings.color_text }};
+      --color-border: {{ section.settings.color_text | color_modify: 'alpha', 0.3 }}
+    "
+  >
+    <div class="announcement-bar__inner">
+      {%- if menu != blank -%}
+        <div class="announcement-bar__links" data-navigation>
+          {% render 'navigation', announcement_bar_links: true, menu: links, interaction_type: 'click' %}
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="announcement-bar__announcements-wrapper">
+          {% comment %} Using custom scroll-slider buttons only visible when user is tabbing {% endcomment %}
+          {% if section.blocks.size > 1 -%}
+            <div
+              class="announcement-bar__nav-button-wrapper announcement-bar__nav-button-wrapper--prev"
+            >
+              <button
+                type="button"
+                class="announcement-bar__nav-button announcement-bar__nav-button--prev hidden"
+                title="{{ 'general.accessibility.previous' | t }}"
+                data-scroll-slider-prev-button
+                name="prev"
+                style="
+                  --icon-width: 16px;
+                  --icon-height: 16px;
+                "
+              >
+                {% render 'icon', icon: 'chevron' %}
+              </button>
+            </div>
+          {%- endif %}
+          {% render 'scroll-slider',
+            navigation_container: '.announcement-bar',
+            id: scroller_id,
+            slider_items: announcements,
+            slider_wrapper_classes: 'announcement-bar__announcements',
+            columns: 1,
+            gap: 20,
+            peek: 0,
+            loop: true,
+            full_width_below_720: true,
+            autoplay: true,
+            autoplay_pause_on_hover: true,
+            autoplay_delay: section.settings.autoplay_delay,
+            slideshow: true
+          %}
+          {% if section.blocks.size > 1 -%}
+            <div
+              class="announcement-bar__nav-button-wrapper announcement-bar__nav-button-wrapper--next"
+            >
+              <button
+                type="button"
+                class="announcement-bar__nav-button announcement-bar__nav-button--next hidden"
+                title="{{ 'general.accessibility.next' | t }}"
+                data-scroll-slider-next-button
+                name="next"
+                style="
+                  --icon-width: 16px;
+                  --icon-height: 16px;
+                "
+              >
+                {% render 'icon', icon: 'chevron' %}
+              </button>
+            </div>
+          {%- endif %}
+        </div>
+      {%- endif -%}
+
+      {%- if locale_selector or country_selector or show_social_media -%}
+        <div class="announcement-bar__menus">
+          {%- if show_social_media -%}
+            {% render 'social-icons' %}
+          {%- endif -%}
+
+          {%- if locale_selector or country_selector -%}
+            <div class="announcement-bar__cross-border">
+              {% render 'cross-border',
+                show_locale: locale_selector,
+                show_country: country_selector,
+                hide_country_flags: hide_country_flags,
+                id: 'announcement-bar'
+              %}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.announcement_bar.name",
+  "class": "announcement-bar-wrapper",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "t:sections.announcement_bar.settings.timing.label",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "default": 8,
+      "unit": "s"
+    },
+    {
+      "id": "color_text",
+      "type": "color",
+      "label": "t:sections.announcement_bar.settings.color_text.label",
+      "default": "#FFFFFF"
+    },
+    {
+      "id": "color_background",
+      "type": "color",
+      "label": "t:sections.announcement_bar.settings.color_background.label",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "t:sections.announcement_bar.settings.show_divider.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.disclosure.header__language.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_locale_selector",
+      "label": "t:shared.settings.disclosure.enable_locale_selector.label",
+      "info": "t:shared.settings.disclosure.enable_locale_selector.info",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.disclosure.header__country.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "label": "t:shared.settings.disclosure.enable_country_selector.label",
+      "info": "t:shared.settings.disclosure.enable_country_selector.info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_flags",
+      "label": "t:shared.settings.disclosure.show_country_flags.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.header__social_media.content",
+      "info": "t:shared.settings.header__social_media.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_media",
+      "label": "t:shared.settings.show_social_icons.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement_bar.settings.header__links.content"
+    },
+    {
+      "id": "menu",
+      "type": "link_list",
+      "label": "t:sections.announcement_bar.settings.links.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "t:sections.announcement_bar.blocks.announcement.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "default": "<p>Free standard shipping and returns on all orders</p>",
+          "label": "t:sections.announcement_bar.blocks.announcement.settings.title.label"
+        },
+        {
+          "type": "richtext",
+          "id": "title_mobile",
+          "label": "t:sections.announcement_bar.blocks.announcement.settings.title_mobile.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.announcement_bar.blocks.announcement.settings.link.label",
+          "info": "t:sections.announcement_bar.blocks.announcement.settings.link.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.announcement_bar.blocks.announcement.settings.header__additional_info.content",
+          "info": "t:sections.announcement_bar.blocks.announcement.settings.header__additional_info.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_modal",
+          "label": "t:shared.settings.general.enable.label",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "modal_link_text",
+          "label": "t:sections.announcement_bar.settings.link_text.label",
+          "default": "<p>Click for details</p>"
+        },
+        {
+          "type": "select",
+          "id": "modal_link_style",
+          "label": "t:sections.announcement_bar.settings.link_style.label",
+          "options": [
+            {
+              "value": "text",
+              "label": "t:shared.section_blocks.text.settings.text.label"
+            },
+            {
+              "value": "button",
+              "label": "t:shared.section_blocks.button.name"
+            }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "modal_heading",
+          "label": "t:sections.announcement_bar.settings.popup_heading.label"
+        },
+        {
+          "id": "heading_tag",
+          "type": "select",
+          "label": "t:shared.settings.heading_tag.label",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ],
+          "info": "t:shared.settings.heading_tag.info",
+          "default": "h3"
+        },
+        {
+          "type": "richtext",
+          "id": "modal_text",
+          "label": "t:sections.announcement_bar.settings.popup_text.label",
+          "default": "<p>Add your information popup content here</p>"
+        },
+        {
+          "type": "page",
+          "id": "page_for_modal_content",
+          "label": "t:shared.settings.general.page_for_content.label",
+          "info": "t:shared.settings.general.page_for_content.info"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "announcement"
+      }
+    ]
+  }
+}
+{% endschema %}

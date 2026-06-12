@@ -1,0 +1,166 @@
+{% liquid
+  comment
+    Renders the discount display.
+
+    Required parameters:
+      - One of the following:
+        - prod: { Object } The associated product object.
+        - variant: { Object } The associated variant object.
+      - format: { String } The discount string format. Can be:
+        - "sale_text"
+        - "percent_off"
+        - "minus_percent"
+        - "save_percent"
+        - "amount_off"
+        - "minus_amount"
+        - "save_amount"
+
+    Optional parameters:
+      - hidden: { Boolean } Whether the display is hidden. Used for hidden variant displays that get referenced
+        in JS.
+      - use_data_attribute: { Boolean } Whether to include the 'data-discount-display' data
+        attribute on the wrapper.
+      - wrapper_class: { String } A custom class to apply to the wrapper.
+      - unstyled: { Boolean } style classes
+      - size_class: { String } defaults to fs-body-75
+  endcomment
+
+  assign hidden = hidden | default: false, allow_false: true
+  assign varies = false
+  assign size_class = size_class | default: 'fs-body-75'
+
+  if variant
+    assign prod = variant
+  else
+    if prod.compare_at_price_varies or prod.price_varies
+      assign varies = true
+      assign amount_off_varies = true
+
+      assign smallest_amount_off = 0
+      assign largest_amount_off = 0
+
+      for variant in prod.variants
+        if variant.compare_at_price > variant.price
+          assign variant_amount_off = variant.compare_at_price | minus: variant.price
+
+          if smallest_amount_off == 0 or variant_amount_off < smallest_amount_off
+            assign smallest_amount_off = variant_amount_off
+          endif
+
+          if variant_amount_off > largest_amount_off
+            assign largest_amount_off = variant_amount_off
+          endif
+        endif
+      endfor
+
+      if smallest_amount_off == largest_amount_off
+        assign amount_off_varies = false
+      endif
+    endif
+  endif
+
+  if format == 'sale_text'
+    if prod.compare_at_price > prod.price
+      capture discount_output
+        echo 'products.product.on_sale' | t
+      endcapture
+    endif
+  else
+    assign is_percent_format = false
+    assign percent_formats = 'percent_off,minus_percent,save_percent' | split: ','
+
+    if percent_formats contains format
+      assign is_percent_format = true
+    endif
+
+    capture displayed_discount
+      if varies
+        if is_percent_format
+          render 'get-varied-percent-discount', prod: prod
+        else
+          render 'get-varied-amount-discount', prod: prod
+        endif
+      else
+        if is_percent_format
+          render 'get-percent-discount', prod: prod
+        else
+          render 'get-amount-discount', prod: prod
+        endif
+      endif
+    endcapture
+
+    # Make the discount a number
+    assign displayed_discount = displayed_discount | plus: 0
+
+    if displayed_discount > 0
+      unless is_percent_format
+        capture formatted_currency_discount
+          echo displayed_discount | money
+        endcapture
+      endunless
+
+      capture discount_output
+        if amount_off_varies
+          case format
+            when 'percent_off, minus_percent, amount_off, minus_amount'
+              echo 'products.product.on_sale_varied_prefix' | t
+          endcase
+        endif
+
+        case format
+          when 'percent_off'
+            echo 'products.product.on_sale_format_percent_off' | t: value: displayed_discount
+          when 'minus_percent'
+            echo 'products.product.on_sale_format_minus_percent' | t: value: displayed_discount
+          when 'save_percent'
+            if amount_off_varies
+              echo 'products.product.on_sale_format_save_percent_varied' | t: value: displayed_discount
+            else
+              echo 'products.product.on_sale_format_save_percent' | t: value: displayed_discount
+            endif
+          when 'amount_off'
+            echo 'products.product.on_sale_format_amount_off' | t: value: formatted_currency_discount
+          when 'minus_amount'
+            echo 'products.product.on_sale_format_minus_amount' | t: value: formatted_currency_discount
+          when 'save_amount'
+            if amount_off_varies
+              echo 'products.product.on_sale_format_save_amount_varied' | t: value: formatted_currency_discount
+            else
+              echo 'products.product.on_sale_format_save_amount' | t: value: formatted_currency_discount
+            endif
+        endcase
+      endcapture
+    endif
+  endif
+
+  assign display_wrapper_class = 'displayed-discount-wrapper'
+  assign use_data_attribute = use_data_attribute | default: true, allow_false: true
+
+  if wrapper_class != blank
+    assign display_wrapper_class = display_wrapper_class | append: ' ' | append: wrapper_class
+  endif
+
+  assign has_discount = false
+
+  if discount_output != blank
+    assign has_discount = true
+  endif
+-%}
+
+<span
+  class="{{ display_wrapper_class }}"
+  {% if use_data_attribute %}
+    data-discount-display
+  {% endif %}
+  data-hidden="{{ hidden }}"
+  data-has-discount="{{ has_discount }}"
+>
+  <span
+    {% unless unstyled %}
+      class="displayed-discount badge-shape {{ size_class }}"
+    {% endunless %}
+    data-badge-shape="{{ settings.badge_shape | replace: '_', '-' }}"
+  >
+    {{- discount_output -}}
+  </span>
+</span>

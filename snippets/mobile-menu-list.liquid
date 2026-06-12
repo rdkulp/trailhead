@@ -1,0 +1,261 @@
+{% liquid
+  comment
+    Renders the mobile menu items.
+
+    Required parameters:
+      - type: { String } The menu list type. Can be:
+        - 'primary'
+        - 'secondary'
+        - 'sub'
+      - links: { Object } The primary links to output.
+      - secondary_links: { Object } The secondary links to output.
+      - primary: { Boolean } Whether these are the primary menu items.
+      - settings: { Object } The parent section's settings.
+      - blocks: { Object } The parent section's blocks.
+
+      Optional parameters:
+        - additional_content: { String } Additional content to be rendered (ie. social icons, currency
+          and language selector, etc.).
+        - additional_subpanels: { String } Subpanel content for account login and currency/language selector.
+        - depth: { Number } The menu depth of the current pane.
+        - forloopIndex: { Number } The current index in the parent link loop.
+        - parent_pane_key: { String } The pane key for the parent link.
+        - parent: { Object } The parent link.
+        - grandparent: { Object } The grandparent link.
+  endcomment
+
+  assign logo_sizes = settings.logo_width | append: 'px'
+  assign handleized_featured_link_label = section.settings.featured_link_label | handleize
+  assign subpanels = ''
+  assign menu_depth = depth | default: 0
+
+  capture pane_key
+    if menu_depth > 0
+      if grandparent
+        echo 'submenu-[[gph]]-[[ph]]-[[fi]]-[[md]]' | replace: '[[gph]]', grandparent.handle | replace: '[[ph]]', parent.handle | replace: '[[fi]]', forloopIndex | replace: '[[md]]', menu_depth
+      else
+        echo 'submenu-[[ph]]-[[fi]]-[[md]]' | replace: '[[ph]]', parent.handle | replace: '[[fi]]', forloopIndex | replace: '[[md]]', menu_depth
+      endif
+    else
+      echo 'home'
+    endif
+  endcapture
+-%}
+
+{% capture main_content -%}
+  <ul
+    {% if type == 'primary' -%}
+      data-primary-container="true"
+    {%- elsif type == 'secondary' -%}
+      data-secondary-container="true"
+    {%- else -%}
+      data-menu-depth="{{ menu_depth }}"
+      data-pane-key="{{ pane_key }}"
+      data-scroll-lock-ignore
+      aria-hidden="true"
+      inert
+      class="mobile-menu__list mobile-menu__list--sub"
+    {%- endif %}
+  >
+    {% if menu_depth == 0 and primary -%}
+      <li class="mobile-menu__item mobile-menu__item--header">
+        <div class="mobile-menu__item--heading-content">
+          {% if settings.logo != blank -%}
+            {% render 'image',
+              image: settings.logo,
+              sizes: logo_sizes,
+              prioritize_loading: true,
+              wrapper_class: 'mobile-menu__item--heading-logo'
+            -%}
+          {%- else -%}
+            <div class="ff-heading fs-heading-5-base">
+              {{ 'sections.mobile_menu.menu' | t }}
+            </div>
+          {%- endif %}
+        </div>
+      </li>
+
+      {% if shop.customer_accounts_enabled -%}
+        <li class="mobile-menu__item mobile-menu__item--callout">
+          {% if customer -%}
+            {% render 'account-overview' %}
+          {%- else -%}
+            {%- if settings.enable_quick_sign_in -%}
+              <button data-action="show-sub-pane" data-link-target-pane-key="account-info" class="mobile-menu__link">
+                {% render 'icon', icon: 'header-account' %}
+                <span class="fs-body-100">
+                  {{ 'sections.mobile_menu.quick_account_login' | t }}
+                </span>
+              </button>
+            {%- else -%}
+              <a href="{{ routes.account_login_url }}" class="mobile-menu__link">
+                {% render 'icon', icon: 'header-account' %}
+                <span class="fs-body-100">
+                  {{ 'sections.mobile_menu.quick_account_login' | t }}
+                </span>
+              </a>
+            {%- endif -%}
+          {%- endif %}
+        </li>
+      {%- endif %}
+    {%- endif %}
+
+    {% if parent -%}
+      {% liquid
+        assign header_has_link = false
+        assign link_url_first_char = link.url | slice: 0
+
+        if link_url_first_char != '#'
+          assign header_has_link = true
+        endif
+
+        render 'mobile-menu-back-to-home'
+      -%}
+
+      {% if grandparent -%}
+        <li class="mobile-menu__item mobile-menu__item--callout">
+          <button
+            data-action="show-sub-pane"
+            data-link-target-pane-key="{{ parent_pane_key }}"
+            class="mobile-menu__link fs-body-100"
+          >
+            {% render 'icon', icon: 'chevron', class: 'back-link-icon' %}
+            {{ grandparent.title }}
+          </button>
+        </li>
+      {%- endif %}
+
+      <li class="mobile-menu__item mobile-menu__item--heading">
+        <a
+          class="mobile-menu__link"
+          data-heading="true"
+          {% if header_has_link -%}
+            href="{{ parent.url }}"
+          {%- endif %}
+        >
+          <span class="ff-heading fs-body-300 fs-heading-4-base">{{ parent.title }}</span>
+        </a>
+      </li>
+    {%- endif %}
+
+    {% unless type == 'secondary' -%}
+      {% render 'mobile-menu-block-area', blocks: blocks, submenu_name: parent.title, position: 'top' %}
+    {%- endunless %}
+
+    {% for link in links -%}
+      {% liquid
+        assign has_children = false
+        assign child_is_active = false
+
+        if link.levels > 0
+          assign has_children = true
+        endif
+
+        for link in link.links
+          if link.active
+            assign child_is_active = true
+            break
+          elsif link.links.size > 0
+            for link in link.links
+              if link.active
+                assign child_is_active = true
+                break
+              endif
+            endfor
+          endif
+        endfor
+
+        if has_children
+          assign submenu_menu_depth = menu_depth | plus: 1
+
+          capture submenu_pane_key
+            if parent
+              echo 'submenu-[[ph]]-[[lh]]-[[fi]]-[[smd]]' | replace: '[[ph]]', parent.handle | replace: '[[lh]]', link.handle | replace: '[[fi]]', forloop.index0 | replace: '[[smd]]', submenu_menu_depth
+            else
+              echo 'submenu-[[lh]]-[[fi]]-[[smd]]' | replace: '[[lh]]', link.handle | replace: '[[fi]]', forloop.index0 | replace: '[[smd]]', submenu_menu_depth
+            endif
+          endcapture
+        endif
+
+        assign mobile_menu_link_class = 'mobile-menu__link'
+
+        if has_children
+          assign mobile_menu_link_class = mobile_menu_link_class | append: ' no-transition'
+        endif
+
+        if link.active or child_is_active
+          assign mobile_menu_link_class = mobile_menu_link_class | append: ' active'
+        endif
+
+        if link.handle == handleized_featured_link_label
+          assign mobile_menu_link_class = mobile_menu_link_class | append: ' featured-link'
+        endif
+      -%}
+
+      <li
+        class="mobile-menu__item fs-body-100"
+        data-list-item
+      >
+        <a
+          class="{{ mobile_menu_link_class }}"
+          href="{{ link.url }}"
+          {% if has_children -%}
+            data-action="show-sub-pane"
+            data-link-target-pane-key="{{ submenu_pane_key }}"
+            data-link="primary"
+            aria-haspopup="true"
+            aria-expanded="false"
+          {%- endif %}
+        >
+          <span class="mobile-menu__link__text fs-body-100">{{ link.title }}</span>
+
+          {% if has_children -%}
+            {% render 'icon', icon: 'chevron', class: 'menu-icon' %}
+          {%- endif %}
+        </a>
+
+        {% if has_children -%}
+          {%- assign next_depth = menu_depth | plus: 1 -%}
+
+          {% capture subpanels %}
+            {{ subpanels }}
+
+            {% render 'mobile-menu-list',
+              type: 'sub',
+              links: link.links,
+              blocks: blocks,
+              depth: next_depth,
+              forloopIndex: forloop.index0,
+              parent_pane_key: pane_key,
+              parent: link,
+              grandparent: parent
+            -%}
+          {%- endcapture %}
+        {%- endif %}
+      </li>
+    {%- endfor %}
+
+    {% unless type == 'secondary' -%}
+      {% render 'mobile-menu-block-area', blocks: blocks, submenu_name: parent.title, position: 'bottom' %}
+    {%- endunless %}
+  </ul>
+
+  {{ additional_content }}
+{%- endcapture %}
+
+{% if type == 'primary' -%}
+  <div data-pane-key="{{ pane_key }}" data-scroll-lock-ignore data-menu-depth="{{ menu_depth }}">
+    {{ main_content }}
+  </div>
+{%- else -%}
+  {{ main_content }}
+{%- endif %}
+
+{% liquid
+  if type == 'secondary'
+    render 'mobile-menu-utility-split'
+  endif
+
+  echo subpanels
+  echo additional_subpanels
+-%}

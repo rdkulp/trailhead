@@ -1,0 +1,78 @@
+{% liquid
+  comment
+    Renders a collapsible row list item.
+
+    Required parameters:
+      - block: { Object } The parent block.
+      - forloop: { Object } The forloop object for the current block iteration.
+      - heading_font: { String } The font family to use for the heading. Can be:
+        - 'heading'
+        - 'body'
+  endcomment
+
+  assign heading = block.settings.title
+  assign text = block.settings.text
+
+  assign heading_expanded = false
+  assign text_hidden = true
+
+  if block.settings.expand_by_default
+    assign heading_expanded = true
+    assign text_hidden = false
+  endif
+
+  assign button_class = 'collapsible-row-list-item__trigger fs-heading-6-base'
+
+  if heading_font == 'heading'
+    assign button_class = button_class | append: ' ff-heading'
+  endif
+-%}
+
+<div
+  class="collapsible-row-list-item"
+  data-index="{{ forloop.index0 }}"
+  {{ block.shopify_attributes }}
+>
+  {% if heading != blank -%}
+    <button
+      type="button"
+      class="{{ button_class }}"
+      aria-controls="content-{{ forloop.index }}"
+      aria-expanded="{{ heading_expanded }}"
+      data-expand-by-default="{{ block.settings.expand_by_default }}"
+    >
+      <div class="collapsible-row-list-item__label">
+        {% if block.settings.custom_icon_image != blank -%}
+          {%
+            render 'image'
+            wrapper_class: 'collapsible-row-list-item__icon',
+            image: block.settings.custom_icon_image,
+            sizes: '25px',
+          -%}
+        {%- elsif block.settings.icon != 'none' -%}
+          {% render 'icon-editorial', class: 'collapsible-row-list-item__icon', icon: block.settings.icon %}
+        {%- endif %}
+
+        <span class="collapsible-row-list-item__heading">
+          {{ heading }}
+        </span>
+      </div>
+
+      <div class="accordion__label-icons" style="--icon-width: 15px; --icon-height: 15px;">
+        {% render 'icon', icon: 'chevron' %}
+      </div>
+    </button>
+  {%- endif %}
+
+  {% if text != blank -%}
+    <div
+      class="collapsible-row-list-item__text-container"
+      aria-hidden="{{ text_hidden }}"
+      id="content-{{ forloop.index }}"
+    >
+      <div class="collapsible-row-list-item__text fs-body-100 rte">
+        {{ text }}
+      </div>
+    </div>
+  {%- endif %}
+</div>

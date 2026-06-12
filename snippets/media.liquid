@@ -1,0 +1,133 @@
+{% liquid
+  comment
+    Renders the product media display.
+
+    Required parameters:
+      - media: { Object } The media object.
+      - sizes: { String } A list of responsive image sizes (for the 'sizes' attributes).
+
+    Optional parameters
+      - animate: { Boolean } Whether animations should be enabled.
+      - aspect_ratio: { String } The aspect ratio of the media.
+      - enable_product_lightbox: { Boolean } Whether the product media lightbox should be enabled.
+      - fallback_alt: { String } Alt text to use if the media doesn't have any.
+      - link: { String } A URL for the media to link to.
+      - loop_video: { Boolean } Whether videos should loop.
+      - prioritize_loading: { Boolean } If 'true', the `loading="lazy"` attribute won't be added to images.
+      - within_carousel: { Boolean } Whether the media is being displayed inside a carousel. This is used to
+        attempt to make iframes more usable within touch sliders.
+  endcomment
+
+  assign media_class = 'media'
+
+  if enable_product_lightbox
+    assign media_class = media_class | append: ' media--has-lightbox'
+  endif
+
+  if animate and media.media_type != 'image'
+    assign media_class = media_class | append: ' animation--media'
+  endif
+
+  capture additional_media_attributes
+    case media.media_type
+      when 'video'
+        echo 'data-loop="[[loop]]"' | replace: '[[loop]]', loop_video
+        echo 'style="--video-aspect-ratio: [[w]]/[[h]];"' | replace: '[[w]]', media.preview_image.width | replace: '[[h]]', media.preview_image.height
+      when 'external_video'
+        echo 'data-host="[[host]]"' | replace: '[[host]]', media.host
+        echo ' data-video-id="[[vid]]"' | replace: '[[vid]]', media.external_id
+      when 'image'
+        echo 'data-interactive'
+    endcase
+  endcapture
+-%}
+
+<div
+  class="{{ media_class }}"
+  data-media-id="{{ media.id }}"
+  data-media-type="{{ media.media_type }}"
+  {{ additional_media_attributes }}
+>
+  {%- if media.media_type == 'image' -%}
+    {% liquid
+      assign media_link_tag = 'div'
+
+      if enable_product_lightbox or link
+        assign media_link_tag = 'a'
+      endif
+
+      capture media_link_attributes
+        if enable_product_lightbox
+          assign media_image_url = media.src | image_url
+
+          echo 'href="[[url]]"' | replace: '[[url]]', media_image_url
+          echo 'class="lightbox-image no-transition"'
+          echo 'data-pswp-src="[[url]]"' | replace: '[[url]]', media_image_url
+          echo 'data-pswp-width="[[w]]"' | replace: '[[w]]', media.width
+          echo 'data-pswp-height="[[h]]"' | replace: '[[h]]', media.height
+          echo 'data-cropped="true"'
+        elsif link
+          echo 'href="[[url]]"' | replace: '[[url]]', link
+        endif
+        if enable_product_lightbox or link
+          echo 'aria-label="[[alt]]"' | replace: '[[alt]]', media.alt
+        endif
+      endcapture
+    -%}
+
+    <{{ media_link_tag }} {{ media_link_attributes }}>
+      {% render 'image',
+        image: media,
+        aspect_ratio: aspect_ratio,
+        sizes: sizes,
+        prioritize_loading: prioritize_loading,
+        fallback_alt: fallback_alt,
+        no_crop: enable_product_lightbox,
+        animate: animate
+      -%}
+    </{{ media_link_tag }}>
+  {%- elsif media.media_type == 'video' -%}
+    {{ media | video_tag: image_size: '1024x', loop: loop_video, controls: true }}
+  {%- elsif media.media_type == 'external_video' -%}
+    {%- liquid
+      assign loop_binary = '0'
+
+      if loop_video
+        assign loop_binary = '1'
+      endif
+
+      # The `external_video_tag` filter will include the wrong origin parameter when viewing a shopify preview URL, so the
+      # replace here is to work around that.
+      assign shop_domain = shop.secure_url | replace: 'https://', ''
+      assign video_class = 'js-' | append: media.host
+
+      if media.host == 'youtube'
+        echo media | external_video_url: loop: loop_binary, playlist: media.external_id | external_video_tag: class: video_class, loading: 'lazy' | replace: shop_domain, request.host
+      else
+        # This covers Vimeo
+        echo media | external_video_url: loop: loop_binary | external_video_tag: class: video_class, loading: 'lazy' | replace: shop_domain, request.host
+      endif
+    -%}
+
+    {% if within_carousel %}
+      <div class="external-video-overlay"></div>
+    {% endif %}
+  {%- elsif media.media_type == 'model' -%}
+    {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true }}
+
+    <button
+      class="model-poster"
+      style="background-image: url({{ media | image_url: width: 1000 }})"
+      type="button"
+      title="{{ 'general.accessibility.view_3d_model' | t }}"
+    >
+      <span class="media-badge model in-poster">
+        {% render 'icon', icon: '3d-button-control' %}
+      </span>
+    </button>
+
+    <button class="media-badge model-close">
+      {% render 'icon', icon: 'close' %}
+    </button>
+  {%- endif -%}
+</div>

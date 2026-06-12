@@ -1,0 +1,16 @@
+<div
+  class="product__controls-group product__controls-group-quantity product__block product__block--medium"
+  {{ block.shopify_attributes }}
+>
+  {%- assign input_id = 'product-form-[[bid]]' | replace: '[[bid]]', block.id -%}
+
+  {% render 'quantity-input',
+    parent_id: input_id,
+    prod: prod,
+    initial_value: '1',
+    show_label: block.settings.show_label,
+    show_quantity_in_cart: block.settings.show_quantity_in_cart,
+    use_border: true,
+    wrapper_class: 'quantity-input-wrapper--product-form'
+  -%}
+</div>

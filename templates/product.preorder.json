@@ -1,0 +1,823 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product--default",
+      "blocks": {
+        "product_header": {
+          "type": "product_header",
+          "settings": {
+            "show_divider": true,
+            "show_vendor": true,
+            "show_sku": false,
+            "show_price": true,
+            "show_discount": true,
+            "discount_format": "percent_off",
+            "show_shop_pay": false,
+            "show_product_rating": true,
+            "show_rating_count": false,
+            "rating_style": "compact",
+            "show_sale_badge": false,
+            "show_new_badge": true,
+            "show_custom_badges": true,
+            "product_header_always_top_mobile": "below"
+          }
+        },
+        "text_1": {
+          "type": "text",
+          "settings": {
+            "column_placement": "right",
+            "text_font_size": 4,
+            "text": "<p>Transform your space with our exquisite furniture collections at Flair. Discover timeless elegance and modern comfort in every piece. Elevate your home with quality craftsmanship and stylish designs for a truly inviting atmosphere.</p><p></p>"
+          }
+        },
+        "product_labels_1": {
+          "type": "product_labels",
+          "settings": {
+            "heading": "",
+            "icon_size": 24,
+            "label_style": "accent_bold",
+            "outline": true,
+            "icon_1": "none",
+            "text_1": "Made in Norway",
+            "icon_2": "none",
+            "text_2": "Limited Edition",
+            "icon_3": "none",
+            "text_3": "Sustainably Made",
+            "icon_4": "none",
+            "text_4": "",
+            "icon_5": "none",
+            "text_5": "",
+            "icon_6": "none",
+            "text_6": ""
+          }
+        },
+        "spacer_jHzffe": {
+          "type": "spacer",
+          "settings": { "column_placement": "right", "space": 40 }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "variant_popup_option": "Size",
+            "variant_popup_icon": "measuring-tape",
+            "variant_popup_text": "Size guide",
+            "variant_popup_page": "",
+            "swatch_size": "medium",
+            "siblings_show_product_image": true,
+            "siblings_option_name": "Color",
+            "chip_layout": "3col"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "enable_sticky_atc_bar_desktop": true,
+            "enable_sticky_atc_bar_mobile": true,
+            "drop_shadow": "line",
+            "show_quantity_selector": false,
+            "show_quantity_in_cart": true,
+            "show_pickup_availability": true
+          }
+        },
+        "inventory_counter": {
+          "type": "inventory-counter",
+          "settings": {
+            "label": "",
+            "inventory_max": "100",
+            "low_inventory_threshold": "40",
+            "indicator_style": "dot_with_text",
+            "show_status_bar": true,
+            "show_inventory_transfer": true,
+            "show_untracked_quantity": true
+          }
+        },
+        "text_list_with_icons_Q7Cdaq": {
+          "type": "text-list-with-icons",
+          "settings": {
+            "column_placement": "right",
+            "title": "",
+            "add_box": false,
+            "add_dividers": true,
+            "truncate_num_lines": "0",
+            "icon_border": "none",
+            "icon_border_style": "outlined",
+            "icon_border_color": "accent",
+            "icon_size": 23,
+            "icon_size_mobile": 24,
+            "icon_1": "checkmark-badge",
+            "icon_alignment_1": "icon_center",
+            "text_1": "<p>1-year Warranty Available</p>",
+            "icon_2": "package",
+            "icon_alignment_2": "icon_center",
+            "text_2": "<p>Free Returns & Exchanges</p>",
+            "icon_3": "message-bubble",
+            "icon_alignment_3": "icon_center",
+            "text_3": "<p>Need help? <a href=\"/pages/contact\">Contact Us</a></p>",
+            "icon_4": "none",
+            "icon_alignment_4": "icon_center",
+            "text_4": "",
+            "icon_5": "none",
+            "icon_alignment_5": "icon_center",
+            "text_5": "",
+            "icon_6": "none",
+            "icon_alignment_6": "icon_center",
+            "text_6": "",
+            "display_as_collapsible_row": false,
+            "expand_by_default": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "column_placement": "right",
+            "title": "The Vision",
+            "text_font_class": "fs-body-75",
+            "truncate_num_lines": "0",
+            "display_as_collapsible_row": true,
+            "expand_by_default": false
+          }
+        },
+        "accordion_ePjkTb": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "right",
+            "expand_by_default": false,
+            "heading": "The Designer",
+            "content": "<p>Use metafields in your product page to provide information about the brand or creator. Or customize each row with other technical information more pertinent to your product.</p>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "accordion-2": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "right",
+            "expand_by_default": false,
+            "heading": "The Materials",
+            "content": "<ul><li>Listing of materials</li><li>Use metafields to add dynamic info</li></ul>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "accordion-3": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "right",
+            "expand_by_default": false,
+            "heading": "Shipping & Returns",
+            "content": "<p><strong>Standard Shipping</strong><br/>Free Standard Shipping on orders over $250. Select “Free Shipping” at checkout.<br/><br/><strong>Free Easy Returns</strong><br/>Need to return an item? We make it easy. Email us and we'll send you a free return label with instructions.</p>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "spacer_Q7gzmR": {
+          "type": "spacer",
+          "settings": { "column_placement": "right", "space": 24 }
+        },
+        "spacer_nY4Aar": {
+          "type": "spacer",
+          "settings": { "column_placement": "left", "space": 40 }
+        },
+        "complementary_products_6mUd4X": {
+          "type": "complementary_products",
+          "disabled": true,
+          "settings": {
+            "column_placement": "left",
+            "heading": "You may also like",
+            "enable_slider_desktop": true,
+            "enable_slider_mobile": true,
+            "max_products": 5,
+            "product_source": "app-recommendations",
+            "product_list": []
+          }
+        }
+      },
+      "block_order": [
+        "product_header",
+        "text_1",
+        "product_labels_1",
+        "spacer_jHzffe",
+        "variant_picker",
+        "buy_buttons",
+        "inventory_counter",
+        "text_list_with_icons_Q7Cdaq",
+        "description",
+        "accordion_ePjkTb",
+        "accordion-2",
+        "accordion-3",
+        "spacer_Q7gzmR",
+        "spacer_nY4Aar",
+        "complementary_products_6mUd4X"
+      ],
+      "settings": {
+        "enable_sticky_product_details": true,
+        "show_breadcrumbs": false,
+        "show_navigation_buttons": false,
+        "gallery_size": "large",
+        "thumbnail_position": "bottom",
+        "thumbnail_size": "small",
+        "enable_video_looping": true,
+        "enable_product_lightbox": true,
+        "show_thumbs_in_product_lightbox": true,
+        "image_aspect_ratio": "square",
+        "enable_multiple_variant_media": false,
+        "enable_gift_card_recipient": true,
+        "show_recommended_products_on_desktop": false,
+        "show_recommended_products_on_mobile": false,
+        "max_recommended_products": 3,
+        "enable_quick_view_recommended_products": true,
+        "recommended_products_heading": "You may also like",
+        "section_style_enable_animation": true
+      }
+    },
+    "product_tabs": {
+      "type": "product-tabs",
+      "blocks": {
+        "product_description": {
+          "type": "product_description",
+          "settings": {
+            "tab_heading": "Product description",
+            "content_width": "full",
+            "custom_width": 500,
+            "heading": "Product description",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text_font_size": 3
+          }
+        },
+        "one_column": {
+          "type": "one_column",
+          "settings": {
+            "tab_heading": "1 column tab",
+            "content_width": "full",
+            "custom_width": 500,
+            "heading_column_1": "Single column",
+            "heading_tag_column_1": "h3",
+            "heading_font_size_column_1": 3,
+            "text_column_1": "<p>Add your tab content here.</p>",
+            "text_font_size_column_1": 3,
+            "page_for_content_column_1": "",
+            "custom_liquid_column_1": "",
+            "image_width_column_1": 50,
+            "image_position_column_1": "above_text"
+          }
+        },
+        "two_column": {
+          "type": "two_column",
+          "settings": {
+            "tab_heading": "2 column tab",
+            "content_vertical_alignment": "top",
+            "column_spacing": 28,
+            "heading_column_1": "First column",
+            "heading_tag_column_1": "h3",
+            "heading_font_size_column_1": 3,
+            "text_column_1": "<p>Add your tab content here.</p>",
+            "text_font_size_column_1": 3,
+            "page_for_content_column_1": "",
+            "custom_liquid_column_1": "",
+            "image_width_column_1": 50,
+            "image_position_column_1": "above_text",
+            "heading_column_2": "Second column",
+            "heading_tag_column_2": "h3",
+            "heading_font_size_column_2": 3,
+            "text_column_2": "<p>Add your tab content here.</p>",
+            "text_font_size_column_2": 3,
+            "page_for_content_column_2": "",
+            "custom_liquid_column_2": "",
+            "image_width_column_2": 50,
+            "image_position_column_2": "above_text"
+          }
+        },
+        "three_column": {
+          "type": "three_column",
+          "settings": {
+            "tab_heading": "3 column tab",
+            "content_vertical_alignment": "top",
+            "column_spacing": 28,
+            "heading_column_1": "First column",
+            "heading_tag_column_1": "h3",
+            "heading_font_size_column_1": 3,
+            "text_column_1": "<p>Add your tab content here.</p>",
+            "text_font_size_column_1": 3,
+            "page_for_content_column_1": "",
+            "custom_liquid_column_1": "",
+            "image_width_column_1": 50,
+            "image_position_column_1": "above_text",
+            "heading_column_2": "Second column",
+            "heading_tag_column_2": "h3",
+            "heading_font_size_column_2": 3,
+            "text_column_2": "<p>Add your tab content here.</p>",
+            "text_font_size_column_2": 3,
+            "page_for_content_column_2": "",
+            "custom_liquid_column_2": "",
+            "image_width_column_2": 50,
+            "image_position_column_2": "above_text",
+            "heading_column_3": "Third column",
+            "heading_tag_column_3": "h3",
+            "heading_font_size_column_3": 3,
+            "text_column_3": "<p>Add your tab content here.</p>",
+            "text_font_size_column_3": 3,
+            "page_for_content_column_3": "",
+            "custom_liquid_column_3": "",
+            "image_width_column_3": 50,
+            "image_position_column_3": "above_text"
+          }
+        }
+      },
+      "block_order": [
+        "product_description",
+        "one_column",
+        "two_column",
+        "three_column"
+      ],
+      "disabled": true,
+      "name": "t:sections.product_tabs.presets.name",
+      "settings": {
+        "tab_alignment": "left",
+        "tab_design": "line",
+        "text_font_type": "body",
+        "text_font_size": 6,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "icon_with_text_columns_HnKXFY": {
+      "type": "icon-with-text-columns",
+      "blocks": {
+        "column_NJRHrx": {
+          "type": "column",
+          "settings": {
+            "icon": "shipping-truck-fast",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>Fast, free shipping</strong> over $50</p>"
+          }
+        },
+        "column_deXCng": {
+          "type": "column",
+          "settings": {
+            "icon": "package",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>100-day</strong> free returns</p>"
+          }
+        },
+        "column_BzawBg": {
+          "type": "column",
+          "settings": {
+            "icon": "rating-star-winner",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>4.9</strong> stars based on 499 reviews</p>"
+          }
+        },
+        "column_XWjHmY": {
+          "type": "column",
+          "settings": {
+            "icon": "chat-support",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>Dedicated support</strong></p>"
+          }
+        }
+      },
+      "block_order": [
+        "column_NJRHrx",
+        "column_deXCng",
+        "column_BzawBg",
+        "column_XWjHmY"
+      ],
+      "settings": {
+        "icon_border": "none",
+        "icon_border_style": "outlined",
+        "icon_border_color": "accent",
+        "icon_size": 24,
+        "icon_size_mobile": 32,
+        "accent_font_size": 3,
+        "heading_font_size": 2,
+        "text_font_size": 2,
+        "desktop_alignment": "above_center",
+        "columns_per_row": 4,
+        "content_width": "full",
+        "custom_width": 900,
+        "color_scheme": "default",
+        "override_with_custom_colors": true,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_JCXbN8": {
+      "type": "rich-text",
+      "blocks": {
+        "accent_ic7RYT": {
+          "type": "accent",
+          "settings": {
+            "text": "The Brand",
+            "accent_font_size": 4,
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent"
+          }
+        },
+        "heading_CTTD3F": {
+          "type": "heading",
+          "settings": {
+            "title": "{{ product.vendor }}",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        }
+      },
+      "block_order": ["accent_ic7RYT", "heading_CTTD3F"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 600,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 80,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "featured_collection_with_media_7xcPRk": {
+      "type": "featured-collection-with-media",
+      "blocks": {
+        "featured_image_EYG3Wr": {
+          "type": "featured_image",
+          "settings": {
+            "background_image_media_fit": "cover",
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "media_link": "",
+            "image_overlay_tint_opacity": 50,
+            "image_overlay_tint_style": "gradient_down",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000",
+            "maximum_content_width": 500,
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Find more",
+            "heading_tag": "h3",
+            "heading_font_size": 6,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "View collection",
+            "button_style": "secondary",
+            "text_position": "flex-start_flex-start",
+            "text_position_mobile": "center_flex-start"
+          }
+        }
+      },
+      "block_order": ["featured_image_EYG3Wr"],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_link": "",
+        "button_label": "",
+        "button_style": "primary",
+        "collection": "",
+        "maximum_products": 6,
+        "num_columns": "3",
+        "enable_slider_desktop": false,
+        "enable_slider_mobile": true,
+        "media_position": "left",
+        "media_width": 50,
+        "media_height": 500,
+        "media_position_mobile": "above",
+        "media_height_mobile": 360,
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 80,
+        "section_style_enable_animation": true
+      }
+    },
+    "video_hero": {
+      "type": "video-hero",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Imagine your new space",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Speak to one of our consultants to create and design the perfect space for your home.</p>",
+            "text_font_size": 4
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_link": "",
+            "button_label": "Book consultation",
+            "button_style": "secondary"
+          }
+        }
+      },
+      "block_order": ["heading", "text", "button"],
+      "settings": {
+        "enable_full_width": true,
+        "image_height_type": "custom",
+        "custom_height_desktop": "80vh",
+        "custom_height_mobile": "50vh",
+        "video_focal_point": "center",
+        "mobile_video_focal_point": "center",
+        "media_link": "",
+        "content_max_width": 860,
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "center_flex-end",
+        "image_overlay_tint_opacity": 50,
+        "image_overlay_tint_style": "gradient_up",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "solid_thick",
+        "text_box_color_scheme": "color_scheme_1",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "collapsible_row_list_CKTwAq": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item_cUTzyb": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Where can I find information on sustainability?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_8jyLjd": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do you offer gift cards?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_VW3jGw": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "How long will it take to get my item?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_yV9EGk": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is your return policy?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_cUTzyb",
+        "item_8jyLjd",
+        "item_VW3jGw",
+        "item_yV9EGk"
+      ],
+      "settings": {
+        "center_content": true,
+        "preheading": "Frequently asked",
+        "heading": "",
+        "heading_font_size": 4,
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "header_position": "above",
+        "item_heading_font": "heading",
+        "content_width": "full",
+        "custom_width": 1200,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 48,
+        "section_style_spacing_bottom": 60,
+        "section_style_enable_animation": true
+      }
+    },
+    "recommendations": {
+      "type": "recommended-products",
+      "disabled": true,
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "You may also like",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "button_2_button_link": "",
+        "button_2_button_label": "",
+        "button_2_button_style": "tertiary",
+        "button_position": "header",
+        "maximum_products": 8,
+        "num_columns": "3",
+        "num_columns_mobile": "2",
+        "enable_slider_desktop": true,
+        "enable_slider_mobile": true,
+        "section_style_spacing_top": 80,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "grid_YLHJKE": {
+      "type": "grid",
+      "blocks": {
+        "item_AtGFzk": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Living Room",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 50,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item_3N7Cx9": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Kitchen",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 60,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item_L7wAXB": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Dining Room",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 60,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item_A7xLyG": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Bathroom",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 60,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "item_AtGFzk",
+        "item_3N7Cx9",
+        "item_L7wAXB",
+        "item_A7xLyG"
+      ],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "Shop by room",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "full_width": false,
+        "grid_spacing": 24,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 24,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "product_tabs",
+    "icon_with_text_columns_HnKXFY",
+    "rich_text_JCXbN8",
+    "featured_collection_with_media_7xcPRk",
+    "video_hero",
+    "collapsible_row_list_CKTwAq",
+    "recommendations",
+    "grid_YLHJKE"
+  ]
+}

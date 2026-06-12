@@ -1,0 +1,111 @@
+{%- liquid
+  capture custom_swatch_color_maps
+    render 'get-custom-swatch-color-maps'
+  endcapture
+
+  assign custom_color_key_map = custom_swatch_color_maps | split: ' | ' | first | split: ','
+  assign custom_color_value_map = custom_swatch_color_maps | split: ' | ' | last | split: ','
+-%}
+
+<div
+  class="
+    section
+    product__sidebar-recommendations
+    hidden
+    {% unless show_on_desktop %}
+      product__sidebar-recommendations--hide-on-desktop
+    {% endunless %}
+    {% unless show_on_mobile %}
+      product__sidebar-recommendations--hide-on-mobile
+    {% endunless %}
+  "
+  data-product-sidebar-recommendations
+  data-product-id="{{ prod.id }}"
+  data-section-id="{{ section.id }}"
+  data-max-recommendations="{{ max_products }}"
+>
+  <div class="section-inner">
+    {%- unless heading == blank -%}
+      <h3 class="product__sidebar-recommendations__heading product__sidebar-recommendations__heading--sidebar fs-accent-bold">
+        {{ heading }}
+      </h3>
+
+      <h3 class="product__sidebar-recommendations__heading product__sidebar-recommendations__heading--slider ff-heading fs-heading-3-base">
+        {{ heading }}
+      </h3>
+    {%- endunless -%}
+
+    <div data-product-sidebar-recommendations-content>
+      {%- if recommendations.performed and recommendations.products_count > 0 -%}
+        <div
+          data-product-sidebar-recommendations-products
+          class="
+            product__sidebar-recommendations-content
+            featured-collection-slider-grid
+            standard-grid-spacing
+            product-item-holder
+          "
+          {% render 'setup-product-item-grid' %}
+          data-slider-desktop="true"
+          data-slider-mobile="true"
+        >
+          {%- if recommendations.products_count > 0 -%}
+            {%- capture product_items -%}
+            {%- for product_item in recommendations.products -%}
+              {% assign id = 'recommended-sidebar-' | append: product_item.id %}
+
+              {% render 'product-item',
+                parent_id: id,
+                prod: product_item,
+                aspect_ratio: settings.product_listing_aspect_ratio,
+                custom_color_key_map: custom_color_key_map,
+                custom_color_value_map: custom_color_value_map,
+                show_quick_view: show_quick_view
+              %}
+            {%- endfor -%}
+          {%- endcapture -%}
+
+            {%- liquid
+              if settings.product_listing_product_list_style == 'bordered_grid'
+                assign gap = 1
+              else
+                assign gap = 12
+              endif
+            -%}
+
+            {% render 'scroll-slider',
+              navigation_container: '.product__sidebar-recommendations',
+              id: 'product__sidebar-recommendations',
+              slider_wrapper_classes: 'product__sidebar-recommendations-items',
+              slider_items: product_items,
+              columns: 2,
+              columns_above_720: 4,
+              gap: gap,
+              peek: 24,
+              full_width_below_1024: true,
+              peek_and_full_width_below_1024: true,
+              disable_above_1024: true
+            %}
+
+            {% render 'scroll-slider-navigation-buttons' %}
+
+            {% if show_on_desktop %}
+              <div
+                class="product__sidebar-recommendations-mini-desktop"
+              >
+                {%- for product_item in recommendations.products -%}
+                  {% render 'product-item-mini',
+                    prod: product_item,
+                    aspect_ratio: settings.product_listing_aspect_ratio,
+                    show_quick_view: show_quick_view,
+                    image_sizes: '90px'
+                  %}
+                {%- endfor -%}
+              </div>
+            {% endif %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

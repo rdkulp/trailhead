@@ -1,0 +1,109 @@
+{% liquid
+  comment
+    Renders a column block for the "Multi-column" section.
+
+    Required parameters:
+      - block: { Object } The parent block.
+      - section_settings: { Object } The parent section's settings.
+  endcomment
+
+  assign item_class = 'multi-column__grid-item animation--item'
+
+  if section_settings.enable_text_box
+    assign item_class = item_class | append: ' text-box'
+  endif
+
+  capture text_styles
+    echo '--text-max-width: [[tmw]]%;' | replace: '[[tmw]]', block.settings.text_max_width
+  endcapture
+-%}
+
+{% if block.type == 'image_column' -%}
+  {% capture column_image -%}
+    {% liquid
+      assign image_wrapper_tag = 'div'
+      assign image_wrapper_attributes = 'class="multi-column__grid-item-image-wrapper"'
+
+      if block.settings.image_link != blank
+        assign image_wrapper_tag = 'a'
+        assign image_wrapper_attributes = image_wrapper_attributes | prepend: 'href="[[link]]" ' | replace: '[[link]]', block.settings.image_link
+
+        assign aria_label = block.settings.small_caption | default: block.settings.image.alt
+        assign image_wrapper_attributes = image_wrapper_attributes | append: ' aria-label="[[al]]"' | replace: '[[al]]', aria_label
+      endif
+
+      assign image_sizes = '(min-width: 960px) calc(100vw - (2 * clamp(24px, 2vw, 36px)) / [[dc]] * [[iwp]]), (min-width: 720px) calc(100vw - (2 * clamp(24px, 2vw, 36px))), calc(100vw - (2 * 16px))'
+      assign image_sizes = image_sizes | replace: '[[dc]]', section_settings.desktop_columns | replace: '[[iwp]]', block.settings.image_width
+    -%}
+
+    <figure class="multi-column__grid-item-image-figure" style="--image-width: {{ block.settings.image_width }}%;">
+      <{{ image_wrapper_tag }} {{ image_wrapper_attributes }}>
+        {% render 'image',
+          wrapper_class: 'multi-column__grid-item-image',
+          image: block.settings.image,
+          sizes: image_sizes,
+          aspect_ratio: block.settings.aspect_ratio,
+          focal_point: block.settings.focal_point,
+          include_placeholder: true
+        -%}
+      </{{ image_wrapper_tag }}>
+
+      {% if block.settings.small_caption != blank -%}
+        <figcaption class="multi-column__grid-item-small-caption ff-body fs-body-75">
+          {{ block.settings.small_caption }}
+        </figcaption>
+      {%- endif %}
+    </figure>
+  {%- endcapture %}
+{%- endif %}
+
+<div
+  class="{{ item_class }}"
+  {% if section_settings.enable_text_box -%}
+    {% render 'settings-text-box',
+      local_settings: section_settings,
+      leading_style: text_styles,
+      section_type: 'standard'
+    %}
+  {%- else -%}
+    style="{{ text_styles }}"
+  {%- endif %}
+  {{ block.shopify_attributes }}
+>
+  <div class="multi-column__grid-item-inner">
+    {% if block.settings.image_position == 'above_text' -%}
+      {{ column_image }}
+    {%- endif %}
+
+    <div class="multi-column__grid-item-text-wrapper section-blocks">
+      {% render 'section-block-accent',
+        accent_text: block.settings.accent,
+        accent_font_size: 3,
+        accent_divider_enable: false
+      -%}
+
+      {% render 'section-block-heading',
+        heading_text: block.settings.heading,
+        heading_font_size: block.settings.heading_font_size,
+        heading_tag: block.settings.heading_tag
+      -%}
+
+      {% render 'section-block-text', text: block.settings.text, text_font_size: block.settings.text_font_size -%}
+
+      {% if block.settings.button_label != blank -%}
+        <div class="section-blocks__button">
+          {%- render 'button',
+            label: block.settings.button_label,
+            link: block.settings.button_link,
+            button_style: block.settings.button_style,
+            button_size: 'small'
+          -%}
+        </div>
+      {%- endif %}
+    </div>
+
+    {% if block.settings.image_position == 'below_text' -%}
+      {{ column_image }}
+    {%- endif %}
+  </div>
+</div>

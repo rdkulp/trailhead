@@ -1,0 +1,35 @@
+<div
+  class="product__block product-blocks__product-labels product__block--medium"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.heading != blank %}
+    <div class="product-blocks__product-labels-heading ff-heading fs-heading-6-base">
+      {{ block.settings.heading }}
+    </div>
+  {% endif %}
+  <div
+    class="product-blocks__product-labels-items"
+    data-outlined-labels="{{ block.settings.outline }}"
+  >
+    {% for i in (1..6) -%}
+      {% liquid
+        assign text_setting_string = 'text_' | append: i
+        assign icon_setting_string = 'icon_' | append: i
+        assign custom_icon_image_setting_string = 'custom_icon_image_' | append: i
+
+        assign text_setting = block.settings[text_setting_string]
+        assign icon_setting = block.settings[icon_setting_string]
+        assign custom_icon_image_setting = block.settings[custom_icon_image_setting_string]
+      -%}
+      {%
+        render 'product-block-product-labels-item',
+        text: text_setting,
+        icon: icon_setting,
+        custom_icon_image: custom_icon_image_setting,
+        icon_size: block.settings.icon_size,
+        label_style: block.settings.label_style,
+        outline: block.settings.outline,
+      %}
+    {%- endfor %}
+  </div>
+</div>

@@ -1,0 +1,62 @@
+{% liquid
+  comment
+    Renders the base structure for product quick add/view modals.
+
+    Required parameters:
+      - open: { Boolean } Whethe the modal should be open.
+
+    Optional parameters:
+      - content: { String } The content to be rendered inside the modal.
+      - type: { String } The type of modal. Can be:
+        - 'quick-add'
+        - 'quick-view'
+  endcomment
+
+  assign modal_wrapper_class = 'quick-product-modal modal popover is-fixed'
+  assign modal_content_class = 'quick-product-modal__content'
+
+  if open
+    assign modal_wrapper_class = modal_wrapper_class | append: ' is-visible active'
+  else
+    assign modal_content_class = modal_content_class | append: ' empty'
+  endif
+
+  if settings.enable_section_animations
+    assign modal_wrapper_class = modal_wrapper_class | append: ' animation animation--quick-product animation--quick-product-revealed'
+  endif
+-%}
+
+<div
+  class="{{ modal_wrapper_class }}"
+  aria-modal="true"
+  {% unless open %}
+    aria-hidden="true"
+  {% endunless %}
+  data-quick-product-modal
+  data-quick-product-type="{{ type }}"
+>
+  <div class="modal__wash"></div>
+
+  <div class="quick-product-modal__inner modal__inner">
+    <template id="quick-product-modal-template">
+      {% liquid
+        if content == blank
+          render 'quick-product-modal-template'
+        endif
+      -%}
+    </template>
+
+    <div class="{{ modal_content_class }}">
+      {{ content }}
+    </div>
+
+    <button
+      type="button"
+      data-modal-close
+      class="modal__close-icon"
+      aria-label="{{ 'general.accessibility.close_modal' | t }}"
+    >
+      {% render 'icon-button', icon: 'modal-drawer-close', icon_size: 24 %}
+    </button>
+  </div>
+</div>

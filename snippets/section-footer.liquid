@@ -1,0 +1,12 @@
+{%- comment -%}
+  Renders a section's footer
+
+  Required parameters:
+    - content: { String } The content for the footer
+{%- endcomment -%}
+
+{% render 'inline-scripts', script_name: 'section-footer' %}
+
+<section-footer-component class="section-footer animation--container-footer">
+  {{ content }}
+</section-footer-component>

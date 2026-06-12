@@ -1,0 +1,1 @@
+{"sections":{"main":{"type":"main-product--quick-add","blocks":{"variant_picker":{"type":"variant_picker","settings":{"chip_layout":"natural"}},"inventory-counter":{"type":"inventory-counter","settings":{}}},"block_order":["variant_picker","inventory-counter"],"settings":{}}},"order":["main"]}

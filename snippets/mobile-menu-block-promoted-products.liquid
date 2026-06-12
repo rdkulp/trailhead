@@ -1,0 +1,43 @@
+{% liquid
+  comment
+    Renders a mobile menu promoted product block.
+
+    Required parameters:
+    - block: { Object } The associated block object.
+  endcomment
+-%}
+
+<div class="mobile_menu__promo_block mobile-menu-block-promoted-products" {{ block.shopify_attributes }}>
+  {% if block.settings.title != blank -%}
+    <{{ block.settings.heading_tag }} class="mobile-menu-block-title fs-accent-bold">
+      {{- block.settings.title -}}
+    </{{ block.settings.heading_tag }}>
+  {%- endif %}
+
+  <div class="mobile-menu-block-promoted-products__inner" data-layout="{{ block.settings.layout }}">
+    {% for product in block.settings.products -%}
+      {% render 'mobile-menu-block-promoted-products-item',
+        prod: product,
+        layout: block.settings.layout,
+        image_size: block.settings.image_size,
+        image_aspect_ratio: block.settings.image_aspect_ratio,
+        show_product_vendor: block.settings.show_product_vendor,
+        show_product_subtitles: block.settings.show_product_subtitles,
+        show_product_prices: block.settings.show_product_prices
+      -%}
+    {%- else -%}
+      {% for num in (1..3) -%}
+        {% render 'mobile-menu-block-promoted-products-item',
+          prod: blank,
+          layout: block.settings.layout,
+          image_size: block.settings.image_size,
+          image_aspect_ratio: block.settings.image_aspect_ratio,
+          show_product_vendor: block.settings.show_product_vendor,
+          show_product_subtitles: block.settings.show_product_subtitles,
+          show_product_prices: block.settings.show_product_prices,
+          placeholder: true
+        -%}
+      {%- endfor %}
+    {%- endfor %}
+  </div>
+</div>

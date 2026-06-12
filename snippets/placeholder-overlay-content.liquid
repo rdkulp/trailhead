@@ -1,0 +1,33 @@
+{%- comment -%}
+  This renders placeholder overlay content for use on top of 'placeholder-overlay'
+  It includes instructions for collection sections with block-based media.
+
+  Optional
+    - wrapper_class: { String } A class string to add to the container.
+{%- endcomment -%}
+
+{% liquid
+  assign placeholder_title = 'sections.collection_shared.onboarding.title' | t
+  assign placeholder_text = 'sections.collection_shared.onboarding.text' | t
+%}
+
+<div class="{{ wrapper_class }} overlay-content overlay-content__placeholder">
+  <div
+    class="overlay-content__text-container image-overlay-content section-blocks"
+    style="
+      --color-text: #FFFFFF;
+      --color-background: rgba(0, 0, 0, 0.5);
+    "
+  >
+    {%
+      render 'section-block-heading',
+      heading_text: placeholder_title,
+      heading_font_size: 4,
+    -%}
+    {%
+      render 'section-block-text',
+      text: placeholder_text,
+      text_font_size: 3,
+    -%}
+  </div>
+</div>

@@ -1,0 +1,40 @@
+{%- comment -%}
+  Renders the base template for product quick add/view modals.
+{%- endcomment -%}
+
+<div class="quick-product">
+  <div class="quick-product__left"></div>
+
+  <div class="quick-product__right">
+    <div class="quick-product__right-viewport" data-scroll-lock-ignore>
+      <div class="quick-product__right-inner">
+        <h2 class="product__title placeholder ff-heading fs-heading-2-base"></h2>
+      </div>
+    </div>
+
+    <h3 class="quick-product-modal-loading-indicator hidden">
+      {% render 'loader',
+        foreground_color_var: '--color-text-popups-drawers',
+        background_color_var: '--color-text-alpha-20-popups-drawers',
+        loader_size: '28px'
+      %}
+    </h3>
+
+    <div class="quick-product__right-viewport-footer">
+      <div
+        class=" product-form__item product-form__item--submit product-form__item--no-variants"
+      >
+        <button
+          type="submit"
+          name="add"
+          class="product-form__cart-submit btn btn--medium btn--full btn--primary"
+          data-add-to-cart
+        >
+          <span data-add-to-cart-text>
+            {{ 'products.product.add_to_cart' | t }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

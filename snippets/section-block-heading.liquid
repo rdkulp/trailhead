@@ -1,0 +1,31 @@
+{% liquid
+  comment
+    Renders a "Heading" text block.
+
+    Required parameters:
+      - heading_text: { Object } The heading text.
+      - heading_font_size: { Number } A number representing a font size, within the
+        heading font scale.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+
+    Optional parameters:
+      - heading_tag: { String: 'h2' } The HTML heading tag (ie. 'h2', 'h3, etc') defined in section settings. Accepts 'h1' through 'h6'.
+  endcomment
+
+  if heading_text != blank
+    assign heading_tag = heading_tag | default: 'h2'
+    assign heading_class = 'section-blocks__heading heading-block ff-heading'
+
+    capture heading_font_class
+      render 'settings-text-size', type: 'heading', size: heading_font_size
+    endcapture
+
+    assign heading_class = heading_class | append: ' ' | append: heading_font_class
+  endif
+-%}
+
+{% if heading_text != blank -%}
+  <{{ heading_tag }} class="{{ heading_class }}" {{ shopify_attributes }}>
+    {{ heading_text }}
+  </{{ heading_tag }}>
+{%- endif %}

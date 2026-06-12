@@ -1,0 +1,43 @@
+{% liquid
+  comment
+    Renders the `class` and other necessary attributes for a text box container.
+
+    Required parameters:
+      - local_settings: { Object } The local section settings object.
+
+    Optional parameters:
+      - class: { String } A default class to apply to the container
+      - animate_text_box: { Boolean } Whether the text box should animate. Defaults to 'false'.
+      - section_type: { String } A string noting the section type, because the inner padding of text boxes
+        dependent on the type. Can be:
+          - 'standard' (default)
+          - 'hero'
+          - 'image-with-text'
+  endcomment
+
+  assign class = class | default: 'text-container'
+  assign animate_text_box = animate_text_box | default: false, allow_false: true
+
+  if local_settings.enable_text_box
+    assign class = class | append: ' text-box'
+  endif
+
+  if animate_text_box
+    assign class = class | append: ' animation--item'
+  endif
+
+  capture image_overlay_style_for_content
+    render 'settings-image-overlay-style-for-content', local_settings: local_settings
+  endcapture
+
+  capture attributes
+    if local_settings.enable_text_box
+      render 'settings-text-box', local_settings: local_settings, leading_style: image_overlay_style_for_content, section_type: section_type
+    else
+      echo 'style="[[iosfc]]"' | replace: '[[iosfc]]', image_overlay_style_for_content
+    endif
+  endcapture
+
+  echo 'class="[[class]]"' | replace: '[[class]]', class
+  echo attributes
+-%}

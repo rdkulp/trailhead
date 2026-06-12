@@ -1,0 +1,82 @@
+<div
+  class="
+    page
+    section
+    {% if settings.enable_section_animations and section.settings.section_style_enable_animation %}
+      animation
+      animation--page
+    {% endif %}
+  "
+  data-section-id="{{ section.id }}"
+  data-section-type="page"
+  style="
+    {% if section.settings.content_width == 'custom' %}
+      --content-width: {{ section.settings.custom_content_width }}px;
+    {% endif %}
+  "
+>
+  <div class="section-inner">
+    <div class="page__inner">
+      <header class="page__header">
+        <h1 class="page__heading ff-heading fs-heading-1-base ta-c">
+          {{ page.title }}
+        </h1>
+      </header>
+
+      <div class="page__rte ff-body rte rte--page">
+        {{ page.content }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main_page.name",
+  "tag": "section",
+  "class": "page-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header__layout.content"
+    },
+    {
+      "type": "radio",
+      "id": "content_width",
+      "label": "t:shared.settings.section_style.content_width.label",
+      "options": [
+        {
+          "value": "full",
+          "label": "t:shared.settings.section_style.content_width.option_full"
+        },
+        {
+          "value": "custom",
+          "label": "t:shared.settings.section_style.content_width.option_custom"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_content_width",
+      "label": "t:shared.settings.section_style.custom_content_width.label",
+      "unit": "px",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header_style.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_style_enable_animation",
+      "default": true,
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    }
+  ]
+}
+{% endschema %}

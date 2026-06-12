@@ -1,0 +1,132 @@
+{%- liquid
+  comment
+    Renders the filters form.
+
+    Required parameters:
+      - resource: { Object } The resource being filtered (ie. collection or search).
+      - scope: { String } Where the filters are being rendered. Can be:
+        - 'drawer'
+        - 'sidebar'
+      - section_settings: { Object } The parent section's settings.
+      - active_filter_count: { Number } The number of active filters.
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+  endcomment
+
+  assign filter_search_groups = section_settings.filter_search_groups | downcase | split: ', '
+  assign collapse_filter_groups = true
+
+  if scope == 'sidebar'
+    assign collapse_filter_groups = section_settings.collapse_filter_groups_desktop
+  endif
+-%}
+
+<form
+  class="filter-form"
+  data-filter-form
+  data-form-type="{{ scope }}"
+  data-search="{{ filter_search_groups }}"
+  data-filters-active="{% if active_filter_count > 0 %}true{% else %}false{% endif %}"
+  {% if scope == 'sidebar' -%}
+    data-sticky-container
+  {%- endif %}
+>
+  {%- comment -%}
+    Keep the following within the form:
+      - search term
+      - product type
+      - product vendor
+  {%- endcomment -%}
+  {% if resource.terms -%}
+    <input type="hidden" name="q" value="{{ resource.terms | escape }}">
+    <input name="options[prefix]" type="hidden" value="last">
+  {%- elsif resource.current_type -%}
+    <input type="hidden" name="q" value="{{ resource.current_type | escape }}">
+  {%- elsif resource.current_vendor -%}
+    <input type="hidden" name="q" value="{{ resource.current_vendor | escape }}">
+  {%- endif %}
+
+  <div class="filter-form__hidden-sort">
+    {% liquid
+      assign sort_by = resource.sort_by | default: resource.default_sort_by
+
+      for option in resource.sort_options
+        if option.value == sort_by
+          assign sort_by = option.name
+        endif
+      endfor
+    -%}
+
+    {% for option in resource.sort_options -%}
+      {% liquid
+        assign is_active = false
+
+        if resource.sort_by != blank
+          if option.value == resource.sort_by
+            assign is_active = true
+          endif
+        elsif option.value == collection.default_sort_by
+          assign is_active = true
+        endif
+      -%}
+
+      <input
+        type="radio"
+        name="sort_by"
+        data-filter-item-input
+        {% if is_active -%}
+          checked
+        {%- endif %}
+        value="{{ option.value }}"
+        data-value-escaped="{{ option.value | url_escape }}"
+        class="filter-item__radio"
+      >
+    {%- endfor %}
+  </div>
+
+  <div
+    class="filter-form__content"
+    {% if scope == 'drawer' -%}
+      data-scroll-lock-ignore
+    {%- endif %}
+  >
+    {% liquid
+      for filter in resource.filters
+        if filter.type == 'boolean' or filter.type == 'list' and filter.values.first.param_name contains 'availability'
+          capture boolean_filters
+            echo boolean_filters
+
+            assign filter_value = filter.true_value
+            assign filter_label = filter.label
+
+            # Normally, this would be shown as a multi select with options "In stock" and "Out of stock".
+            # However, we want it to appear as a toggle of "In stock only".
+            if filter.type == 'list' and filter.values.first.param_name contains 'availability'
+              assign filter_value = filter.values.first
+              assign filter_label = 'filters.in_stock_only' | t
+            endif
+
+            # We only output true values for boolean filters
+            render 'filter-item', type: 'boolean', filter_value: filter_value, filter_label: filter_label, scope: scope, truncate_item: false
+          endcapture
+        else
+          capture other_filters
+            echo other_filters
+
+            render 'filter-form-group', filter: filter, collapse_filter_groups: collapse_filter_groups, filter_search_groups: filter_search_groups, section_settings: section_settings, scope: scope, custom_color_key_map: custom_color_key_map, custom_color_value_map: custom_color_value_map
+          endcapture
+        endif
+      endfor
+    -%}
+
+    {% if boolean_filters != blank -%}
+      <div class="filter-form__list-wrapper animation--filter-form-group" data-is-boolean="true">
+        <ul class="filter-form__list">
+          {{ boolean_filters }}
+        </ul>
+      </div>
+    {%- endif %}
+
+    {{ other_filters }}
+  </div>
+</form>

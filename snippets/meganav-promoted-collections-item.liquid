@@ -1,0 +1,92 @@
+{% liquid
+  comment
+    Renders a meganav promoted collection item.
+
+    Required parameters:
+      - meganav_settings: { Object } The settings object for the associated meganav block.
+      - promo_width: { Number } The width of the promo area (as a percentage of the parent container).
+      - promo_column_count: { Number } The number of columns in the promo area.
+      - nav_collection: { Object } The associated collection object.
+      - collection_title_style: { String } Where the title should be displayed. Can be:
+        - 'overlay': Overlayed on the collection image.
+        - 'beneath': Beneath the collection image.
+      - image_source: { String } Where the collection image should be sourced from. Can be:
+        - 'collection': The collection image.
+        - 'product': The featured image of the first product in the collection.
+      - image_aspect_ratio: { String } A string noting the aspect ratio of the collection image.
+
+    Optional parameters:
+      - placeholder: { Boolean } Whether we're rendering a placeholder.
+  endcomment
+
+  assign image_sizes = 'calc(100vw - (100% - [[pw]]%) - (clamp(24px, 2vw, 36px) * 2)) / [[pcc]])'
+  assign image_sizes = image_sizes | replace: '[[pw]]', promo_width | replace: '[[pcc]]', promo_column_count
+
+  unless placeholder
+    if image_source == 'collection'
+      assign image = nav_collection.image
+    elsif image_source == 'product'
+      assign image = nav_collection.products.first.featured_media
+    endif
+  endunless
+
+  assign placeholder_title = 'general.onboarding.collection_title' | t
+  assign tag = 'a'
+
+  if placeholder
+    assign tag = 'div'
+  endif
+
+  capture attributes
+    unless placeholder
+      echo 'href="[[cu]]"' | replace: '[[cu]]', nav_collection.url
+      echo 'aria-label="[ct]"' | replace: '[[ct]]', nav_collection.title
+    endunless
+  endcapture
+%}
+
+<{{ tag }}
+  {{ attributes }}
+  class="meganav-promoted-collections-item"
+  data-title-style="{{ collection_title_style }}"
+>
+  <div class="meganav-promoted-collections-item-image-wrap">
+    {%- render 'image',
+      image: image,
+      sizes: image_sizes,
+      aspect_ratio: image_aspect_ratio,
+      include_placeholder: true
+    -%}
+  </div>
+
+  <div
+    class="meganav-promoted-collections-item-text-wrap"
+    {% if collection_title_style == 'overlay' %}
+      style="
+        {% render 'settings-text-position-style' local_settings: meganav_settings %}
+        {%- render 'settings-image-overlay-style-for-content', local_settings: meganav_settings -%}
+      "
+    {% endif %}
+  >
+    {% if collection_title_style == 'overlay' %}
+      <div
+        class="meganav-promoted-collections-item-overlay image-overlay animation--image-overlay"
+        {%- render 'settings-image-overlay', local_settings: meganav_settings -%}
+      ></div>
+    {% endif %}
+
+    {% liquid
+      assign collection_title_class = 'meganav-promoted-collections-item-text-title ff-body'
+
+      if promo_width >= 45 and promo_column_count <= 2 or promo_width >= 65 and promo_column_count <= 3
+        assign collection_title_class = collection_title_class | append: ' fs-body-100'
+      else
+        assign collection_title_class = collection_title_class | append: ' fs-body-75'
+      endif
+    -%}
+
+    <h3 class="{{ collection_title_class }}">
+      {{ nav_collection.title | default: placeholder_title }}
+    </h3>
+  </div>
+</{{ tag }}>

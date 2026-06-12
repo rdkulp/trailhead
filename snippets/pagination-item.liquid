@@ -1,0 +1,59 @@
+{% liquid
+  comment
+    Renders a pagination item.
+
+    Required parameters:
+      - item_type: { String } The pagination item type. Can be:
+        - 'arrow'
+        - 'active'
+        - 'ellip'
+        - 'previous-page'
+        - 'none'
+      - is_link: { Boolean } Whether the pagination item is a link.
+      - link: { String } The pagination item's URL.
+      - button_label: { String } The pagination item's button label.
+
+    Optional parameters:
+      - button_type: { String } The pagination item's button type (used for 'arrow' items). Can be:
+        - 'previous'
+        - 'next'
+      - button_text: { String } The pagination item's button text (used for 'part' items).
+  endcomment
+
+  assign button_type = button_type | default: 'none'
+-%}
+
+<li
+  class="pagination__item"
+  data-type="{{ item_type }}"
+>
+  {% if is_link -%}
+    <a
+      href="{{ link }}"
+      class="pagination__navigation-button"
+      data-type="{{ button_type }}"
+      aria-label="{{ button_label }}"
+    >
+      {%- liquid
+        if item_type == 'arrow'
+          render 'icon', icon: 'chevron'
+        else
+          echo button_text
+        endif
+      -%}
+    </a>
+  {%- else -%}
+    <span
+      class="pagination__navigation-button"
+      {% if item_type == 'arrow' -%}
+        aria-hidden="true"
+      {%- endif %}
+    >
+      {%- liquid
+        if button_text != blank
+          echo button_text
+        endif
+      -%}
+    </span>
+  {%- endif %}
+</li>

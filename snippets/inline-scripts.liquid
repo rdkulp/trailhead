@@ -1,0 +1,40 @@
+{% liquid
+  comment
+    > When users customize sections through the theme editor, the HTML of those sections is dynamically added,
+    > removed, or re-rendered directly onto the existing DOM, without reloading the entire page. However, any
+    > associated JavaScript that runs when the page loads won't run again.
+
+    To avoid javascript (webcomponents) not loading when being added to the editor for the first time,
+    this snippet will allow us to attach required scripts to components, and load all scripts to the head
+    of the document when in the editor.
+
+    Optional parameters:
+    - script_name: { String } The script you want to output
+    - load_all: { Bool } Load all scripts
+  endcomment
+%}
+
+{%- if script_name == 'background-video' or load_all %}
+  <script src="{{ 'background-video.js' | asset_url }}" type="module"></script>
+{% endif -%}
+
+{%- if script_name == 'scroll-slider' or load_all %}
+  <script src="{{ 'scroll-slider.js' | asset_url }}" type="module"></script>
+{% endif -%}
+
+{%- if script_name == 'slideshow' or load_all %}
+  <script src="{{ 'slideshow.js' | asset_url }}" type="module"></script>
+{% endif -%}
+
+{%- if script_name == 'section-footer' or load_all %}
+  <script src="{{ 'section-footer.js' | asset_url }}" type="module"></script>
+{% endif -%}
+
+{%- if script_name == 'scrolling-content' or load_all %}
+  <script src="{{ 'scrolling-content.js' | asset_url }}" type="module"></script>
+{% endif -%}
+
+{% comment %}
+  {%- if script_name == '' or load_all %}
+  {% endif -%}
+{% endcomment %}

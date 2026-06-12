@@ -1,0 +1,65 @@
+{% liquid
+  comment
+    Renders a "video play button". This button also acts as the trigger for the flash message.
+
+    Required parameters:
+    - has_video: { Boolean } Determines if the flash message will be shown on click.
+    - button_design: { String } The button design a choice between - button / - icon
+
+    Optional parameters:
+    - button_style: { String } The button style.
+    - button_size: { String } The button size.
+    - icon_style: { String } The 'play' icon style.
+    - label: { String } The button's label (required for 'full' layout).
+    - shopify_attributes: { Object } Can be passed in if using this snippet as a block.
+  endcomment
+%}
+
+{% capture button_attributes -%}
+  data-video-play-button
+  data-icon-style="{{ icon_style }}"
+  data-button-design="{{ button_design }}"
+
+  {% if layout != blank -%}
+    data-layout="{{ layout }}"
+  {%- endif %}
+
+  {% if button_size != blank -%}
+    data-button-size="{{ button_size }}"
+  {%- endif %}
+
+  {% if alt_text != blank -%}
+    aria-label="{{ alt_text }}"
+  {%- endif %}
+
+  {% unless has_video -%}
+    data-flash-trigger
+    data-flash-message="{{ 'general.flash_alert.no_video' | t }}"
+  {%- endunless %}
+
+  {% if shopify_attributes != blank -%}
+    {{ shopify_attributes }}
+  {%- endif %}
+{%- endcapture %}
+
+{% liquid
+  assign button_class = 'video-play-button btn'
+
+  if button_style != blank
+    assign button_class = button_class | append: ' btn--' | append: button_style
+  endif
+-%}
+
+<button
+  class="{{ button_class }}"
+  type="button"
+  {{ button_attributes }}
+>
+  {% render 'icon', icon: 'play-arrow-circled' %}
+
+  {%- if label != blank and button_design == 'button' -%}
+    <span class="video-play-button__label">
+      {{ label }}
+    </span>
+  {%- endif -%}
+</button>

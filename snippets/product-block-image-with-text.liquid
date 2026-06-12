@@ -1,0 +1,98 @@
+{% liquid
+  assign mobile_image_size = 95 | times: block.settings.image_size_mobile | divided_by: 100
+
+  if block.settings.column_placement == 'right'
+    assign desktop_image_size = 35 | times: block.settings.image_size | divided_by: 100
+    assign image_sizes = '(min-width: 960px) [dis]vw, [mis]vw' | replace: '[dis]', desktop_image_size | replace: '[mis]', mobile_image_size
+  else
+    assign desktop_image_size = 60 | times: block.settings.image_size | divided_by: 100
+    assign image_sizes = '(min-width: 960px) [dis]vw, [mis]vw' | replace: '[dis]', desktop_image_size | replace: '[mis]', mobile_image_size
+  endif
+%}
+
+{%- capture content -%}
+  <div
+    class="
+      product__image-with-text
+      product__image-with-text-image-position--{{ block.settings.image_position }}
+      product__image-with-text-vertical-alignment--{{ block.settings.vertical_alignment }}
+      {% if block.settings.add_box %}product__image-with-text--boxed{% endif %}
+    "
+    style="
+      --image-block-max-width: {{ block.settings.image_size }}%;
+      --image-block-max-width-mobile: {{ block.settings.image_size_mobile }}%;
+    "
+  >
+    {% render 'section-block-image'
+      image: block.settings.image,
+      image_full_width: 'full',
+      break_to_mobile_at: '960',
+      sizes: image_sizes,
+      wrapper_class: 'product__image-with-text-image'
+    -%}
+
+    <div class="product__image-with-text-content">
+      {% if block.settings.accent != blank -%}
+        <p class="product__image-with-text-content-accent fs-accent section-blocks__accent">
+          <span class="accent__text">
+            {{ block.settings.accent }}
+
+            {% if block.settings.accent_divider_enable -%}
+              <span class="accent__divider color-{{ block.settings.accent_divider_color }}"></span>
+            {%- endif %}
+          </span>
+        </p>
+      {%- endif %}
+
+      {% if block.settings.title != blank -%}
+        {% liquid
+          capture heading_font_class
+            render 'settings-text-size', type: 'heading', size: block.settings.heading_font_size
+          endcapture
+        -%}
+
+        <h3 class="product__image-with-text-content-heading ff-heading {{ heading_font_class }}">
+          {{ block.settings.title }}
+        </h3>
+      {%- endif %}
+
+      {%- liquid
+        if block.settings.text != blank or block.settings.link != blank and block.settings.link_text != blank
+          capture text_font_class
+            render 'settings-text-size', type: 'text', size: block.settings.text_font_size
+          endcapture
+        endif
+      -%}
+
+      {% if block.settings.text != blank -%}
+        <div class="product__image-with-text-content-text rte ff-body {{ text_font_class }}">{{ block.settings.text }}</div>
+      {%- endif %}
+
+      {% if block.settings.link != blank and block.settings.link_text != blank -%}
+        <a class="product__image-with-text-content-link link {{ text_font_class }}" href="{{ block.settings.link }}">
+          {{- block.settings.link_text -}}
+        </a>
+      {%- endif %}
+    </div>
+  </div>
+{%- endcapture -%}
+
+{% if block.settings.display_as_collapsible_row -%}
+  {%- assign collapsible_row_heading = block.settings.collapsible_row_title | default: block.settings.title -%}
+
+  {% render 'product-block-accordion',
+    block: block,
+    block_settings: block.settings,
+    heading: collapsible_row_heading,
+    content: content,
+    disable_rte: true,
+    disable_max_width: true
+  -%}
+{%- else -%}
+  <div
+    class="product__block product__block--large {% if block.settings.add_box %}product__block--boxed{% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    {{ content }}
+  </div>
+{%- endif %}

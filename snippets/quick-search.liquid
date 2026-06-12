@@ -1,0 +1,263 @@
+{% comment %}
+  Required parameters:
+
+  Optional parameters:
+   - enable_predictive_search: show the results dropdown as field is populated
+{% endcomment %}
+
+{%- liquid
+  assign all_product_types = collections.all.all_types
+  assign show_product_type_chooser = false
+  if settings.enable_header_search_product_types_choice
+    assign show_product_type_chooser = true
+
+    if settings.header_search_product_type_options != blank
+      assign product_types = settings.header_search_product_type_options | split: ','
+    else
+      comment
+        Note: all_types will include an empty string
+        type as well that needs to be filtered out
+      endcomment
+      assign product_types = all_product_types
+    endif
+  endif
+
+  assign has_search_value = false
+  if search and search.terms
+    assign has_search_value = true
+  endif
+-%}
+
+{% capture product_type_dropdown_content %}
+{% assign default_all_types_label = 'search.all_products' | t %}
+
+<option disabled>{{ 'search.search_within' | t }}</option>
+<option value selected>
+  {{ settings.header_search_product_type_all_label | default: default_all_types_label }}
+</option>
+{%- for product_type in product_types -%}
+  {% assign cleaned_type = product_type | strip %}
+  {% if all_product_types contains cleaned_type and cleaned_type != '' %}
+    <option value="{{ cleaned_type | escape }}" id="{{ product_type | handleize }}">
+      {{ cleaned_type | escape }}
+    </option>
+  {% endif %}
+{%- endfor -%}
+
+{% endcapture %}
+<div
+  class="
+    quick-search
+    quick-search--{{ scope }}
+  "
+  data-quick-search
+  data-quick-search-scope="{{ scope }}"
+  data-quick-search-active="false"
+>
+  <div class="quick-search__inner">
+    <div class="quick-search__trigger-container">
+      <div
+        class="quick-search__bar"
+      >
+        <div
+          class="quick-search__bar-inner"
+          style="
+            --color-text-input: var(--color-text-search-field);
+            --color-background-input: var(--color-background-search-field);
+            --color-border-input: var(--color-border-search-field);
+          "
+        >
+          {%- if show_product_type_chooser -%}
+            <div class="quick-search__type-select-wrapper quick-search__type-select-wrapper--faux select-wrapper">
+              <select
+                class="quick-search__type-select"
+                data-quick-search-faux-product-type
+              >
+                {{ product_type_dropdown_content }}
+              </select>
+              {% render 'icon', icon: 'chevron-small', class: 'select-wrapper--icon' %}
+            </div>
+          {%- endif -%}
+
+          <button
+            type="button"
+            class="quick-search__faux-input"
+            data-quick-search-faux-input
+            data-placeholder-active="true"
+            aria-label="{{ 'general.accessibility.open_search' | t }}"
+            data-placeholder-when-type-active="{{ 'search.placeholder_within_type' | t }}"
+            data-placeholder="{{ 'search.placeholder' | t }}"
+          >
+            <span data-quick-search-faux-text>
+              {% if has_search_value %}
+                {{ search.terms | escape }}
+              {% else %}
+                {{ 'search.placeholder' | t }}
+              {% endif %}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="quick-search__submit"
+            aria-label="{{ 'search.search' | t }}"
+            data-color-source="{{ settings.header_search_field_submit_color_source }}"
+            data-quick-search-faux-submit
+          >
+            {% render 'icon', icon: 'search' %}
+          </button>
+        </div>
+      </div>
+
+      {% if section.settings.desktop_search_appearance == 'icon' %}
+        {{ search_icon | replace: 'mobile', desktop }}
+      {% endif %}
+    </div>
+    <div class="quick-search__active-search-container" data-search-active-container>
+      <form
+        action="{{ routes.search_url }}"
+        class="quick-search__form"
+        autocomplete="off"
+        data-quick-search-form
+        data-scroll-lock-ignore
+      >
+        <input type="hidden" name="options[prefix]" value="last">
+        <label
+          for="QuickSearchInput{{ scope }}"
+          class="visually-hidden"
+          aria-label="{{ 'search.placeholder' | t }}"
+        ></label>
+
+        <div class="quick-search__bar">
+          <div class="quick-search__bar-inner">
+            {%- if show_product_type_chooser -%}
+              {%- assign product_type_options = settings.header_search_product_type_options | split: ',' -%}
+              <div class="quick-search__type-select-wrapper select-wrapper">
+                <select
+                  class="quick-search__type-select"
+                  data-quick-search-product-type
+                  name="filter.p.product_type"
+                >
+                  {{ product_type_dropdown_content }}
+                </select>
+                {% render 'icon', icon: 'chevron-small', class: 'select-wrapper--icon' %}
+              </div>
+            {%- endif -%}
+
+            <input
+              class="quick-search__input"
+              id="QuickSearchInput{{ scope }}"
+              type="text"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ 'search.placeholder' | t }}"
+              data-quick-search-input
+            >
+
+            <button
+              type="reset"
+              class="quick-search__clear"
+              aria-label="{{ 'search.clear_search' | t }}"
+              data-quick-search-clear
+            >
+              {% render 'icon', icon: 'close-small' %}
+            </button>
+
+            <button
+              type="submit"
+              class="quick-search__submit"
+              aria-label="{{ 'search.search' | t }}"
+              data-color-source="{{ settings.header_search_field_submit_color_source }}"
+              data-quick-search-submit
+            >
+              {% render 'icon', icon: 'search' %}
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="
+              btn
+              btn--text
+              quick-search__cancel
+            "
+            data-quick-search-cancel
+          >
+            {{ 'search.cancel_search' | t }}
+          </button>
+        </div>
+
+        {% if settings.enable_predictive_search %}
+          <div class="quick-search__results-wrapper" data-scroll-lock-ignore>
+            <div class="quick-search__results" data-quick-search-results data-scroll-lock-ignore></div>
+            <div class="quick-search__loading">
+              {%- render 'loader' -%}
+            </div>
+            <div class="quick-search__footer">
+              <button
+                type="submit"
+                class="quick-search__view-all"
+              >
+                <span
+                  class="quick-search__view-all-label"
+                  data-label="{{ 'search.view_all' | t }}"
+                  data-label-with-query="{{ 'search.view_all_for_query' | t }}"
+                >
+                  {{- 'search.view_all' | t -}}
+                </span>
+                {% render 'icon', icon: 'chevron-small' %}
+              </button>
+            </div>
+          </div>
+        {% endif %}
+
+        {%- if settings.search_bar_suggested_links != blank or settings.search_bar_suggested_searches != blank -%}
+          <div class="quick-search__suggested-wrapper">
+            <div class="quick-search__suggested">
+              {%- if settings.search_bar_suggested_searches != blank -%}
+                {%- assign search_bar_suggested_searches = settings.search_bar_suggested_searches | split: ',' -%}
+                {%- if settings.search_bar_suggested_searches_heading != blank -%}
+                  <h4 class="quick-search__suggested-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+                    {{ settings.search_bar_suggested_searches_heading }}
+                  </h4>
+                {%- endif -%}
+                <ul class="quick-search__resource-list quick-search__resource-list--list">
+                  {%- for term in search_bar_suggested_searches -%}
+                    <li class="quick-search__resource-list-item">
+                      <a
+                        class="quick-search__result quick-search__result--suggested no-transition"
+                        href="{{ routes.search_url }}?q={{ term }}"
+                        data-suggested-search="{{ term }}"
+                        data-result-type="suggested-search"
+                      >
+                        {% render 'icon', icon: 'search' %}
+                        <span class="quick-search__result-heading ff-body fs-body-100">{{ term }}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+
+              {%- if settings.search_bar_suggested_links != blank -%}
+                {%- if settings.search_bar_suggested_links_heading != blank -%}
+                  <h4 class="quick-search__suggested-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+                    {{ settings.search_bar_suggested_links_heading }}
+                  </h4>
+                {%- endif -%}
+                <ul class="quick-search__resource-list">
+                  {%- for link in settings.search_bar_suggested_links.links -%}
+                    <li class="quick-search__resource-list-item">
+                      <a class="quick-search__result" href="{{ link.url }}">
+                        <span class="quick-search__result-heading ff-body fs-body-100">{{ link.title }}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </form>
+    </div>
+  </div>
+</div>

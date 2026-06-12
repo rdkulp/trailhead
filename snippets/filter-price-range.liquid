@@ -1,0 +1,82 @@
+{% liquid
+  comment
+    Renders a 'price range' type filter form item.
+
+    Required parameters:
+      - filter: { Object } The current filter.
+      - scope: { String } Where the form item is being rendered. Can be:
+        - 'drawer'
+        - 'sidebar'
+  endcomment
+
+  assign max_price_amount = filter.range_max | money | strip_html | escape
+-%}
+
+<div
+  class="filter-form__price-range"
+  data-price-range
+>
+  <div class="filter-form__price-range-input-wrapper">
+    <div class="filter-form__price-range-input">
+      <span class="filter-form__price-range-currency">{{ cart.currency.symbol }}</span>
+
+      <input
+        data-range-input-type="min"
+        data-range-input
+        data-filter-item-input
+        class="input"
+        name="{{ filter.min_value.param_name }}"
+        id="filter-form-{{ filter.label | escape }}-{{ filter.min_value.param_name | escape }}--{{ scope }}"
+        {%- if filter.min_value.value -%}
+          value="{{ filter.min_value.value | divided_by: 100.00 }}"
+        {%- endif -%}
+        type="number"
+        placeholder="0"
+        min="0"
+        max="{{ filter.range_max | divided_by: 100.00 | ceil }}"
+      >
+
+      <label
+        class="filter-form__price-range-label visually-hidden"
+        for="filter-form-{{ filter.label | escape }}-{{ filter.min_value.param_name | escape }}--{{ scope }}"
+      >
+        {{- 'filters.min' | t -}}
+      </label>
+    </div>
+
+    <span class="filter-form__price-range-separator">{{- 'filters.to' | t -}}</span>
+
+    <div class="filter-form__price-range-input">
+      <span class="filter-form__price-range-currency">{{ cart.currency.symbol }}</span>
+
+      <input
+        data-range-input-type="max"
+        data-range-input
+        data-filter-item-input
+        class="input"
+        name="{{ filter.max_value.param_name }}"
+        id="filter-form-{{ filter.label | escape }}-{{ filter.max_value.param_name | escape }}--{{ scope }}"
+        {%- if filter.max_value.value -%}
+          value="{{ filter.max_value.value | divided_by: 100.00 }}"
+        {%- endif -%}
+        type="number"
+        placeholder="{{ filter.range_max | divided_by: 100.00 | ceil }}"
+        min="0"
+        max="{{ filter.range_max | divided_by: 100.00 | ceil }}"
+      >
+
+      <label
+        class="filter-form__price-range-label visually-hidden"
+        for="filter-form-{{ filter.label | escape }}-{{ filter.max_value.param_name | escape }}--{{ scope }}"
+      >
+        {{- 'filters.max' | t -}}
+      </label>
+    </div>
+  </div>
+
+  <div class="filter-form__slider" data-range-slider></div>
+
+  <p class="filter-form__price-range-title fs-body-75">
+    {{ 'filters.max_price' | t: price: max_price_amount }}
+  </p>
+</div>

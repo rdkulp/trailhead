@@ -1,0 +1,33 @@
+{% liquid
+  comment
+    Renders a search box for a filter group.
+
+    Required parameters:
+      - filter: { Object } The current filter.
+  endcomment
+-%}
+
+<div class="filter-form__group-search-wrapper">
+  <label class="filter-form__group-search-label">
+    <span class="visually-hidden">{{ 'filters.filter_search_placeholder' | t }}</span>
+    <span class="filter-form__group-search-icon">
+      {% render 'icon', icon: 'search' %}
+    </span>
+    <input
+      type="text"
+      class="filter-form__group-search input"
+      placeholder="Search"
+      data-filter-search-input
+      data-filter-label="{{ filter.label | handle }}"
+    >
+    <button
+      type="button"
+      class="filter-form__group-search-clear"
+      data-filter-search-clear
+      aria-label="{{ 'filters.reset' | t }}"
+    >
+      {% render 'icon', icon: 'close-small' %}
+    </button>
+  </label>
+  <p class="filter-form__group-search-empty fs-body-75">{{ 'filters.filter_search_empty' | t }}</p>
+</div>

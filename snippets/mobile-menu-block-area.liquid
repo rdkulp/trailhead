@@ -1,0 +1,37 @@
+{% liquid
+  comment
+    Renders mobile menu blocks.
+
+    Required parameters:
+      - blocks: { Object } The parent section's blocks.
+      - submenu_name: { String } The parent link's title.
+      - position: { String } Where the blocks are being rendered. Can be:
+        - 'top': Above the menu items
+        - 'bottom': Below the menu items
+  endcomment
+
+  assign submenu_name_down = submenu_name | downcase
+
+  capture appearing_blocks
+    for block in blocks
+      assign block_submenu_name_down = block.settings.submenu_name | downcase
+
+      if block_submenu_name_down == submenu_name_down and block.settings.block_position == position
+        case block.type
+          when 'promoted_collections'
+            render 'mobile-menu-block-promoted-collections', block: block
+          when 'promoted_products'
+            render 'mobile-menu-block-promoted-products', block: block
+          when 'promoted_text'
+            render 'mobile-menu-block-promoted-text', block: block
+        endcase
+      endif
+    endfor
+  endcapture
+-%}
+
+{% if appearing_blocks != blank -%}
+  <li class="mobile_menu__promo_blocks" data-position="{{ position }}">
+    {{ appearing_blocks }}
+  </li>
+{%- endif %}

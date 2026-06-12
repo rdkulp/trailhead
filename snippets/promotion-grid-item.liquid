@@ -1,0 +1,126 @@
+{% liquid
+  comment
+    Renders a promotion grid item.
+
+    Required parameters:
+      - block: { Object } The parent block object.
+      - show_border: { Boolean } Whether the item should have a border.
+      - bold_discount_text: { Boolean } Whether the discount text should be bolded.
+      - text_position: { String } Where the text should display, in relation to the image. Can be:
+        - 'over-image'
+        - 'left-of-image'
+        - 'right-of-image'
+      - image_aspect_ratio: { String } The image's aspect ratio.
+      - image_sizes: { String } A list of responsive image sizes (for the 'sizes' attributes).
+  endcomment
+
+  capture item_tag
+    if block.settings.link != blank
+      echo 'a'
+    else
+      echo 'div'
+    endif
+  endcapture
+
+  capture item_attributes
+    if block.settings.link != blank
+      echo 'href="[[link]]"' | replace: '[[link]]', block.settings.link
+      echo 'aria-label="[label]"' | replace: '[[label]]', block.settings.sale_heading
+    endif
+
+    echo 'class="promotion-grid-item animation--item"'
+    echo 'data-show-border="[[sb]]"' | replace: '[[sb]]', show_border
+    echo block.shopify_attributes
+  endcapture
+-%}
+
+<{{ item_tag }} {{ item_attributes }}>
+  <div
+    class="promotion-grid-item__inner"
+    data-text-position="{{ text_position }}"
+    style="--promotion-grid-item-image-padding: {{ section.settings.image_spacing }}%; {% render 'settings-color-schemes-style', local_settings: block.settings %} {% render 'settings-section-style-style' %}"
+  >
+    <div class="promotion-grid-item__image">
+      {% render 'image',
+        image: block.settings.image,
+        aspect_ratio: image_aspect_ratio,
+        include_placeholder: true,
+        sizes: image_sizes
+      -%}
+    </div>
+
+    <div class="promotion-grid-item__promotion">
+      <div class="promotion-grid-item__promotion-container">
+        {%- if block.settings.sale_heading != blank -%}
+          <span class="promotion-grid-item__promotion-heading ff-heading fs-heading-6-base">
+            {{- block.settings.sale_heading -}}
+          </span>
+        {% endif %}
+
+        {%- if block.settings.sale_type != blank -%}
+          <span class="promotion-grid-item__promotion-type fs-accent{%- if bold_discount_text -%}-bold{%- endif -%}">
+            {{- block.settings.sale_type -}}
+          </span>
+        {%- endif -%}
+
+        {%- if block.settings.sale_amount != blank %}
+          <div class="promotion-grid-item__promotion-discount ff-heading{% if bold_discount_text %} fs-heading-bold{%- endif -%}">
+            <span class="promotion-grid-item__amount-value">
+              <span class="promotion-grid-item__amount">
+                {%- if block.settings.sale_unit == 'per_month'
+                  or block.settings.sale_unit == 'per_year'
+                  or block.settings.sale_unit == 'dollars'
+                  or block.settings.sale_unit == 'dollars_off'
+                -%}
+                  <span class="promotion-grid-item__unit-currency">
+                    {% render 'currency-symbol' %}
+                  </span>
+                {% endif %}
+
+                <span class="promotion-grid-item__sale-amount fs-heading-1-base">
+                  {{ block.settings.sale_amount }}
+                </span>
+              </span>
+
+              {%- if block.settings.sale_unit == 'percent' or block.settings.sale_unit == 'percent_off' %}
+                <span class="promotion-grid-item__unit-centered">
+                  {%- if block.settings.sale_unit == 'percent' or block.settings.sale_unit == 'percent_off' %}
+                    <span>
+                      {{- 'sections.promotion_grid.sale_units.percent' | t }}
+                    </span>
+                  {% endif %}
+
+                  {%- if block.settings.sale_unit == 'percent_off' %}
+                    <span>
+                      {{- 'sections.promotion_grid.sale_units.off' | t -}}
+                    </span>
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+
+              {%- if block.settings.sale_unit == 'per_month'
+                or block.settings.sale_unit == 'per_year'
+                or block.settings.sale_unit == 'dollars_off'
+              -%}
+                <span class="promotion-grid-item__unit-top">
+                  {%- case block.settings.sale_unit -%}
+                    {% when 'per_month' %}
+                      {{ 'sections.promotion_grid.sale_units.per_month' | t }}
+                    {% when 'per_year' %}
+                      {{ 'sections.promotion_grid.sale_units.per_year' | t }}
+                    {% when 'dollars_off' %}
+                      {{- 'sections.promotion_grid.sale_units.off' | t -}}
+                  {%- endcase -%}
+                </span>
+              {%- endif -%}
+            </span>
+          </div>
+        {% endif %}
+
+        {%- if block.settings.promotion_text != blank -%}
+          <p class="promotion-grid-item__promotion-text ff-body">{{ block.settings.promotion_text }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</{{ item_tag }}>

@@ -1,0 +1,115 @@
+{% comment %}
+  Renders product thumbnails for a media gallery. Supports scrollable viewport and navigation controls.
+
+  Required params:
+    - prod: { Object } Product object.
+    - featured_media: { Object } The currently featured media.
+    - aspect_ratio: { String } Aspect ratio for thumbnails.
+    - thumbnail_size: { String } Thumbnail size. can be:
+        - "mobile"
+        - "small"
+        - "medium"
+        - "large"
+      - thumbnail_position: { String } Thumbnail position. can be:
+        - "bottom"
+        - "left"
+
+  Optional:
+    - initial_variant_media_position: { Number } Starting media index for the selected variant (used in media grouping).
+    - next_variant_media_index: { Number } Last media index for the selected variant (used in media grouping).
+    - enable_multiple_variant_media: { Boolean } Whether to enable media grouping per variant.
+{% endcomment %}
+
+{% liquid
+  case thumbnail_size
+    when 'mobile'
+      assign sizes = '54px'
+    when 'small'
+      assign sizes = '60px'
+    when 'medium'
+      assign sizes = '80px'
+    when 'large'
+      assign sizes = '100px'
+  endcase
+
+  assign initial_variant_media_position = initial_variant_media_position | default: 1
+  assign next_variant_media_index = next_variant_media_index | default: prod.media.size
+%}
+
+{% if prod.media.size > 1 %}
+  <div
+    class="product-thumbnails"
+    data-product-thumbnails
+    data-thumbnail-position="{{ thumbnail_position }}"
+    data-thumbnail-size="{{ thumbnail_size }}"
+    data-scroll-container
+    data-at-start="true"
+    data-at-end="false"
+    data-axis="{% if thumbnail_position == 'bottom' %}horizontal{% else %}vertical{% endif %}"
+  >
+    <button
+      class="scroll-button"
+      data-position="start"
+      data-direction="backwards"
+      title="{{ 'general.accessibility.up' | t }}"
+    >
+      {% render 'icon', icon: 'chevron' %}
+    </button>
+    <div class="product-thumbnails__viewport" data-scroll-container-viewport>
+      <div class="scroll-sentinal scroll-sentinal--start" data-position="start"></div>
+      <ul class="product-thumbnails__items">
+        {% for media in prod.media %}
+          {% liquid
+            if enable_multiple_variant_media
+              if forloop.index < initial_variant_media_position or forloop.index > next_variant_media_index
+                continue
+              endif
+            endif
+          -%}
+          <li class="product-thumbnails__item">
+            <button
+              type="button"
+              class="product-thumbnails__item-link{% if media.id == featured_media.id %} active{% endif %}"
+              data-thumbnail-id="{{ media.id }}"
+              data-thumbnail-index="{{ forloop.index0 }}"
+              data-product-thumbnail
+              aria-label="{{ 'general.accessibility.image_thumbail' | t: number: forloop.index }}"
+            >
+              {% render 'image',
+                image: media.preview_image,
+                id: media.id,
+                wrapper_class: 'product-thumbnails__item-image',
+                aspect_ratio: aspect_ratio,
+                sizes: sizes
+              %}
+
+              {% case media.media_type %}
+                {% when 'video' %}
+                  <div class="product-thumbnails__item-badge">
+                    {% render 'icon', icon: 'play-badge' %}
+                  </div>
+                {% when 'external_video' %}
+                  <div class="product-thumbnails__item-badge">
+                    {% render 'icon', icon: 'play-badge' %}
+                  </div>
+                {% when 'model' %}
+                  <div class="product-thumbnails__item-badge">
+                    {% render 'icon', icon: '3d-badge' %}
+                  </div>
+              {% endcase %}
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="scroll-sentinal scroll-sentinal--end" data-position="end"></div>
+    </div>
+    <button
+      class="scroll-button"
+      data-position="end"
+      data-direction="forwards"
+      title="{{ 'general.accessibility.down' | t }}"
+    >
+      {% render 'icon', icon: 'chevron' %}
+    </button>
+  </div>
+{% endif %}

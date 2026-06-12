@@ -1,0 +1,124 @@
+{% liquid
+  comment
+    Renders product badges for the product page header block and product cards.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - show_sale_badge: { Boolean } Whether to show the "Sale" badge.
+      - show_sold_out_badge: { Boolean } Whether to show the "Sold-out" badge.
+        - If the "Sold-out" badge should show (ie. is enabled, and the product is sold out),
+          then no other badges will show.
+      - show_new_badge: { Boolean } Whether to show the "New" badge.
+      - show_custom_badges: { Boolean } Whether to show any custom badges.
+  endcomment
+
+  # TODO: Can we build this list of badge tags once?
+  # Get custom badges
+  for i in (1..4)
+    assign setting_key = 'custom_product_badge_group_[[index]]_tag_names' | replace: '[[index]]', i
+    assign current_tags = settings[setting_key] | split: ','
+    assign stripped_tags = ''
+
+    if current_tags != blank
+      for tag in current_tags
+        assign stripped_tag = tag | strip
+        assign stripped_tags = stripped_tags | append: stripped_tag
+
+        unless forloop.last
+          assign stripped_tags = stripped_tags | append: ','
+        endunless
+      endfor
+
+      assign stripped_tags = stripped_tags | split: ','
+      assign badge_tags = badge_tags | concat: stripped_tags
+    endif
+  endfor
+
+  assign is_sold_out = false
+
+  if show_sold_out_badge
+    unless prod.available or placeholder
+      assign is_sold_out = true
+    endunless
+  endif
+
+  if is_sold_out
+    assign badge_text = 'products.product.sold_out' | t
+
+    # Output "Sold-out" badge
+    capture badges
+      render 'product-badge', text: badge_text, type: 'sold-out'
+    endcapture
+  else
+    # Output custom badges
+    if show_custom_badges
+      for badge_tag in badge_tags
+        for product_tag in prod.tags
+          assign product_tag_handle = product_tag | handleize
+          assign badge_tag_handle = badge_tag | handleize
+
+          if product_tag_handle == badge_tag_handle
+            capture badges
+              echo badges
+              render 'product-badge', text: badge_tag, handle: badge_tag_handle, type: 'custom'
+            endcapture
+
+            break
+          endif
+        endfor
+      endfor
+    endif
+
+    # Output "New" badge
+    assign new_badge_is_valid = false
+
+    if show_new_badge and settings.new_badge_product_source == 'collection'
+      assign collection_titles = prod.collections | map: 'title'
+
+      if collection_titles contains settings.new_badge_collection.title
+        assign new_badge_is_valid = true
+      endif
+    elsif show_new_badge and settings.new_badge_product_source == 'auto'
+      assign days = settings.new_badge_duration_in_days
+      assign period_time = days | times: 24 | times: 60 | times: 60
+      assign date_now = 'now' | date: '%s'
+      assign date_finished = prod.published_at | date: '%s' | plus: period_time | date: '%s'
+
+      if date_finished > date_now
+        assign new_badge_is_valid = true
+      endif
+    endif
+
+    if new_badge_is_valid
+      assign badge_text = 'products.product.new' | t
+
+      capture badges
+        echo badges
+        render 'product-badge', text: badge_text, type: 'new'
+      endcapture
+    endif
+
+    # Output "Sale" badge
+    if show_sale_badge and prod.compare_at_price > prod.price
+      capture badge_text
+        render 'get-display-discount', prod: prod, format: settings.sale_badge_format, unstyled: true, use_data_attribute: false
+      endcapture
+
+      capture badges
+        echo badges
+        render 'product-badge', text: badge_text, type: 'sale'
+      endcapture
+    endif
+  endif
+-%}
+
+{%- if badges != blank -%}
+  <div
+    class="product-badges"
+    data-badge-shape="{{ settings.badge_shape | replace: '_', '-' }}"
+    data-badge-vertical-position="{{ settings.product_listing_badge_position | split: '_' | first }}"
+    data-badge-horizontal-position="{{ settings.product_listing_badge_position | split: '_' | last }}"
+  >
+    {{ badges }}
+  </div>
+{%- endif -%}

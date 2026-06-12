@@ -1,0 +1,85 @@
+{%- comment -%}
+  Renders an accordion display.
+
+  Required parameters:
+    - block: { Object } The parent block.
+    - content: { String } Content to display inside the accordion.
+    - heading: { String } The accordion heading.
+
+  Optional parameters:
+    - classes: { String } A string representing any classes to apply to the accordion container.
+    - disable_max_width: { Boolean } Whether a max-width should be applied.
+    - disable_rte: { Boolean } Whether RTE styles should be applied.
+    - disable_font_class: { Boolean } Whether the built-in font class should be applied.
+    - expand_by_default: { Boolean } Whether the accordion should be open by default.
+    - heading_tag: { String } the heading tag, defaults to h3
+{%- endcomment -%}
+
+{% liquid
+  assign open = false
+  assign aria_hidden = true
+  assign content_display = 'none'
+  assign heading_tag = heading_tag | default: 'h3'
+
+  if block.settings.expand_by_default or expand_by_default
+    assign open = true
+    assign aria_hidden = false
+    assign content_display = 'block'
+  endif
+-%}
+
+<div id="{{ block.id }}" class="accordion {{ classes }}" {{ block.shopify_attributes }}>
+  <div
+    class="accordion__inner"
+    data-open="{{ open }}"
+  >
+    <button
+      class="accordion__label"
+      aria-expanded="{{ open }}"
+      aria-controls="{{ block.id }}"
+    >
+      <{{ heading_tag }} class="ff-heading fs-heading-5-base">
+        {{ heading }}
+      </{{ heading_tag }}>
+
+      <div class="accordion__label-icons" style="--icon-width: 15px; --icon-height: 15px;">
+        {% render 'icon', icon: 'chevron' %}
+      </div>
+    </button>
+
+    {% liquid
+      assign content_class = 'accordion__content'
+
+      unless disable_font_class
+        assign content_class = content_class | append: ' fs-body-100'
+      endunless
+
+      unless disable_rte
+        assign content_class = content_class | append: ' rte non-page-rte'
+      endunless
+
+      if block.settings.page_for_content
+        assign content_page = pages[block.settings.page_for_content]
+
+        if content_page and content_page != blank
+          assign content = content_page.content
+        endif
+      endif
+
+      if block.settings.custom_liquid != blank
+        assign content = block.settings.custom_liquid
+      endif
+    -%}
+
+    <div
+      class="{{ content_class }}"
+      aria-hidden="{{ aria_hidden }}"
+      id="accordion-content-{{ block.id }}"
+      data-default-expanded="{{ open }}"
+      data-measured="{% if disable_max_width %}false{% else %}true{% endif %}"
+      style="display: {{ content_display }};"
+    >
+      {{ content }}
+    </div>
+  </div>
+</div>

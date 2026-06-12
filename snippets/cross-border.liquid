@@ -1,0 +1,153 @@
+{% comment %}
+  Handles both currency and country dropdowns
+  Pass these variables into snippet:
+  * show_locale: Bool
+  * show_country: Bool
+  * hide_country_flags: Bool
+  * id: String
+{% endcomment %}
+
+{%- if show_locale or show_country -%}
+  {%- form 'localization', class: 'disclosure-form', id: id -%}
+    <div class="disclosure-form__inner">
+      {%- if show_locale -%}
+        <div class="disclosure-form__item" data-is-expanded="false">
+          <h2 class="visually-hidden" id="lang-heading-{{ id }}">
+            {{ 'general.language.dropdown_label' | t }}
+          </h2>
+
+          <div class="disclosure disclosure--locale" data-disclosure="locale" data-disclosure-locale>
+            <button
+              type="button"
+              class="disclosure__toggle fs-body-60"
+              aria-expanded="false"
+              aria-controls="lang-list-{{ id }}"
+              aria-describedby="lang-heading-{{ id }}"
+              data-disclosure-toggle
+            >
+              {{ form.current_locale.endonym_name | capitalize }}
+              {% render 'icon', icon: 'chevron-small' %}
+            </button>
+
+            <div class="disclosure-list-wrapper">
+              <ul
+                id="lang-list-{{ id }}"
+                class="disclosure-list"
+                aria-hidden="true"
+                data-disclosure-list
+              >
+                {% for locale in form.available_locales %}
+                  <li class="disclosure-list__item {% if locale.iso_code == form.current_locale.iso_code %}disclosure-list__item--current{% endif %}">
+                    <a
+                      class="disclosure-list__option no-transition fs-body-75"
+                      href="#"
+                      lang="{{ locale.iso_code }}"
+                      {% if locale.iso_code == form.current_locale.iso_code %}
+                        aria-current="true"
+                      {% endif %}
+                      data-value="{{ locale.iso_code }}"
+                      data-disclosure-option
+                    >
+                      <span class="disclosure-list__option-label">{{ locale.endonym_name | capitalize }}</span>
+
+                      {%- if locale.iso_code == form.current_locale.iso_code -%}
+                        {% render 'icon', icon: 'checkmark' %}
+                      {%- endif -%}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+
+            <input
+              type="hidden"
+              name="locale_code"
+              id="LocaleSelector-{{ id }}"
+              value="{{ form.current_locale.iso_code }}"
+              data-disclosure-input
+            >
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if show_country -%}
+        {%- liquid
+          assign show_flags = true
+
+          if hide_country_flags
+            assign show_flags = false
+          endif
+        -%}
+        <div class="disclosure-form__item" data-is-expanded="false">
+          <h2 class="visually-hidden" id="currency-heading-{{ id }}">
+            {{ 'general.currency.dropdown_label' | t }}
+          </h2>
+
+          <div class="disclosure disclosure--currency" data-disclosure="currency" data-disclosure-currency>
+            <button
+              type="button"
+              class="disclosure__toggle disclosure__toggle--currency fs-body-60"
+              aria-expanded="false"
+              aria-controls="currency-list-{{ id }}"
+              aria-describedby="currency-heading-{{ id }}"
+              data-disclosure-toggle
+            >
+              {%- if show_flags -%}
+                <span class="flag-icon flag-icon-{{ localization.country.iso_code | handleize }}"></span>
+              {%- endif -%}
+
+              {{ localization.country.name }} ({{ localization.country.currency.iso_code }}
+              {{ localization.country.currency.symbol }})
+              {% render 'icon', icon: 'chevron-small' %}
+            </button>
+
+            <div class="disclosure-list-wrapper">
+              <ul
+                id="currency-list-{{ id }}"
+                class="disclosure-list"
+                aria-hidden="true"
+                data-disclosure-list
+              >
+                {% for country in localization.available_countries %}
+                  <li class="disclosure-list__item {% if country.iso_code == localization.country.iso_code %}disclosure-list__item--current{% endif %}">
+                    <a
+                      class="disclosure-list__option no-transition fs-body-75"
+                      href="#"
+                      {% if country.iso_code == localization.country.iso_code %}
+                        aria-current="true"
+                      {% endif %}
+                      data-value="{{ country.iso_code }}"
+                      data-disclosure-option
+                    >
+                      {%- if show_flags -%}
+                        <span class="flag-icon flag-icon-{{ country.iso_code | handleize }}"></span>
+                      {%- endif -%}
+
+                      <span class="disclosure-list__option-label">
+                        {{- country.name }} ({{ country.currency.iso_code }}
+                        {{ country.currency.symbol }})</span
+                      >
+
+                      {%- if country.iso_code == localization.country.iso_code -%}
+                        {% render 'icon', icon: 'checkmark' %}
+                      {%- endif -%}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+
+            <input
+              type="hidden"
+              name="country_code"
+              id="CurrencySelector-{{ id }}"
+              value="{{ localization.country.iso_code }}"
+              data-disclosure-input
+            >
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endform -%}
+  {{ 'partial-flag-icons.css' | asset_url | stylesheet_tag }}
+{%- endif -%}

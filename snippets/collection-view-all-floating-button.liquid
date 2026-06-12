@@ -1,0 +1,35 @@
+{% liquid
+  comment
+    Renders the floating button for the collection 'View all' tile.
+
+    Required parameters:
+      - local_settings: { Object } Shopify settings object for block or section that is using the generator
+
+    Optional parameters:
+      - button_url: { String } The button's URL.
+      - button_label: { String } The button's label (to be used for aria-label).
+  endcomment
+
+  capture tag
+    if button_url
+      echo 'a'
+    else
+      echo 'div'
+    endif
+  endcapture
+
+  capture attributes
+    if button_url
+      echo 'href="[[bu]]"' | replace: '[[bu]]', button_url
+      echo 'aria-label="[[bl]]"' | replace: '[[bl]]', button_label
+    endif
+  endcapture
+-%}
+
+<{{ tag }}
+  {{ attributes }}
+  class="collection-view-all-floating-button btn"
+  data-text-position="{{ local_settings.text_position }}"
+>
+  {% render 'icon', icon: 'chevron' %}
+</{{ tag }}>

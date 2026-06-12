@@ -1,0 +1,59 @@
+{% liquid
+  comment
+    Renders the information popup product block.
+
+    Required parameters:
+      - block: { Object } The associated block object.
+      - popup_page_target: { String } The handle of the page to use for the popup.
+      - popup_page: { Object } The page to use for the popup.
+      - icon: { String } The name of the icon to use in the popup trigger.
+      - custom_icon_image: { Object } The image to use instead of an icon.
+      - text: { String } The popup trigger label.
+  endcomment
+
+  if popup_page.url == blank
+    assign flash_message = 'general.flash_alert.no_content' | t
+    assign flash_message_data = 'data-flash-message="[[fm]]"' | replace: '[[fm]]', flash_message
+
+    capture flash_message_attributes
+      echo 'data-flash-trigger'
+      echo flash_message_data
+    endcapture
+  else
+    assign link_attribute = 'href="[[ppu]]"' | replace: '[[ppu]]', popup_page.url
+
+    capture link_attributes
+      echo link_attribute
+      echo 'data-popup-trigger'
+    endcapture
+  endif
+%}
+
+<a
+  class="product__information-popup product__block product__block--medium fs-body-100"
+  data-modal-content-id="modal-{{ popup_page_target }}-{{ block.id }}"
+  {{ flash_message_attributes }}
+  {{ link_attributes }}
+>
+  {% if custom_icon_image != blank -%}
+    {% render 'image'
+      wrapper_class: "product__information-popup-custom-icon",
+      image: custom_icon_image,
+      sizes: "32px",
+    -%}
+  {%- else -%}
+    {% if icon != 'none' -%}{% render 'icon-editorial', icon: icon %}{%- endif %}
+  {%- endif %}
+
+  {{ text }}
+</a>
+
+<div
+  id="modal-{{ popup_page_target }}-{{ block.id }}"
+  class="information-popup__content modal-content"
+  aria-modal="true"
+>
+  <h2 class="modal-content__title ff-heading fs-heading-2-base">{{ popup_page.title }}</h2>
+
+  {{ popup_page.content }}
+</div>

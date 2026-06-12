@@ -1,0 +1,101 @@
+{% liquid
+  comment
+    Renders a meganav promoted product item.
+
+    Required parameters:
+      - promo_width: { Number } The width of the promo area (as a percentage of the parent container).
+      - layout: { String } A string noting the product layout. Can be:
+        - 'list': Products display in a list style.
+        - '2_col': Products display in a grid with 2 columns.
+        - '3_col': Products display in a grid with 3 columns.
+        - '3_col': Products display in a grid with 4 columns.
+      - prod: { Object } The associated product object.
+      - image_aspect_ratio: { String } A string noting the aspect ratio of the product image.
+      - show_product_vendor: { Boolean } Whether the product vendor should show.
+      - show_product_subtitles: { Boolean } Whether the product subtitle should show.
+      - show_product_prices: { Boolean } Whether the product price should show.
+      - show_animations: { Boolean } Whether animations are enabled.
+
+    Optional parameters:
+      - placeholder: { Boolean } Whether we're rendering a placeholder.
+  endcomment
+
+  assign promo_image_width = 'calc((100vw - (100% - [[pw]]%) - (clamp(24px, 2vw, 36px) * 2)) / [[pcc]])' | replace: '[[pw]]', promo_width
+
+  capture image_sizes
+    case layout
+      when 'list'
+        echo '67px'
+      when '2_col'
+        echo promo_image_width | replace: '[[pcc]]', 2
+      when '3_col'
+      echo promo_image_width | replace: '[[pcc]]', 3
+      when '4_col'
+        echo promo_image_width | replace: '[[pcc]]', 4
+    endcase
+  endcapture
+
+  if image_aspect_ratio == 'use_theme_settings'
+    assign image_aspect_ratio = settings.product_listing_aspect_ratio
+  endif
+
+  assign placeholder_product_title = 'general.onboarding.product_title' | t
+  assign placeholder_product_subtitle = 'general.onboarding.product_subtitle' | t
+  assign placeholder_vendor = 'general.onboarding.product_vendor_short' | t
+
+  assign tag = 'a'
+
+  if placeholder
+    assign tag = 'div'
+  endif
+
+  capture attributes
+    unless placeholder
+      echo 'href="[[pu]]"' | replace: '[[pu]]', prod.url
+      echo 'aria-label="[pt]"' | replace: '[[pt]]', prod.title
+    endunless
+  endcapture
+-%}
+
+<{{ tag }}
+  {{ attributes }}
+  class="meganav-promoted-products-item"
+>
+  <div class="meganav-promoted-products-item-image-wrap">
+    {% render 'image',
+      image: prod.featured_media,
+      sizes: image_sizes,
+      aspect_ratio: image_aspect_ratio,
+      include_placeholder: true,
+      show_animations: show_animations
+    -%}
+  </div>
+
+  <div class="meganav-promoted-products-item-text-wrap">
+    {% if show_product_vendor -%}
+      {% if prod.vendor or placeholder -%}
+        <h5 class="ff-body fs-body-60 meganav-promoted-products-item-text-vendor">
+          {{ prod.vendor | default: placeholder_vendor }}
+        </h5>
+      {%- endif %}
+    {%- endif %}
+
+    <h3 class="ff-body fs-body-100 meganav-promoted-products-item-text-title">
+      {{ prod.title | default: placeholder_product_title }}
+    </h3>
+
+    {% if show_product_subtitles -%}
+      {% if placeholder or prod.metafields.descriptors.subtitle != blank -%}
+        <h4 class="ff-body fs-body-75 meganav-promoted-products-item-text-subtitle">
+          {{ prod.metafields.descriptors.subtitle | default: placeholder_product_subtitle }}
+        </h4>
+      {%- endif %}
+    {%- endif %}
+
+    {% if show_product_prices -%}
+      <p class="fs-body-60 meganav-promoted-products-item-text-price">
+        {% render 'product-item-price', prod: prod, placeholder: placeholder %}
+      </p>
+    {%- endif %}
+  </div>
+</{{ tag }}>

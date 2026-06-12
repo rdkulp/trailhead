@@ -1,0 +1,43 @@
+{% liquid
+  comment
+    Renders the product price block.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - block: { Object } The asscoiated block object.
+      - current_variant: { Object } The current variant object.
+      - is_quick: { Boolean } Whether the content is being rendered inside a quick view.
+
+    Optional parameters:
+      - label: { String } Text to show above the block content.
+  endcomment
+-%}
+
+<div class="product__price-block product__block product__block--medium" {{ block.shopify_attributes }}>
+  {% if label != blank -%}
+    <div class="product__label-wrapper">
+      <span class="product__label fs-body-100">{{ label }}</span>
+    </div>
+  {%- endif %}
+
+  <div class="product__price ff-product-price fs-body-300">
+    {% render 'product-price',
+      prod: prod,
+      current_variant: current_variant,
+      show_discount: block.settings.show_discount,
+      discount_format: block.settings.discount_format
+    -%}
+  </div>
+
+  {% liquid
+    if block.settings.show_discount and prod != blank
+      render 'hidden-variant-discount-display', prod: prod, discount_format: block.settings.discount_format
+    endif
+  -%}
+
+  {% liquid
+    if block.settings.show_shop_pay
+      render 'shop-pay-payment-terms', prod: prod
+    endif
+  -%}
+</div>

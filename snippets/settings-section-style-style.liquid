@@ -1,0 +1,15 @@
+{%- comment -%}
+  Renders CSS variables for section spacing.
+
+  Use this snippet within an element's style attribute:
+
+    style="{% render 'settings-section-style-style' %}"
+
+  Note: unlike most settings-use partials, this assumes the presence of `section`
+        because it is only used on sections
+{%- endcomment -%}
+
+{% liquid
+  echo '--section-style-spacing-top: [[ssst]]px;' | replace: '[[ssst]]', section.settings.section_style_spacing_top
+  echo ' --section-style-spacing-bottom: [[sssb]]px;' | replace: '[[sssb]]', section.settings.section_style_spacing_bottom
+-%}

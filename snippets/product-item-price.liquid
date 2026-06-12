@@ -1,0 +1,76 @@
+{% liquid
+  comment
+    Renders a list of product price displays (ie. regular, sale, unit). Used for product
+    listings (ie. collection page, search results).
+
+    Optional parameters:
+      - variant: { Object } The associated variant object.
+      - product: { Object } The associated product object.
+      - show_discount: { Boolean } Whether to show any discounts.
+      - discount_format: { String } The discount format. Can be:
+        - "sale_text"
+        - "percent_off"
+        - "minus_percent"
+        - "save_percent"
+        - "amount_off"
+        - "minus_amount"
+        - "save_amount"
+      - use_wrapper: { Boolean } Whether to add a wrapper to the main content. Defaults to 'true'.
+      - wrapper_class: { String } A custom class to be applied to the wrapper.
+  endcomment
+
+  if prod != blank
+    assign compare_at_price = prod.compare_at_price
+    assign price = prod.price
+    assign price_varies = prod.price_varies
+    assign current_variant = prod.selected_or_first_available_variant
+  else
+    assign compare_at_price = 2999
+    assign price = 1999
+  endif
+
+  assign use_wrapper = use_wrapper | default: true, allow_false: true
+-%}
+
+{%- capture content -%}
+  <span class="product-item__price-main">
+    {% if placeholder -%}
+      {{ 9999 | money }}
+    {%- elsif compare_at_price > price -%}
+      <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+
+      <s class="t-subdued">{{ compare_at_price | money }}</s>
+
+      {% if price_varies -%}
+        {%- assign sale_price = price | money -%}
+
+        <span class="sale">{{ 'products.product.on_sale_from_html' | t: price: sale_price }}</span>
+      {%- else -%}
+        <span class="sale" data-price>{{ price | money }}</span>
+      {%- endif %}
+    {%- else -%}
+      {% if price_varies -%}
+        {%- assign price = price | money -%}
+
+        <span>
+          {{- 'products.product.from_lowest_price_html' | t: lowest_price: price -}}
+        </span>
+      {%- else -%}
+        <span>{{ price | money }}</span>
+      {%- endif %}
+    {%- endif %}
+  </span>
+  {% if show_discount -%}
+    {% render 'get-display-discount', prod: prod, format: discount_format, use_data_attribute: false, size_class: "fs-body-60" %}
+  {%- endif %}
+
+  {% render 'unit-price', item: current_variant %}
+{%- endcapture -%}
+
+{% if use_wrapper %}
+  <span class="ff-product-price {{ wrapper_class }}">
+    {{ content }}
+  </span>
+{% else %}
+  {{ content }}
+{% endif %}

@@ -1,0 +1,123 @@
+{% liquid
+  comment
+    Snippet description
+
+    Required parameters:
+      - paginate: { Object } The current pagination object.
+      - pagination_type: { String } The type of pagination. Can be:
+        - 'infinite': Infinite scroll.
+        - 'click': Click to load.
+        - 'paginated': Regular pagination.
+      - resource_string: { String } A theme translation key that contains the type of resource that's being paginated.
+
+    Optional parameters:
+      - display_paginate_item_count_only: { Boolean } Whether to only show the item count (no pagination links).
+      - show_item_count: { Boolean } Whether to show the item count.
+  endcomment
+
+  assign pagination_current_item_start = paginate.current_offset | plus: 1
+  assign pagination_current_item_end = paginate.current_page | times: paginate.page_size
+
+  if pagination_current_item_end > paginate.items
+    assign pagination_current_item_end = paginate.items
+  endif
+
+  if pagination_type == 'infinite' or pagination_type == 'click'
+    assign current_pagination_range = pagination_current_item_end
+  else
+    assign current_pagination_range = pagination_current_item_start | append: '-' | append: pagination_current_item_end
+  endif
+
+  assign pagination_resource = resource_string | t
+-%}
+
+<div class="pagination">
+  {% unless display_paginate_item_count_only -%}
+    {% liquid
+      # Previous button
+      assign previous_is_link = false
+      assign previous_label = 'general.pagination.previous_page' | t: type: pagination_resource
+
+      if paginate.previous != blank
+        assign previous_is_link = true
+      endif
+
+      capture pagination_parts
+        render 'pagination-item', item_type: 'arrow', is_link: previous_is_link, link: paginate.previous.url, button_type: 'previous', button_label: previous_label
+      endcapture
+
+      # Parts
+      assign previous_page_index = paginate.current_page | minus: 1
+      assign next_page_index = paginate.current_page | plus: 1
+      assign ellipsis_part_count = 0
+
+      for part in paginate.parts
+        assign item_type = 'none'
+        assign part_label = 'general.pagination.page' | t: number: part.title, type: pagination_resource
+
+        if part.title == paginate.current_page
+          assign item_type = 'active'
+        elsif part.title == '&hellip;'
+          assign item_type = 'ellip'
+          assign ellipsis_part_count = ellipsis_part_count | plus: 1
+        elsif part.title == 1
+          assign item_type = 'first-page'
+        elsif part.title == previous_page_index
+          assign item_type = 'previous-page'
+        elsif part.title == next_page_index
+          assign item_type = 'next-page'
+        elsif part.title == paginate.pages
+          assign item_type = 'last-page'
+        endif
+
+        capture pagination_parts
+          echo pagination_parts
+          render 'pagination-item', item_type: item_type, is_link: part.is_link, link: part.url, button_label: part_label, button_text: part.title
+        endcapture
+      endfor
+
+      # Next button
+      assign next_is_link = false
+      assign next_label = 'general.pagination.next_page' | t: type: pagination_resource
+
+      if paginate.next != blank
+        assign next_is_link = true
+      endif
+
+      capture pagination_parts
+        echo pagination_parts
+        render 'pagination-item', item_type: 'arrow', is_link: next_is_link, link: paginate.next.url, button_type: 'next', button_label: next_label
+      endcapture
+
+      # The fourth, and fourth from last, pages end up with an extra link on mobile, so we need to identify
+      # these 2 cases.
+      assign current_is_fourth = false
+      assign current_is_fourth_from_last = false
+      assign fourth_from_last_page = paginate.pages | minus: 3
+
+      if paginate.current_page == 4
+        assign current_is_fourth = true
+      endif
+
+      if paginate.current_page == fourth_from_last_page
+        assign current_is_fourth_from_last = true
+      endif
+    -%}
+
+    <ul
+      class="pagination__list"
+      data-current-is-fourth="{{ current_is_fourth }}"
+      data-current-is-fourth-from-last="{{ current_is_fourth_from_last }}"
+      data-ellipsis-part-count="{{ ellipsis_part_count }}"
+    >
+      {{ pagination_parts }}
+    </ul>
+  {%- endunless %}
+
+  {% if show_item_count or display_paginate_item_count_only -%}
+    <p class="pagination__footer fs-body-75" data-pagination-item-count>
+      {{ 'general.pagination.viewing' | t: of: current_pagination_range, total: paginate.items }}
+      {{ pagination_resource }}
+    </p>
+  {%- endif %}
+</div>

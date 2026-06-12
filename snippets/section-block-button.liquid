@@ -1,0 +1,48 @@
+{% liquid
+  comment
+    Renders a button block.
+
+    Required parameters:
+      - button_label: { String } The button label.
+      - button_link: { String } The button link.
+      - button_style: { String } The button style.
+      - alignment: { String } The button's horizontal alignment. Can be:
+        - "left"
+        - "center"
+        - "right"
+      - forloop: { Object } The forloop object for the current block iteration.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+  endcomment
+
+  assign prev_index = forloop.index0 | minus: 1
+  assign next_index = forloop.index0 | plus: 1
+  assign has_button_next = false
+  assign has_button_prev = false
+
+  if section.blocks[next_index].type == 'button'
+    assign has_button_next = true
+  endif
+
+  if prev_index > -1 and section.blocks[prev_index].type == 'button'
+    assign has_button_prev = true
+  endif
+-%}
+
+{% if has_button_prev == false and has_button_next -%}
+  <div class="section-blocks__inline-buttons" data-alignment="{{ alignment }}">
+{%- endif %}
+
+{%- unless button_label == blank -%}
+  <div class="section-blocks__button" {{ shopify_attributes }}>
+    {%- render 'button',
+      label: button_label,
+      link: button_link,
+      button_style: button_style,
+      button_alignment: alignment
+    -%}
+  </div>
+{%- endunless -%}
+
+{% if has_button_prev and has_button_next == false -%}
+  </div>
+{%- endif %}

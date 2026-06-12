@@ -1,0 +1,163 @@
+{%- liquid
+  assign max_products = block.settings.max_products
+  assign should_render_content = false
+
+  if block.settings.product_source == 'custom-product-list' and block.settings.product_list.count > 0
+    assign should_render_content = true
+  elsif block.settings.product_source == 'app-recommendations'
+    assign should_render_content = true
+  endif
+
+  assign has_slider = false
+  assign disable_slider_desktop = true
+  assign disable_slider_mobile = true
+
+  if block.settings.enable_slider_desktop or block.settings.enable_slider_mobile
+    assign has_slider = true
+  endif
+
+  if block.settings.enable_slider_desktop
+    assign disable_slider_desktop = false
+  endif
+
+  if block.settings.enable_slider_mobile
+    assign disable_slider_mobile = false
+  endif
+
+  capture custom_swatch_color_maps
+    render 'get-custom-swatch-color-maps'
+  endcapture
+
+  assign custom_color_key_map = custom_swatch_color_maps | split: ' | ' | first | split: ','
+  assign custom_color_value_map = custom_swatch_color_maps | split: ' | ' | last | split: ','
+-%}
+
+{%- if should_render_content -%}
+  {% capture product_items %}
+    {%- for product_item in block.settings.product_list limit: max_products -%}
+      {% assign id = product_item.id | append: '-'| append: block.id %}
+
+      {%
+        render 'product-item'
+        parent_id: id,
+        prod: product_item,
+        aspect_ratio: settings.product_listing_aspect_ratio,
+        custom_color_key_map: custom_color_key_map,
+        custom_color_value_map: custom_color_value_map,
+        product_columns: 2
+      %}
+    {%- endfor -%}
+  {% endcapture %}
+
+  {% capture recommended_product_items %}
+    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+      {%- if recommendations.products_count > 0 -%}
+        {%- for product_item in recommendations.products -%}
+          {% assign id = product_item.id | append: block.id %}
+
+          {%
+            render 'product-item'
+            parent_id: id,
+            prod: product_item,
+            aspect_ratio: settings.product_listing_aspect_ratio,
+            custom_color_key_map: custom_color_key_map,
+            custom_color_value_map: custom_color_value_map,
+            product_columns: 2
+          %}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endif -%}
+  {% endcapture %}
+
+  {% capture content %}
+    <div
+      data-complementary-products
+      data-product-id="{{ product.id }}"
+      data-section-id="{{ section.id }}"
+      data-recommendations-type="{{ block.settings.product_source }}"
+      data-max-recommendations="{{ max_products }}"
+    >
+      {%- liquid
+        assign items = recommended_product_items
+
+        if block.settings.product_source == 'custom-product-list'
+          assign items = product_items
+        endif
+      -%}
+        <div
+          class="
+            product__block-complementary-products-wrapper
+            featured-collection-slider-grid
+            standard-grid-spacing
+            product-item-holder
+          "
+          data-complementary-products-content
+          data-has-slider="{{ has_slider }}"
+          data-slider-desktop="{{ block.settings.enable_slider_desktop }}"
+          data-slider-mobile="{{ block.settings.enable_slider_mobile }}"
+          {% render 'setup-product-item-grid' %}
+        >
+          {%- liquid
+            if settings.product_listing_product_list_style == 'bordered_grid'
+              assign gap = 1
+              assign gap_above_1024 = 1
+              assign gap_above_1200 = 1
+            else
+              assign gap = 12
+              assign gap_above_1024 = 16
+              assign gap_above_1200 = 24
+            endif
+
+            assign columns_above_960 = 2
+            assign columns_above_1024 = 2
+            assign columns_above_1200 = 3
+
+            if block.settings.column_placement == 'left'
+              assign columns_above_960 = 3
+              assign columns_above_1024 = 3
+              assign columns_above_1200 = 4
+            endif
+          -%}
+
+          {%- if has_slider -%}
+            {%
+              render 'scroll-slider',
+              navigation_container: '.product__block-complementary-products-wrapper',
+              id: 'complementary-products',
+              slider_items: items,
+              columns: 2,
+              columns_above_720: 3,
+              columns_above_960: columns_above_960,
+              columns_above_1024: columns_above_1024,
+              columns_above_1200: columns_above_1200,
+              gap: gap,
+              gap_above_1024: gap_above_1024,
+              gap_above_1200: gap_above_1200,
+              peek: 24,
+              peek_above_720: 0,
+              full_width_below_720: true,
+              peek_and_full_width_below_720: true,
+              disable_above_1024: disable_slider_desktop,
+              disable_below_1024: disable_slider_mobile,
+            %}
+
+            {% render 'scroll-slider-navigation-buttons' %}
+          {%- else -%}
+            {{ items }}
+          {%- endif -%}
+        </div>
+    </div>
+  {% endcapture %}
+
+  <div
+    class="product__block product__block-complementary-products{% if block.settings.product_source == 'app-recommendations' %} hidden{% endif %} product__block--medium"
+    {{ block.shopify_attributes }}
+  >
+    {%- unless block.settings.heading == blank -%}
+      <h3 class="product__block-complementary-products__heading ff-heading fs-heading-5-base">
+        {{ block.settings.heading }}
+      </h3>
+    {%- endunless -%}
+    {{ content }}
+  </div>
+{%- endif -%}

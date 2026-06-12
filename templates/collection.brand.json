@@ -1,0 +1,405 @@
+{
+  "sections": {
+    "image_hero_nT7RGe": {
+      "type": "image-hero",
+      "blocks": {
+        "text_xDhxJV": {
+          "type": "text",
+          "settings": {
+            "text": "<p>{{ collection.title }}</p>",
+            "text_font_size": 5
+          }
+        },
+        "heading_j83Mj6": {
+          "type": "heading",
+          "settings": {
+            "title": "Contemporary Decor",
+            "heading_tag": "h3",
+            "heading_font_size": 8
+          }
+        }
+      },
+      "block_order": ["text_xDhxJV", "heading_j83Mj6"],
+      "settings": {
+        "enable_full_width": true,
+        "image_height_type": "custom",
+        "custom_height_desktop": "80vh",
+        "custom_height_mobile": "450px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 700,
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "center_flex-end",
+        "image_overlay_tint_opacity": 30,
+        "image_overlay_tint_style": "gradient_up",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_Er6aBL": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_Hk88zC": {
+          "type": "heading",
+          "settings": {
+            "title": "{{ collection.title }}",
+            "heading_tag": "h3",
+            "heading_font_size": 8
+          }
+        },
+        "spacer_qrLi3H": { "type": "spacer", "settings": { "space": 20 } },
+        "text_Qnfiai": {
+          "type": "text",
+          "settings": {
+            "text": "{{ collection.description }}",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading_Hk88zC", "spacer_qrLi3H", "text_Qnfiai"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 96,
+        "section_style_spacing_bottom": 96,
+        "section_style_enable_animation": true
+      }
+    },
+    "overlapping_media_with_content_9XFBhb": {
+      "type": "overlapping-media-with-content",
+      "blocks": {
+        "heading_8c9KfU": {
+          "type": "heading",
+          "settings": {
+            "title": "Bringing new life to historical design",
+            "heading_tag": "h3",
+            "heading_font_size": 5
+          }
+        },
+        "text_3Vaqtp": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We collaborate with international designers aiming at integrating other cultures and viewpoints and satisfying client requests according to their differing  sensitivities.</p>",
+            "text_font_size": 3
+          }
+        },
+        "button_JPeYhm": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_link": "",
+            "button_label": "Read more",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": ["heading_8c9KfU", "text_3Vaqtp", "button_JPeYhm"],
+      "name": "t:sections.overlapping_media_with_content.presets.name",
+      "settings": {
+        "media_width": 40,
+        "media_position_desktop": "right",
+        "media_position_mobile": "above",
+        "media_1_type": "image",
+        "media_1_aspect_ratio": "square",
+        "mobile_media_1_aspect_ratio": "square",
+        "media_1_focal_point": "center",
+        "mobile_media_1_focal_point": "center",
+        "media_caption": "",
+        "enable_media_2": false,
+        "media_2_type": "image",
+        "media_2_aspect_ratio": "square",
+        "mobile_media_2_aspect_ratio": "square",
+        "media_2_focal_point": "center",
+        "mobile_media_2_focal_point": "center",
+        "content_width": "custom",
+        "custom_width": 500,
+        "content_alignment": "left",
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "multi_column_QddHBL": {
+      "type": "multi-column",
+      "blocks": {
+        "image_column_YpRCVR": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "portrait_alt",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "Find Your Flair",
+            "heading_tag": "h3",
+            "heading_font_size": 2,
+            "text": "<p>With subtle variations, find the one that suits your space, your way.</p>",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        },
+        "image_column_G3qJ46": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "portrait_alt",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "The Materials",
+            "heading_tag": "h3",
+            "heading_font_size": 2,
+            "text": "<p>Made from locally-sourced materials, sustainably manufacture, built to last</p>",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        },
+        "image_column_9x7kxE": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "portrait_alt",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "The Inspiration",
+            "heading_tag": "h3",
+            "heading_font_size": 2,
+            "text": "<p>The designers drew from the riches of Norwegian modernism.</p>",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "image_column_YpRCVR",
+        "image_column_G3qJ46",
+        "image_column_9x7kxE"
+      ],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "num_columns": "3",
+        "column_spacing": 24,
+        "row_spacing": 24,
+        "column_alignment": "left",
+        "row_alignment": "top",
+        "num_columns_mobile": "1",
+        "column_spacing_mobile": 24,
+        "row_spacing_mobile": 24,
+        "column_alignment_mobile": "left",
+        "row_alignment_mobile": "top",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 80,
+        "section_style_enable_animation": true
+      }
+    },
+    "image_hero_pJ8CwR": {
+      "type": "image-hero",
+      "blocks": {
+        "accent_r4hRgD": {
+          "type": "accent",
+          "settings": {
+            "text": "Highlight",
+            "accent_font_size": 5,
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent"
+          }
+        },
+        "heading_HhDBPt": {
+          "type": "heading",
+          "settings": {
+            "title": "Adaptable Design",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "spacer_XUQjJr": { "type": "spacer", "settings": { "space": 20 } },
+        "button_zNEPtt": {
+          "type": "button",
+          "settings": {
+            "button_link": "",
+            "button_label": "Shop now",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "accent_r4hRgD",
+        "heading_HhDBPt",
+        "spacer_XUQjJr",
+        "button_zNEPtt"
+      ],
+      "settings": {
+        "enable_full_width": false,
+        "image_height_type": "custom",
+        "custom_height_desktop": "90vh",
+        "custom_height_mobile": "750px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 430,
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "center_flex-end",
+        "image_overlay_tint_opacity": 0,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": true,
+        "text_box_style": "plain",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 32,
+        "section_style_enable_animation": true
+      }
+    },
+    "banner": {
+      "type": "main-collection-banner",
+      "disabled": true,
+      "settings": {
+        "show_breadcrumbs": true,
+        "show_collection_description": true,
+        "collection_description_truncate_num_lines": "2",
+        "show_collection_image": true,
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "image_height_type": "custom",
+        "custom_height_desktop": "250px",
+        "custom_height_mobile": "250px",
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "flex-start_flex-end",
+        "image_overlay_tint_opacity": 0,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": true,
+        "image_overlay_override_color_text": "#140ce9",
+        "image_overlay_override_color_tint": "#000000",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "num_columns": "3",
+        "num_rows": "4",
+        "show_item_count": true,
+        "enable_grid_mode": true,
+        "default_grid_mode": "grid",
+        "enable_sticky_filter_sidebar": true,
+        "show_sort": true,
+        "show_filters": true,
+        "filter_search_groups": "Product type, Brand, Color",
+        "collapse_filter_sidebar": true,
+        "collapse_filter_groups_desktop": true,
+        "truncate_filter_list": true,
+        "truncate_filter_list_amount": 7,
+        "show_swatch_filters": true,
+        "show_chip_filters": true,
+        "chip_layout": "2col",
+        "pagination": "click",
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_buttons_wfnNYR": {
+      "type": "collection-list-buttons",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "Explore all brands",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "collections": [],
+        "num_columns": "4",
+        "num_rows": "all",
+        "grid_spacing": "comfort",
+        "num_rows_mobile": "5",
+        "enable_slider_mobile": false,
+        "show_product_counts": false,
+        "collection_item_style": "filled",
+        "shape": "rectangle",
+        "image_source": "product",
+        "image_position": "left",
+        "image_aspect_ratio": "square",
+        "image_circle_crop_enable": false,
+        "image_size": 80,
+        "image_spacing": 4,
+        "image_size_mobile": 50,
+        "image_spacing_mobile": 0,
+        "title_font_type": "heading",
+        "section_style_spacing_top": 60,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "image_hero_nT7RGe",
+    "rich_text_Er6aBL",
+    "overlapping_media_with_content_9XFBhb",
+    "multi_column_QddHBL",
+    "image_hero_pJ8CwR",
+    "banner",
+    "product-grid",
+    "collection_list_buttons_wfnNYR"
+  ]
+}

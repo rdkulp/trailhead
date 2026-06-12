@@ -1,0 +1,46 @@
+{% liquid
+  comment
+    Renders article tags based on categories that are entered in the settings. Used for the article
+    template, as well as article items.
+
+    Required parameters:
+      - blog_article: { Object } The associated article object.
+      - article_categories: { String } A list of categories to compare with the article's tags.
+
+    Optional parameters:
+      - blog: { Object } The blog object associated with the article.
+  endcomment
+
+  assign article_categories = article_categories | downcase | split: ','
+  assign stripped_article_categories = ''
+
+  for category in article_categories
+    assign stripped_category = category | strip
+    assign stripped_article_categories = stripped_article_categories | append: stripped_category | append: ','
+  endfor
+
+  assign stripped_article_categories = stripped_article_categories | remove_last: ',' | split: ','
+
+  assign tag_el = 'span'
+
+  if blog
+    assign tag_el = 'a'
+  endif
+%}
+
+{% for tag in blog_article.tags -%}
+  {%- assign downcased_tag = tag | downcase -%}
+
+  {% if stripped_article_categories contains downcased_tag or article_categories == blank -%}
+    <li class="article-tags__item">
+      <{{ tag_el }}
+        {% if blog -%}
+          href="{{ blog.url }}/tagged/{{ tag | handleize }}"
+        {%- endif %}
+        class="article-tags__tag fs-accent-bold"
+      >
+        {{ tag }}
+      </{{ tag_el }}>
+    </li>
+  {%- endif %}
+{%- endfor %}

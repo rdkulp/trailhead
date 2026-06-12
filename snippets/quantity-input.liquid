@@ -1,0 +1,148 @@
+{% liquid
+  comment
+    Renders a quantity input display with "+"/"-" buttons.
+
+    Required parameters:
+      - parent_id: { String } An ID to be appended to 'quantity-input' for the input's ID (should be unique).
+      - initial_value: { Number } The initial value of the input.
+
+    Optional parameters:
+      - is_quick_add_button: { Boolean } Whether the quantity input is being rendered for the product
+        item quick add button.
+      - quick_add_style: { String } The quick add button style. Can be:
+        - 'icon':
+          - A "+" icon that shows over the image
+        - 'text':
+          - An "Add to cart" button that shows with the text content
+      - show_label: { Boolean } Whether to show the input label.
+      - show_quantity_in_cart: { Boolean } Whether to show the total number of items in the cart.
+      - use_border: { Boolean } Whether to apply a border around the display.
+      - wrapper_class: { String } A class to be applied to the wrapper.
+  endcomment
+
+  assign is_quick_add_button = is_quick_add_button | default: false
+  assign show_label = show_label | default: false
+  assign show_quantity_in_cart = show_quantity_in_cart | default: false
+  assign use_border = use_border | default: false
+
+  assign parent_id = 'quantity-input-' | append: parent_id
+  assign label_wrapper_class = 'quantity-input-wrapper__labels product__label'
+
+  unless show_label
+    assign label_wrapper_class = label_wrapper_class | append: ' visually-hidden'
+  endunless
+
+  assign quantity_input_wrapper_class = 'quantity-input-wrapper'
+
+  if wrapper_class != blank
+    assign quantity_input_wrapper_class = quantity_input_wrapper_class | append: ' ' | append: wrapper_class
+  endif
+
+  assign button_class = 'quantity-input__button'
+
+  if is_quick_add_button
+    assign button_class = button_class | append: ' btn'
+
+    if quick_add_style == 'icon'
+      assign button_class = button_class | append: ' btn--rounded'
+    else
+      assign button_class = button_class | append: ' btn--primary'
+    endif
+  endif
+
+  assign item_in_cart = 0
+-%}
+
+<div class="{{ label_wrapper_class }}">
+  <label class="quantity-input-wrapper__label fs-body-100" for="{{ parent_id }}">
+    {{ 'products.product.quantity' | t }}
+  </label>
+
+  {% if show_quantity_in_cart -%}
+    {% liquid
+      assign item_in_cart = cart | item_count_for_variant: prod.selected_or_first_available_variant.id
+
+      capture cart_count_html
+        echo '<span class="item_count">[[ic]]</span>' | replace: '[[ic]]', item_in_cart
+      endcapture
+
+      capture cart_count_string
+        echo 'products.product.cart_item_count_html' | t: item_count: cart_count_html
+      endcapture
+    %}
+    <div
+      class="quantity-input-wrapper__cart-count fs-body-60 t-opacity-70"
+      data-cart-item-count="{{ item_in_cart }}"
+    >
+      {% liquid
+        if show_label
+          echo '([[ccs]])' | replace: '[[ccs]]', cart_count_string
+        else
+          echo cart_count_string
+        endif
+      -%}
+    </div>
+  {%- endif %}
+</div>
+
+<div
+  class="{{ quantity_input_wrapper_class }}"
+  data-quantity-selector
+>
+  <div
+    class="quantity-input"
+    data-bordered="{{ use_border }}"
+  >
+    <button
+      type="button"
+      class="{{ button_class }}"
+      data-subtract-quantity
+      aria-label="{{ 'general.accessibility.quantity_subtract' | t }}"
+    >
+      {% if is_quick_add_button -%}
+        {% render 'icon', icon: 'minus-16' %}
+      {%- else -%}
+        {% render 'icon', icon: 'minus-small' %}
+      {%- endif %}
+    </button>
+
+    {% if is_quick_add_button -%}
+      <button
+        type="button"
+        class="{{ button_class }}"
+        data-remove-item
+        aria-label="{{ 'general.accessibility.remove_product' | t }}"
+      >
+        {% render 'icon', icon: 'remove' %}
+      </button>
+    {%- endif %}
+
+    <input
+      type="number"
+      name="updates[]"
+      id="{{ parent_id }}"
+      value="{{ initial_value }}"
+      min="1"
+      pattern="[0-9]*"
+      class="quantity-input__input"
+      data-quantity-input
+      {% if is_quick_add_button -%}
+        data-product-quantity-input
+      {%- endif %}
+      aria-label="{{ 'general.accessibility.quantity' | t }}"
+    >
+
+    <button
+      type="button"
+      class="{{ button_class }}"
+      data-add-quantity
+      aria-label="{{ 'general.accessibility.quantity_add' | t }}"
+    >
+      {% if is_quick_add_button -%}
+        {% render 'icon', icon: 'plus-16' %}
+      {%- else -%}
+        {% render 'icon', icon: 'plus-small' %}
+      {%- endif %}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,171 @@
+{% liquid
+  comment
+    Renders an article item.
+
+    Required parameters:
+      - blog_article: { Object } The associated article object.
+      - show_author: { Boolean } Whether to show the article's author.
+      - show_date: { Boolean } Whether to show the article's publishing date.
+      - show_featured_image: { Boolean } Whether to show the article's featured image.
+      - aspect_ratio: { String } A string noting the aspect ratio of the featured image.
+      - image_sizes: { String } A list of responsive image sizes (for the 'sizes' attributes).
+      - show_tags: { Boolean } Whether to show the article's tags (if there are any).
+      - section_settings: { Object } The parent section's settings. Used to set up text box
+        styles that are controlled in the section.
+
+    Optional parameters:
+      - blog: { Object } The blog object associated with the article.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+  endcomment
+
+  assign excerpt_truncate_amount = 30
+  assign show_image = false
+
+  if show_featured_image and blog_article != blank and blog_article.image != blank
+    assign show_image = true
+  endif
+
+  assign read_button_label = 'blogs.article.read_more' | t
+  assign enable_text_box = true
+
+  # TODO this is a hack, the blog template needs to have a
+  # toggle added, then this can be removed.
+  if section_settings.enable_text_box == false
+    assign enable_text_box = false
+  endif
+-%}
+
+{% liquid
+  capture tag_list
+    if show_tags and blog_article.tags.size > 0
+      render 'article-tags', blog_article: blog_article, article_categories: settings.article_categories
+    endif
+  endcapture
+-%}
+
+{% capture article_image -%}
+  {% if blog_article != blank -%}
+    {% if show_image -%}
+      <a
+        href="{{ blog_article.url }}"
+        class="article-item__image-wrapper"
+        aria-label="{{ blog_article.title }}"
+      >
+        {% render 'image',
+          wrapper_class: 'article-item__image',
+          image: blog_article.image,
+          sizes: image_sizes,
+          aspect_ratio: aspect_ratio,
+          animate: true
+        -%}
+      </a>
+    {%- endif -%}
+  {%- else -%}
+    <div class="article-item__image-wrapper">
+      {% render 'image',
+        wrapper_class: 'article-item__image',
+        sizes: image_sizes,
+        aspect_ratio: aspect_ratio,
+        include_placeholder: true
+      -%}
+    </div>
+  {%- endif %}
+{%- endcapture %}
+
+{% capture article_content_inner -%}
+  {% if blog_article != blank -%}
+    <div class="article-item__content-inner">
+      {% if tag_list != blank -%}
+        <div class="article-item__tags">
+          <ul class="article-tags">
+            {{ tag_list }}
+          </ul>
+        </div>
+      {%- endif %}
+
+      <h3 class="article-item__title ff-heading fs-heading-4-base">
+        <a href="{{ blog_article.url }}">{{ blog_article.title }}</a>
+      </h3>
+
+      {% if show_author or show_date -%}
+        <p class="article-item__meta fs-body-75">
+          {% if show_author -%}
+            <span>
+              {{- 'blogs.article.by' | t }}
+              {{ blog_article.author -}}
+            </span>
+          {%- endif %}
+
+          {% if show_author and show_date -%}
+            <span class="article-item__meta-separator"></span>
+          {%- endif %}
+
+          {% if show_date -%}
+            {{ blog_article.published_at | time_tag: format: 'abbreviated_date' }}
+          {%- endif %}
+        </p>
+      {%- endif %}
+
+      {% if show_excerpt and blog_article.excerpt_or_content.size > 0 -%}
+        <div class="article-item__excerpt">
+          <p>{{ blog_article.excerpt_or_content | strip_html | truncatewords: excerpt_truncate_amount }}</p>
+        </div>
+      {%- endif %}
+
+
+      {% render 'button',
+        label: read_button_label,
+        link: blog_article.url,
+        button_style: 'text',
+        wrapper_class: 'article-item__read-button'
+      -%}
+    </div>
+  {%- else -%}
+    <div class="article-item__content-inner">
+      <h3 class="article-item__title ff-heading fs-heading-4-base">{{ 'homepage.onboarding.blog_title' | t }}</h3>
+
+      <p class="article-item__meta fs-body-75">
+        <span>
+          {{- 'blogs.article.by' | t }}
+          {{ 'homepage.onboarding.article_author' | t -}}
+        </span>
+
+        {{ 'now' | time_tag: format: 'abbreviated_date' }}
+      </p>
+
+      <div class="article-item__excerpt">
+        <p>{{ 'homepage.onboarding.article_excerpt' | t }}</p>
+      </div>
+    </div>
+  {%- endif %}
+{%- endcapture %}
+
+<div class="article-item__wrapper">
+  {% liquid
+    assign article_item_class = 'article-item animation--item'
+
+    if enable_text_box
+      assign article_item_class = article_item_class | append: ' text-box text-box__no-padding'
+    endif
+
+    capture article_item_attributes
+      if enable_text_box
+        render 'settings-text-box', local_settings: section_settings, section_type: 'standard'
+      endif
+
+      echo shopify_attributes
+    endcapture
+  -%}
+
+  <div
+    class="{{ article_item_class }}"
+    data-has-image="{{ show_image }}"
+    {{ article_item_attributes }}
+  >
+    {{ article_image }}
+
+    <div class="article-item__content">
+      {{ article_content_inner }}
+    </div>
+  </div>
+</div>

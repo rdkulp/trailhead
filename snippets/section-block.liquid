@@ -1,0 +1,94 @@
+{%- comment -%}
+  Renders a section content block. Commonly used within a section's block loop:
+
+    {%- for block in section.blocks -%}
+      {% render 'section-blocks', block: block -%}
+    {%- endfor -%}
+
+  Can also be used at the end of a section's block loop case statement as the `else` case:
+
+    {% for block in section.blocks -%}
+      {% case block.type -%}
+        {%- when 'custom-block' -%}
+          {% render 'custom-block' %}
+        {%- else -%}
+          {% render 'section-blocks', block: block, alignment: alignment -%}
+      {%- endcase %}
+    {%- endfor %}
+
+  Required parameters:
+    - block: { Object } The current iteration's block.
+    - forloop: { Object } The forloop object for the current block iteration.
+
+  Optional parameters:
+    - alignment: { String } The horizontal alignment of the content (for button, image, and video player block). Can be:
+      - "left" or "flex-start"
+      - "center"
+      - "right" or "flex-end"
+    - alignment_mobile: { String } The horizontal alignment of the content for an image or video player block with mobile setitings. Can be:
+      - "flex-start"
+      - "center"
+      - "flex-end"
+    - image_full_width: { String } Passing through 'custom' or 'full'.
+    - image_block_break_to_mobile_at: { String } A pixel width to trigger mobile styles at (for image block).
+    - image_wrapper_class
+{%- endcomment -%}
+
+{% case block.type -%}
+  {% when 'accent' -%}
+    {% render 'section-block-accent',
+      accent_text: block.settings.text,
+      accent_font_size: block.settings.accent_font_size,
+      accent_divider_enable: block.settings.accent_divider_enable,
+      accent_divider_color: block.settings.accent_divider_color,
+      shopify_attributes: block.shopify_attributes
+    -%}
+  {% when 'button' -%}
+    {% render 'section-block-button',
+      button_label: block.settings.button_label,
+      button_link: block.settings.button_link,
+      button_style: block.settings.button_style,
+      alignment: alignment,
+      forloop: forloop,
+      shopify_attributes: block.shopify_attributes
+    -%}
+  {% when 'divider' -%}
+    {% render 'section-block-divider',
+      space_above: block.settings.space_above,
+      space_below: block.settings.space_below,
+      thickness: block.settings.thickness,
+      shopify_attributes: block.shopify_attributes
+    -%}
+  {% when 'image' -%}
+    {% render 'section-block-image',
+      image: block.settings.image,
+      width: block.settings.image_size,
+      mobile_width: block.settings.image_size_mobile,
+      break_to_mobile_at: image_block_break_to_mobile_at,
+      wrapper_class: image_wrapper_class,
+      shopify_attributes: block.shopify_attributes,
+      alignment: alignment,
+      alignment_mobile: alignment_mobile,
+      image_full_width: block.settings.image_width
+    -%}
+  {% when 'heading' -%}
+    {% render 'section-block-heading',
+      heading_text: block.settings.title,
+      heading_font_size: block.settings.heading_font_size,
+      shopify_attributes: block.shopify_attributes,
+      heading_tag: block.settings.heading_tag
+    -%}
+  {% when 'video-player' -%}
+    {% render 'section-block-video-player', block: block, alignment: alignment, alignment_mobile: alignment_mobile -%}
+  {% when 'text' -%}
+    {% render 'section-block-text',
+      alignment: alignment,
+      text: block.settings.text,
+      text_font_size: block.settings.text_font_size,
+      shopify_attributes: block.shopify_attributes
+    -%}
+  {% when 'text-list-with-icons' -%}
+    {% render 'section-block-text-list-with-icons', type: 'default', block: block -%}
+  {% when 'spacer' -%}
+    {% render 'section-block-spacer', space: block.settings.space, shopify_attributes: block.shopify_attributes -%}
+{%- endcase %}

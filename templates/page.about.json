@@ -1,0 +1,442 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_1": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Fun. Stylish. Flair.",
+            "heading_tag": "h3",
+            "heading_font_size": 8
+          }
+        },
+        "spacer_9tRz8m": { "type": "spacer", "settings": { "space": 24 } },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Since 2022, we've celebrated style and substance for vibrant home décor. Founded on the collective passion for unique design and aesthetic functionality, our diverse team brings a wealth of experience to the table.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading", "spacer_9tRz8m", "text"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "color_scheme": "default",
+        "override_with_custom_colors": true,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 88,
+        "section_style_spacing_bottom": 88,
+        "section_style_enable_animation": true
+      }
+    },
+    "image_hero_1": {
+      "type": "image-hero",
+      "blocks": {
+        "accent_Fd4KFz": {
+          "type": "accent",
+          "disabled": true,
+          "settings": {
+            "text": "Accent",
+            "accent_font_size": 5,
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent"
+          }
+        },
+        "heading_XRE4Q7": {
+          "type": "heading",
+          "disabled": true,
+          "settings": {
+            "title": "Image hero",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "text_mk7U39": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Use these sections to promote a particular feature with editorial photography.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["accent_Fd4KFz", "heading_XRE4Q7", "text_mk7U39"],
+      "settings": {
+        "enable_full_width": false,
+        "image_height_type": "custom",
+        "custom_height_desktop": "650px",
+        "custom_height_mobile": "450px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 500,
+        "text_position": "center_center",
+        "text_position_mobile": "center_center",
+        "image_overlay_tint_opacity": 0,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Our Distinctive Assortment",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "spacer_9Hpzpk": { "type": "spacer", "settings": { "space": 24 } },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>FLAIR proudly stands as the authorized retailer for all the brands featured in our collection. Directly imported from their countries of origin, our authentic products undergo meticulous curation, and merge practicality with visual allure.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading", "spacer_9Hpzpk", "text"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 650,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 88,
+        "section_style_spacing_bottom": 88,
+        "section_style_enable_animation": true
+      }
+    },
+    "multi_column": {
+      "type": "multi-column",
+      "blocks": {
+        "image_column_1": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "portrait_alt",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "Design-forward",
+            "heading_tag": "h3",
+            "heading_font_size": 4,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        },
+        "image_column_2": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "portrait_alt",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "Sustainable materials",
+            "heading_tag": "h3",
+            "heading_font_size": 4,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        },
+        "image_column_3": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "portrait_alt",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "Transparent pricing",
+            "heading_tag": "h3",
+            "heading_font_size": 4,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": ["image_column_1", "image_column_2", "image_column_3"],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "num_columns": "3",
+        "column_spacing": 24,
+        "row_spacing": 24,
+        "column_alignment": "left",
+        "row_alignment": "top",
+        "num_columns_mobile": "1",
+        "column_spacing_mobile": 24,
+        "row_spacing_mobile": 24,
+        "column_alignment_mobile": "left",
+        "row_alignment_mobile": "top",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 80,
+        "section_style_enable_animation": true
+      }
+    },
+    "image_hero_2": {
+      "type": "image-hero",
+      "blocks": {
+        "accent": {
+          "type": "accent",
+          "disabled": true,
+          "settings": {
+            "text": "Accent",
+            "accent_font_size": 5,
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "disabled": true,
+          "settings": {
+            "title": "Image hero",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "text": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Use these sections to promote a particular feature with editorial photography.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["accent", "heading", "text"],
+      "name": "t:sections.image_hero.presets.name",
+      "settings": {
+        "enable_full_width": false,
+        "image_height_type": "custom",
+        "custom_height_desktop": "650px",
+        "custom_height_mobile": "450px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 500,
+        "text_position": "center_center",
+        "text_position_mobile": "center_center",
+        "image_overlay_tint_opacity": 0,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "collapsible_rows_1": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do you have a showroom or somewhere I can see your products in person?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do you offer wholesale pricing?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do you offer discounts for designers and industry pros?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "How long will it take for me to get my order?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_5": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is your return policy?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        }
+      },
+      "block_order": ["item_1", "item_2", "item_3", "item_4", "item_5"],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "heading_font_size": 3,
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "header_position": "above",
+        "item_heading_font": "heading",
+        "content_width": "full",
+        "custom_width": 1000,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 52,
+        "section_style_enable_animation": true
+      }
+    },
+    "overlapping_media_with_content": {
+      "type": "overlapping-media-with-content",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "Visit us in person",
+            "heading_tag": "h3",
+            "heading_font_size": 7
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>While our primary presence is online, we are open to collaborations with local storefronts, offering our products through engaging pop-up shops.</p>",
+            "text_font_size": 4
+          }
+        },
+        "button": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_link": "",
+            "button_label": "Read more",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": ["heading", "text", "button"],
+      "settings": {
+        "media_width": 40,
+        "media_position_desktop": "right",
+        "media_position_mobile": "above",
+        "media_1_type": "image",
+        "media_1_aspect_ratio": "square",
+        "mobile_media_1_aspect_ratio": "square",
+        "media_1_focal_point": "center",
+        "mobile_media_1_focal_point": "center",
+        "media_caption": "",
+        "enable_media_2": false,
+        "media_2_type": "image",
+        "media_2_aspect_ratio": "square",
+        "mobile_media_2_aspect_ratio": "square",
+        "media_2_focal_point": "center",
+        "mobile_media_2_focal_point": "center",
+        "content_width": "custom",
+        "custom_width": 500,
+        "content_alignment": "left",
+        "color_scheme": "color_scheme_1",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_1",
+    "image_hero_1",
+    "rich_text",
+    "multi_column",
+    "image_hero_2",
+    "collapsible_rows_1",
+    "overlapping_media_with_content"
+  ]
+}

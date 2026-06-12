@@ -1,0 +1,127 @@
+{% liquid
+  comment
+    Renders a filter group.
+
+    Required parameters:
+      - filter: { Object } The current filter.
+      - collapse_filter_groups: { Boolean } Whether the group should be collapsed by default.
+      - filter_search_groups: { String } A list of filter groups that should have a search bar
+      - section_settings: { Object } The parent section's settings.
+      - scope: { String } Where the filter group is being rendered. Can be:
+        - 'drawer'
+        - 'sidebar'
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+  endcomment
+
+  assign group_has_active_filters = false
+  assign filter_label_downcase = filter.label | downcase
+  assign group_has_search = false
+
+  if filter.type == 'price_range'
+    if filter.min_value.value and filter.max_value.value
+      if filter.min_value.value != filter.range_min or filter.max_value.value != filter.range_max
+        assign group_has_active_filters = true
+      endif
+    endif
+  elsif filter.active_values.size > 0
+    assign group_has_active_filters = true
+  endif
+
+  if filter.type == 'list' and filter_search_groups contains filter_label_downcase
+    assign group_has_search = true
+  endif
+
+  assign group_id = 'filter-group-[[fpn]]--[[scope]]' | replace: '[[fpn]]', filter.param_name | replace: '[[scope]]', scope | handle
+-%}
+
+<div
+  class="filter-form__group animation--filter-form-group"
+  data-filter-group
+  data-filter-type="{{ filter.type }}"
+  data-filter-label="{{ filter.label | handle }}"
+  data-filter-group-has-active-filters="{{ group_has_active_filters }}"
+  data-filter-group-has-search="{{ group_has_search }}"
+  data-filter-search-active="false"
+  data-filter-search-empty="false"
+>
+  <div class="filter-form__group-toggle-wrapper">
+    <button
+      type="button"
+      class="filter-form__group-toggle"
+      aria-expanded="{% if collapse_filter_groups %}false{% else %}true{% endif %}"
+      aria-controls="{{ group_id }}"
+      data-filter-group-toggle="{{ group_id }}"
+    >
+      <span class="filter-form__group-toggle-inner">
+        <span class="filter-form__group-toggle-label ff-body fs-body-bold">
+          {{ filter.label }}
+        </span>
+
+        {% if group_has_active_filters -%}
+          <span class="filter-form__group-toggle-active-values ff-body fs-body-75">
+            {% liquid
+              if filter.type == 'price_range'
+                assign min = filter.min_value.value | money
+                assign max = filter.max_value.value | money
+
+                echo '[[min]] - [[max]]' | replace: '[[min]]', min | replace: '[[max]]', max
+              else
+                for value in filter.active_values
+                  unless forloop.last
+                    echo '[[value]], ' | replace: '[[value]]', value.label
+                  else
+                    echo value.label
+                  endunless
+                endfor
+              endif
+            -%}
+          </span>
+        {%- endif %}
+      </span>
+
+      {% render 'icon', icon: 'chevron' %}
+    </button>
+
+    {% if scope == 'sidebar' -%}
+      <button
+        class="filter-form__group-clear fs-body-75"
+        data-filter-group-clear="{{ group_id }}"
+        data-has-active-filters="{{ group_has_active_filters }}"
+      >
+        {{ 'filters.reset' | t }}
+      </button>
+    {%- endif %}
+  </div>
+
+  <div
+    id="{{ group_id }}"
+    class="filter-form__group-filter-wrapper"
+    aria-hidden="{{ collapse_filter_groups }}"
+    data-filter-type="{{ filter.type }}"
+  >
+    {% liquid
+      capture group_search
+        if group_has_search
+          render 'filter-group-search', filter: filter
+        endif
+      endcapture
+
+      capture group_filters
+        case filter.type
+          when 'list'
+            render 'filter-list', filter: filter, section_settings: section_settings, scope: scope, custom_color_key_map: custom_color_key_map, custom_color_value_map: custom_color_value_map
+          when 'price_range'
+            render 'filter-price-range', filter: filter, scope: scope
+        endcase
+      endcapture
+
+      if scope == 'drawer'
+        render 'filter-group-drawer-wrapper', filter: filter, filters: group_filters, filter_search: group_search, has_active_filters: group_has_active_filters
+      else
+        echo group_search
+        echo group_filters
+      endif
+    -%}
+  </div>
+</div>

@@ -1,0 +1,16 @@
+{%- comment -%}
+  Pass in
+
+  Required:
+  * id (string)
+
+  Optional:
+
+  * prefix (string) - will be prefixed on the id with a trailing underscore
+  Note: format should maintain parity with generators/utils.js#prefixedId
+{%- endcomment -%}
+{%- if prefix -%}
+  {{- prefix -}}
+  _
+{%- endif -%}
+{{- id -}}

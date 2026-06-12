@@ -1,0 +1,31 @@
+{%- comment -%}
+  Renders a section's content blocks within a loop. If a section already has a blocks loop, then use
+  section-block.liquid instead.
+
+  Required parameters:
+    - blocks: { Object } The associated block objects.
+
+  Optional parameters:
+    - alignment: { String } The horizontal alignment of the content (for button and image block). Can be:
+      - "left" or "flex-start"
+      - "center"
+      - "right" or "flex-end"
+    - alignment_mobile: { String } The horizontal alignment of the content for an image block with mobile setitings. Can be:
+      - "flex-start"
+      - "center"
+      - "flex-end"
+    - image_block_break_to_mobile_at: { String } A pixel width to trigger mobile styles at (for image block).
+    - image_wrapper_class: { String } Class string to use in image block's container.
+{%- endcomment -%}
+
+{%- for block in blocks -%}
+  {%
+    render 'section-block',
+    block: block,
+    alignment: alignment,
+    alignment_mobile: alignment_mobile,
+    forloop: forloop,
+    image_block_break_to_mobile_at: image_block_break_to_mobile_at,
+    image_wrapper_class: image_wrapper_class,
+  -%}
+{%- endfor -%}

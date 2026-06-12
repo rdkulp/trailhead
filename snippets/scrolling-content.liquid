@@ -1,0 +1,44 @@
+{% liquid
+  comment
+    Renders content in a scrolling banner.
+
+    Required parameters:
+    - content: { HTML } The content to scroll within the banner.
+    - duration: { Number } The time required for content to animate once.
+    - direction: { String } The direction of the scrolling animation. Can be:
+        - 'normal'
+        - 'reverse'
+    - gap: { Number } The column gap between content elements.
+
+    Optional parameters:
+      - prevent_tab_focus: { Boolean } Whether to prevent tab focus within scroller.
+      - gap_mobile: { Number } The column gap between content elements for mobile viewports.
+  endcomment
+
+  assign prevent_tab_focus = prevent_tab_focus | default: false, allow_false: true
+%}
+
+{{ 'partial-component-scrolling-content.css' | asset_url | stylesheet_tag }}
+{% render 'inline-scripts', script_name: 'scrolling-content' %}
+
+<scrolling-content
+  {%- if prevent_tab_focus %}
+    tabindex="-1"
+  {%- endif %}
+>
+  <div
+    class="scrolling-content__marquee scrollbars-hidden"
+    data-play-scroll-animation="false"
+    js-marquee
+    style="
+      --scroll-duration: {{ duration }}s;
+      --scroll-direction: {{ direction }};
+      --gap: {{ gap }}px;
+      {%- if gap_mobile %} --gap-mobile: {{ gap_mobile }}px;{% endif %}
+    "
+  >
+    <span class="scrolling-content__content" js-marquee-content>
+      {{ content }}
+    </span>
+  </div>
+</scrolling-content>

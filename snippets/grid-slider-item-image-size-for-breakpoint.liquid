@@ -1,0 +1,62 @@
+{% liquid
+  comment
+    Renders the appropriate image size string for a grid or slider item, based on the number
+    of columns, the gap, and the peek values, at a given breakpoint.
+
+    Required parameters:
+      - breakpoint: { Number } The breakpoint that the image size should apply to (min-width in pixels).
+        - Can also be blank for a default size.
+      - num_columns: { Number } The number of columns.
+      - gap: { Number } The gap between items, in pixels.
+
+      Optional parameters:
+        - peek: { Number } The amount that the next "hidden" slide peeks out, in pixels. Only applies to sliders.
+        - column_percentage { Number } The amount (in percentage) that the image fills of the column, if not 100%.
+  endcomment
+
+  assign peek = peek | default: 0
+
+  assign num_columns = num_columns | plus: 0
+
+  assign column_percentage = column_percentage | default: 100 | divided_by: 100.00
+
+  if peek > 0
+    assign num_gaps = num_columns
+  else
+    assign num_gaps = num_columns | minus: 1
+  endif
+
+  assign gap_space = num_gaps | times: gap
+  assign gaps_and_peek = peek | plus: gap_space | append: 'px'
+
+  capture image_size
+    if breakpoint != blank
+      echo '(min-width: '
+      echo breakpoint
+      echo 'px) '
+    endif
+
+    echo 'calc((100vw'
+    if breakpoint >= 720
+      echo ' - (2 * clamp(24px, 2vw, 36px)) - '
+    else
+      echo ' - (2 * 16px) - '
+    endif
+    echo gaps_and_peek
+    echo ')'
+
+    if num_columns > 1
+      echo ' / '
+      echo num_columns
+    endif
+
+    if column_percentage != 1.0
+      echo ' * '
+      echo column_percentage
+    endif
+
+    echo ')'
+  endcapture
+
+  echo image_size
+-%}

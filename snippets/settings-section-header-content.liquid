@@ -1,0 +1,68 @@
+{% liquid
+  comment
+    Renders the section header content (used in conjunction with the 'section-header.js' generator).
+
+    Required parameters:
+      - section: { Object } The parent section.
+
+    Optional parameters:
+      - additional_header_content: { String } Any extra content to render at the end of the header.
+  endcomment
+
+  assign heading_font_size = section.settings.heading_font_size | default: 3
+-%}
+
+{% if section.settings.preheading != blank
+  or section.settings.heading != blank
+  or section.settings.subheading != blank
+  or additional_header_content != blank
+-%}
+  <div
+    class="section-header section-blocks animation--container-header"
+    {% render 'settings-section-header', local_settings: section.settings %}
+  >
+    {% if section.settings.preheading != blank -%}
+      <h3 class="ff-body fs-body-50 fs-accent section-header__preheading">
+        {{ section.settings.preheading }}
+      </h3>
+    {%- endif %}
+
+    {% if section.settings.heading != blank -%}
+      {% liquid
+        assign heading_class = 'ff-heading section-header__heading'
+
+        capture heading_font_class
+          if heading_font_size != blank
+            render 'settings-text-size', type: 'heading', size: heading_font_size
+          endif
+        endcapture
+
+        if heading_font_class != blank
+          assign heading_class = heading_class | append: ' ' | append: heading_font_class
+        endif
+      -%}
+
+      <{{ section.settings.section_header_heading_tag }} class="{{ heading_class }}">
+        {{ section.settings.heading }}
+      </{{ section.settings.section_header_heading_tag }}>
+    {%- endif %}
+
+    {%- liquid
+      capture tag_type
+        if section.settings.section_header_subheading_tag != blank
+          echo section.settings.section_header_subheading_tag
+        else
+          echo 'div'
+        endif
+      endcapture
+    -%}
+
+    <{{ tag_type }} class="ff-body fs-body-100 section-header__subheading rte">
+      {{ section.settings.subheading }}
+    </{{ tag_type }}>
+
+    {% unless additional_header_content == blank -%}
+      {{ additional_header_content }}
+    {%- endunless %}
+  </div>
+{%- endif %}

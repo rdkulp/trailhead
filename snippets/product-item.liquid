@@ -1,0 +1,355 @@
+{%- liquid
+  comment
+    Renders a product item.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - parent_id: { String } An ID to be appended to 'product-item' and passed to quick-add-quantity-atc (should be unique).
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+
+    Optional parameters:
+      - coll: { Object } The associated collection object.
+      - show_quick_view: { Boolean } Whether to show the quick view (dependent on 'settings.enable_quick_view').
+      - has_grid_reveal: { Boolean } Whether the item is part of a grid reveal animation.
+  endcomment
+
+  assign product_url = prod.url | within: coll
+  assign show_multiple_images = false
+  assign quick_add_enabled = false
+
+  assign image_link_tagname = 'a'
+
+  if placeholder
+    assign image_link_tagname = 'div'
+    assign id = 'placeholder'
+  endif
+
+  if settings.product_listing_show_second_image_on_hover and prod.media.size > 1
+    assign show_multiple_images = true
+  endif
+
+  if settings.enable_quick_add and prod.available
+    assign quick_add_enabled = true
+  endif
+
+  capture image_size_for_columns
+    case product_columns
+      when '5'
+        echo '270px'
+      when '3'
+        echo '450px'
+      when '2'
+        echo '690px'
+      else
+        # Using a 4 item grid as default for sizes
+        echo '304px'
+    endcase
+  endcapture
+
+  assign sizes = '(max-width: 720px) calc((90vw - 12px) / 2), (max-width: 1400px) calc((93.4vw - (12px * 3)) / [[pc]]), [[isfc]]'
+  assign sizes = sizes | replace: '[[pc]]', product_columns | replace: '[[isfc]]', image_size_for_columns
+
+  assign item_in_cart = 0
+
+  for item in prod.variants
+    assign count_in_cart = cart | item_count_for_variant: item.id
+
+    if count_in_cart > 0
+      assign item_in_cart = item_in_cart | plus: count_in_cart
+    endif
+  endfor
+
+  assign placeholder_product_subtitle = 'general.onboarding.product_subtitle' | t
+  assign show_quick_view = show_quick_view | default: true, allow_false: true
+
+  if settings.enable_quick_view == false or placeholder
+    assign show_quick_view = false
+  endif
+
+  assign has_grid_reveal = has_grid_reveal | default: false, allow_false: true
+
+  assign ratings_visible = false
+
+  if settings.product_listing_show_star_rating and prod.metafields.reviews.rating_count != blank
+    assign ratings_visible = true
+  endif
+
+  assign parent_id = 'product-item-' | append: parent_id
+
+  capture quick_add_button_for_grid
+    render 'quick-add-quantity-atc', parent_id: parent_id, prod: prod, quick_add_style: settings.quick_add_style, item_in_cart: item_in_cart
+  endcapture
+
+  capture quick_add_button_for_list
+    assign parent_id = 'list-mode-' | append: parent_id
+    render 'quick-add-quantity-atc', parent_id: parent_id, prod: prod, quick_add_style: settings.quick_add_style, item_in_cart: item_in_cart
+  endcapture
+-%}
+
+{% capture quick_view_button %}
+  {% if show_quick_view %}
+    <button
+      class="product-item__quick-view-button btn btn--rounded show-product-quick-view product-item__disc-button"
+      href="{{ prod.url | within: coll }}"
+      title="{{ 'products.product.quick_view' | t }}"
+      aria-label="{{ 'products.product.quick_view' | t }}"
+    >
+      {% render 'icon', icon: 'quick-view' %}
+    </button>
+  {% endif %}
+{% endcapture %}
+
+{% capture product_price %}
+  <div
+    class="product-item__price-wrap"
+    data-position="{{ settings.product_listing_price_position }}"
+  >
+    <p
+      class="product-item__price ff-product-price"
+      data-position="{{ settings.product_listing_price_position }}"
+      data-enlarged-prices="{{ settings.product_listing_enlarge_prices }}"
+    >
+      {% render "product-item-price",
+        prod: prod,
+        show_discount: settings.product_listing_show_discount,
+        discount_format: settings.product_listing_discount_format,
+        use_wrapper: false
+      -%}
+    </p>
+  </div>
+{% endcapture %}
+
+{% capture swatches_display -%}
+  {% if settings.product_listing_show_swatches -%}
+    {% liquid
+      capture first_swatchified_option
+        render 'get-first-swatchified-option', prod: prod
+      endcapture
+    -%}
+
+    {% render 'product-item-swatches',
+      prod: prod,
+      coll: coll,
+      custom_color_key_map: custom_color_key_map,
+      custom_color_value_map: custom_color_value_map,
+      option_name: first_swatchified_option,
+      product_url: product_url,
+      show_quick_view: show_quick_view,
+    -%}
+  {%- endif %}
+{%- endcapture %}
+
+<div
+  class="
+    product-item
+    animation--item
+    {% if has_grid_reveal %}animation--item-initial{% endif %}
+  "
+  style="--z-index-item: {{ forloop.index }};"
+  data-input-item
+  data-id="{{ prod.id }}"
+  data-title="{{ prod.title | escape }}"
+  data-url="{{ product_url }}"
+  data-variant-id="{{ prod.first_available_variant.id }}"
+  data-quantity-in-cart="{{ item_in_cart }}"
+  data-product-has-single-variant="{{ prod.has_only_default_variant }}"
+  data-quick-add-style="{{ settings.quick_add_style }}"
+  data-product-item-alignment="{{ settings.product_listing_content_alignment }}"
+  data-price-position="{{ settings.product_listing_price_position }}"
+  data-show-inventory="{{ settings.product_listing_show_inventory_status }}"
+  data-ratings-visible="{{ ratings_visible }}"
+>
+  <div class="product-item__inner">
+    <div class="product-item__media-wrapper">
+      <div class="product-item__media" data-aspect-ratio="{{ settings.product_listing_aspect_ratio }}">
+        <{{ image_link_tagname }}
+          class="product-item__image-link"
+          {% unless placeholder %}
+            href="{{ product_url }}"
+            aria-label="{{ prod.title }}"
+          {% endunless %}
+        >
+          {%- liquid
+            assign image_wrapper_class = 'product-item__image'
+
+            if show_multiple_images
+              assign image_wrapper_class = image_wrapper_class | append: ' product-item__image--one'
+              assign second_image = prod.media[1].preview_image
+
+              if prod.featured_media != prod.media[0]
+                assign second_image = prod.media[0].preview_image
+              endif
+            endif
+          -%}
+
+          {% render 'image',
+            image: prod.featured_media,
+            wrapper_class: image_wrapper_class,
+            aspect_ratio: settings.product_listing_aspect_ratio,
+            object_fit: settings.product_listing_media_fit,
+            include_placeholder: true,
+            sizes: sizes,
+            src_set_type: 'grid',
+            prioritize_loading: prioritize_image_loading
+          -%}
+
+          {% if show_multiple_images -%}
+            {% render 'image',
+              image: second_image,
+              wrapper_class: 'product-item__image product-item__image--two',
+              aspect_ratio: settings.product_listing_aspect_ratio,
+              object_fit: settings.product_listing_media_fit,
+              include_placeholder: true,
+              sizes: sizes,
+              no_lazy_load: true,
+              src_set_type: 'grid'
+            -%}
+          {%- endif %}
+
+          {% comment %}
+            Can be used for future swatch hover UX
+            {% if settings.product_listing_show_swatches -%}
+              <div class="product-item__image__swatch_preview"></div>
+            {%- endif %}
+          {% endcomment %}
+        </{{ image_link_tagname }}>
+
+        {% unless placeholder -%}
+          {% render 'product-badges',
+            prod: prod,
+            show_sale_badge: settings.product_listing_show_sale_badge,
+            show_new_badge: settings.product_listing_show_new_badge,
+            show_custom_badges: settings.product_listing_show_custom_badges,
+            show_sold_out_badge: settings.product_listing_show_sold_out_badge
+          -%}
+        {%- endunless %}
+
+        <div data-product-item-element-visible-only-for-mode="grid">
+          <div class="product-item__floating-action-buttons">
+            {% if quick_add_enabled and settings.quick_add_style == 'icon' -%}
+              {{ quick_add_button_for_grid }}
+            {%- endif %}
+
+            {% if show_quick_view -%}
+              {{ quick_view_button }}
+            {%- endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-item__meta">
+      <div data-product-item-element-visible-only-for-mode="grid">
+        {{ swatches_display }}
+      </div>
+
+      <div
+        class="
+          product-item__text
+          ta-{{ settings.product_listing_content_alignment | slice: 0 }}
+        "
+      >
+        <div class="product-item__text_group_primary">
+          {% if settings.product_listing_price_position == 'above_title' -%}
+            <div data-product-item-element-visible-only-for-mode="grid">
+              {{ product_price }}
+            </div>
+          {%- endif %}
+
+          {% if settings.product_listing_show_vendor and prod.vendor -%}
+            <span class="ff-body fs-body-60 product-item__product-vendor">
+              {{ prod.vendor }}
+            </span>
+          {%- endif %}
+
+          <h3
+            class="product-item__product-title fs-product-title {% if settings.product_listing_title_font == 'body' %}ff-body{% else %}ff-heading{% endif %}"
+            {% if settings.product_listing_product_title_text_limit != 'no_limit' %}
+              data-line-limit="{{ settings.product_listing_product_title_text_limit | split: "_" | first }}"
+            {% endif %}
+            data-base-size-setting="{{ settings.product_listing_title_base_size }}"
+          >
+            {% if placeholder -%}
+              {{ 'homepage.onboarding.product_title' | t }}
+            {%- else -%}
+              <a href="{{ product_url }}">{{ prod.title }}</a>
+            {%- endif %}
+          </h3>
+
+          {% if settings.product_listing_show_subtitle -%}
+            {% if placeholder or prod.metafields.descriptors.subtitle != blank -%}
+              <h4 class="ff-body fs-body-75 product-item__subtitle t-subdued">
+                {{ prod.metafields.descriptors.subtitle | default: placeholder_product_subtitle }}
+              </h4>
+            {%- endif %}
+          {%- endif %}
+
+          {% if settings.product_listing_show_star_rating -%}
+            {% render 'product-rating',
+              prod: prod,
+              show_rating_count: settings.product_listing_show_rating_count,
+              rating_style: settings.product_listing_rating_style,
+              show_when_zero_ratings: false,
+              text_class: 'fs-body-50'
+            -%}
+          {%- endif %}
+
+          {%- if swatches_display != blank -%}
+            <div data-product-item-element-visible-only-for-mode="list">
+              <div class="product-item__swatches">
+                {{ swatches_display }}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {% if settings.product_listing_price_position == 'below_title' -%}
+            <div data-product-item-element-visible-only-for-mode="grid">
+              {{ product_price }}
+            </div>
+          {%- endif %}
+        </div>
+
+        <div class="product-item__text_group_secondary">
+          <div data-product-item-element-visible-only-for-mode="list">
+            {{ product_price }}
+          </div>
+
+          {% if quick_add_enabled and settings.quick_add_style == 'text' -%}
+            <div class="product-item__spacer"></div>
+          {%- endif %}
+
+          {% if settings.product_listing_show_inventory_status -%}
+            <p class="product-item__stock-indicator fs-body-75" data-in-stock="{{ prod.available }}">
+              <span class="product-item__stock-indicator-dot"></span>
+
+              {% liquid
+                if prod.available
+                  echo 'store_availability.general.in_stock' | t
+                else
+                  echo 'store_availability.general.not_in_stock' | t
+                endif
+              -%}
+            </p>
+          {%- endif %}
+
+          {% if quick_add_enabled and settings.quick_add_style == 'text' -%}
+            <div class="product-item__quick-add-beneath" data-product-item-element-visible-only-for-mode="grid">
+              {{ quick_add_button_for_grid }}
+            </div>
+          {%- endif %}
+
+          <div class="product-item__list-mode-buttons-wrap" data-product-item-element-visible-only-for-mode="list">
+            <div class="product-item__list-mode-buttons">
+              {{ quick_view_button }}
+
+              {% if quick_add_enabled -%}
+                {{ quick_add_button_for_list }}
+              {%- endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

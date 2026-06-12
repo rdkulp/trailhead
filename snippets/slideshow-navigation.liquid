@@ -1,0 +1,67 @@
+{% liquid
+  comment
+    Renders a custom slider navigation for the slideshow section.
+
+    Required parameters:
+      - naviagtion_size: { String } The width of the navigation display. Can be:
+        - 'narrow'
+        - 'regular'
+        - 'wide'
+        - 'exta-wide'
+      - naviagtion_size_mobile: { String } The width of the navigation display on mobile. Has the same
+        options as desktop.
+      - navigation_alignment: { String } The horizontal alignment of the navigation.
+      - navigation_alignment_mobile: { String } The horizontal alignment of the navigation on mobile.
+      - show_drop_shadows: { Boolean } Whether the navigation items should have drop shadows.
+      - navigation_color_foreground: { String } The foreground colour of the navigation.
+      - navigation_color_background: { String } The background colour of the navigation.
+      - navigation_background_opacity: { Number } The percent-based opacity of the navigation background.
+      - navigation_background_style: { String } The style of navigation background. Can be:
+        - 'gradient': A radial gradient.
+        - 'fill': A filled container.
+      - autoplay_enabled: { Boolean } Whether autoplay is enabled.
+      - duration_autoplay: { Number } The number of seconds between automatic slide changes.
+  endcomment
+
+  assign navigation_background_opacity = navigation_background_opacity | divided_by: 100.0
+-%}
+
+<div
+  class="slideshow-navigation"
+  data-autoplay="{{ autoplay_enabled }}"
+  data-size="{{ navigation_size }}"
+  data-size-mobile="{{ navigation_size_mobile }}"
+  data-alignment="{{ navigation_alignment }}"
+  data-alignment-mobile="{{ navigation_alignment_mobile }}"
+  data-background-style="{{ navigation_background_style }}"
+  data-show-drop-shadows="{{ show_drop_shadows }}"
+  style="
+    --animation-timing: {{ duration_autoplay }};
+    --color-foreground: {{ navigation_color_foreground }};
+    --color-foreground-alpha-40: {{ navigation_color_foreground | color_modify: 'alpha', 0.4 }};
+    --color-foreground-alpha-80: {{ navigation_color_foreground | color_modify: 'alpha', 0.8 }};
+    --color-background: {{ navigation_color_background }};
+    --color-background-alpha-0: {{ navigation_color_background | color_modify: 'alpha', 0 }};
+    --color-background-alpha-background: {{ navigation_color_background | color_modify: 'alpha', navigation_background_opacity }};
+  "
+>
+  <div class="slideshow-navigation__inner">
+    <div class="slideshow-navigation__dots">
+      {% render 'scroll-slider-page-dots', hide_below_720: false %}
+    </div>
+
+    {% if autoplay_enabled -%}
+      <button
+        type="button"
+        class="slideshow-navigation__pause-button"
+        data-is-playing="true"
+        data-play-label="{{ 'general.accessibility.play' | t | escape }}"
+        data-pause-label="{{ 'general.accessibility.pause' | t | escape }}"
+        aria-label="{{ 'general.accessibility.pause' | t | escape }}"
+      >
+        {% render 'icon', icon: 'play-arrow' %}
+        {% render 'icon', icon: 'pause' %}
+      </button>
+    {%- endif %}
+  </div>
+</div>

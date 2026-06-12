@@ -1,0 +1,37 @@
+{% liquid
+  comment
+    Renders an "Accent" text block.
+
+    Required parameters:
+      - accent_text: { String } The accent text.
+      - accent_font_size: { Number } A number representing a font size, within the
+        accent font scale.
+      - accent_divider_enable: { Boolean } Whether to show a divider.
+      - accent_divider_color: { String } The color of the divider.
+      - shopify_attributes: { Object } Attributes for the theme editor.
+  endcomment
+
+  if accent_text != blank
+    if accent_font_size != blank
+      capture font_class
+        render 'settings-text-size', type: 'accent', size: accent_font_size
+      endcapture
+    endif
+
+    assign block_class = 'section-blocks__accent fs-accent' | append: ' ' | append: font_class
+  endif
+
+  assign accent_divider_enable = accent_divider_enable | default: false, allow_false: true
+-%}
+
+{% if accent_text != blank -%}
+  <p class="{{ block_class }}" {{ shopify_attributes }} data-divider-enabled="{{ accent_divider_enable }}">
+    <span class="accent__text">
+      {{ accent_text }}
+
+      {% if accent_divider_enable -%}
+        <span class="accent__divider color-{{ accent_divider_color }}"></span>
+      {%- endif %}
+    </span>
+  </p>
+{%- endif %}

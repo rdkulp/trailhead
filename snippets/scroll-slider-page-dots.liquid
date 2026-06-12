@@ -1,0 +1,13 @@
+{% liquid
+  comment
+    Renders an empty container for the scroll slider page dots. The scroll slider JS
+    handles populating the dots.
+
+    Optional parameters:
+      - hide_below_720: { Boolean } Whether the dots should show on screens below 720px.
+  endcomment
+
+  assign hide_below_720 = hide_below_720 | default: true, allow_false: true
+-%}
+
+<div class="scroll-slider-page-dots" data-scroll-slider-page-dots data-hide-below-720="{{ hide_below_720 }}"></div>

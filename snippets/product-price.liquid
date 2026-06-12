@@ -1,0 +1,46 @@
+{% liquid
+  comment
+    Renders a product price display.
+
+    Required parameters:
+      - prod: { Object } The associated product object
+      - current_variant: { Object } The current variant object.
+      - show_discount: { Boolean } Whether to show the discount display.
+      - discount_format: { String } The discount format. Can be:
+        - "sale_text"
+        - "percent_off"
+        - "minus_percent"
+        - "save_percent"
+        - "amount_off"
+        - "minus_amount"
+        - "save_amount"
+  endcomment
+-%}
+
+{%- if prod != blank -%}
+  <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+
+  <s data-compare-price>
+    {%- liquid
+      if current_variant.compare_at_price > current_variant.price
+        echo current_variant.compare_at_price | money
+      endif
+    -%}
+  </s>
+
+  <span data-price>{{ current_variant.price | money }}</span>
+
+  {% if show_discount -%}
+    {% render 'get-display-discount',
+      prod: prod,
+      variant: current_variant,
+      format: discount_format,
+      wrapper_class: 'product__price-displayed-discount',
+      use_data_attribute: true
+    -%}
+  {%- endif %}
+
+  {% render 'unit-price', item: current_variant %}
+{%- else -%}
+  <span>{{ 9999 | money }}</span>
+{%- endif %}

@@ -1,0 +1,51 @@
+{% liquid
+  comment
+    Renders the appropriate image size string for a grid or slider item, based on the number
+    of columns, the gap, and the peek values, at each given breakpoint.
+
+    Optional parameters:
+      - num_columns: { Number} The number of columns in the slider, or grid.
+      - num_columns_above_720: { Number} The number of columns in the slider, or grid, above 720px.
+      - num_columns_above_1024: { Number} The number of columns in the slider, or grid, above 1024px.
+      - num_columns_above_1200: { Number} The number of columns in the slider, or grid, above 1200px.
+      - gap: { Number } The gap between items (in pixels).
+      - gap_above_720: { Number } The gap between items (in pixels), above 720px.
+      - gap_above_1024: { Number } The gap between items (in pixels), above 1024px.
+      - gap_above_1200: { Number } The gap between items (in pixels), above 1200px.
+      - peek: { Number } The amount (in pixels) that the next "hidden" slide peeks out.
+      - peek_above_720: { Number } The amount (in pixels) that the next "hidden" slide peeks out, above 720px.
+      - peek_above_1024: { Number } The amount (in pixels) that the next "hidden" slide peeks out, above 1024px.
+      - column_percentage: { Number } The amount (in percentage) that the image fills of the column, if not 100%.
+      - column_percentage_above_720: { Number } The amount (in percentage) that the image fills of the column, if not 100%, above 720px.
+      - column_percentage_above_1024: { Number } The amount (in percentage) that the image fills of the column, if not 100%, above 1024px.
+      - column_percentage_above_1200: { Number } The amount (in percentage) that the image fills of the column, if not 100%, above 1200px.
+  endcomment
+
+  assign num_columns = num_columns | default: 1
+  assign gap = gap | default: 0
+  assign peek = peek | default: 0
+  assign column_percentage = column_percentage | default: 100
+
+  assign num_columns_above_720 = num_columns_above_720 | default: 2
+  assign gap_above_720 = gap_above_720 | default: 16
+  assign peek_above_720 = peek_above_720 | default: 0
+  assign column_percentage_above_720 = column_percentage_above_720 | default: 100
+
+  assign num_columns_above_1024 = num_columns_above_1024 | default: 3
+  assign gap_above_1024 = gap_above_1024 | default: 24
+  assign peek_above_1024 = peek_above_1024 | default: 0
+  assign column_percentage_above_1024 = column_percentage_above_1024 | default: 100
+
+  assign num_columns_above_1200 = num_columns_above_1200 | default: 3
+  assign gap_above_1200 = gap_above_1200 | default: 28
+  assign peek_above_1200 = peek_above_1200 | default: 0
+  assign column_percentage_above_1200 = column_percentage_above_1200 | default: 100
+
+  render 'grid-slider-item-image-size-for-breakpoint', breakpoint: 1200, num_columns: num_columns_above_1200, gap: gap_above_1200, peek: peek_above_1200, column_percentage: column_percentage_above_1200
+  echo ', '
+  render 'grid-slider-item-image-size-for-breakpoint', breakpoint: 1024, num_columns: num_columns_above_1024, gap: gap_above_1024, peek: peek_above_1024, column_percentage: column_percentage_above_1024
+  echo ', '
+  render 'grid-slider-item-image-size-for-breakpoint', breakpoint: 720, num_columns: num_columns_above_720, gap: gap_above_720, peek: peek_above_720, column_percentage: column_percentage_above_720
+  echo ', '
+  render 'grid-slider-item-image-size-for-breakpoint', num_columns: num_columns, gap: gap, peek: peek, column_percentage: column_percentage
+-%}

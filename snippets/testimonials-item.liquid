@@ -1,0 +1,140 @@
+{% liquid
+  comment
+    Renders a testimonial item.
+
+    Required parameters:
+      - block: { Object } The associated block object.
+      - section_settings: { Object } The parent section's settings.
+  endcomment
+
+  assign testimonial_item_class = 'testimonial-item animation--item'
+  assign truncate = false
+
+  if section_settings.enable_text_box
+    assign testimonial_item_class = testimonial_item_class | append: ' text-box'
+  endif
+
+  if block.settings.featured_product != blank
+    assign product_image = block.settings.featured_product.featured_image | default: block.settings.featured_product.featured_media.preview_image
+    assign featured_product_image = block.settings.featured_product_image | default: product_image
+  endif
+
+  if section_settings.truncate_num_lines != blank and section_settings.truncate_num_lines != '0'
+    assign truncate = true
+  endif
+
+  assign leading_style = '--testimonial-text-alignment: ' | append: section_settings.text_alignment | append: ';'
+-%}
+
+<div class="testimonial-item-wrapper">
+  <div
+    class="{{ testimonial_item_class }}"
+    {% if section_settings.enable_text_box -%}
+      {% render 'settings-text-box',
+        local_settings: section_settings,
+        leading_style: leading_style,
+        section_type: 'standard'
+      %}
+    {%- else -%}
+      style="{{ leading_style }}"
+    {%- endif %}
+    data-alignment="{{ section_settings.text_alignment }}"
+    data-show-author-image="{{ block.settings.show_author_image }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="testimonial-item__author-wrapper">
+      <div class="testimonial-item__author">
+        {% if block.settings.show_author_image -%}
+          <div class="testimonial-item__author-image">
+            {% render 'image',
+              image: block.settings.author_image,
+              sizes: '64px',
+              aspect_ratio: 'square',
+              include_placeholder: true
+            -%}
+          </div>
+        {%- endif %}
+
+        <div class="testimonial-item__author-content">
+          {% if block.settings.author != blank -%}
+            <span class="testimonial-item__author-name fs-heading-6-base">{{ block.settings.author }}</span>
+          {%- endif %}
+
+          {% if section_settings.show_verified_review_badges -%}
+            <div class="testimonial-item__author-verified">
+              {%- comment -%}
+                TODO: Should we update the 'icon' snippet to allow for different dimensions?
+                {% render 'icon', icon: 'verified-badge' %}
+              {%- endcomment -%}
+              <svg
+                class="verified-badge__icon"
+                width="13"
+                height="16"
+                viewBox="0 0 13 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.8963 4.16774C12.8963 4.16774 14.3335 12.7525 6.49992 15.6796C-1.33363 12.7525 0.10356 4.16774 0.10356 4.16774L6.49992 0.332031L12.8963 4.16774ZM5.97956 10.9789L10.3933 5.86305L9.4249 5.02757L5.41793 9.672L3.49258 8.09841L2.6832 9.08871L5.09068 11.0564L5.57281 11.4504L5.97956 10.9789Z" fill="currentColor" />
+              </svg>
+
+              <span class="author-verified__review fs-body-75">{{ 'sections.testimonials.verified_review' | t }}</span>
+            </div>
+          {%- endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if block.settings.show_rating -%}
+      <div class="testimonial-item__rating">
+        {% render 'star-rating', rating: block.settings.rating %}
+      </div>
+    {%- endif %}
+
+    {% if block.settings.testimonial != blank -%}
+      <div class="testimonial-item__testimonial rte non-page-rte">
+        {% if truncate -%}
+          {% render 'truncate-wrapper',
+            content: block.settings.testimonial,
+            num_lines: section_settings.truncate_num_lines,
+            parent_id: block.id
+          -%}
+        {%- else -%}
+          {{ block.settings.testimonial }}
+        {%- endif %}
+      </div>
+    {%- endif %}
+
+    {% if block.settings.featured_product != blank -%}
+      <div class="testimonial-item__featured-product">
+        {%- assign product_image_width = section_settings.product_thumbnail_size | append: 'px' -%}
+        <a
+          class="testimonial-item__featured-product-image"
+          href="{{ block.settings.featured_product.url }}"
+          style="--product-image-width: {{ product_image_width }};"
+          aria-label="{{ block.settings.featured_product.title }}"
+        >
+          {% render 'image', image: featured_product_image, sizes: product_image_width, aspect_ratio: 'square' %}
+        </a>
+
+        <div class="testimonial-item__featured-product-meta">
+          <a
+            class="testimonial-item__featured-product-title fs-body-100"
+            href="{{ block.settings.featured_product.url }}"
+          >
+            {{ block.settings.featured_product.title }}
+          </a>
+
+          {% assign product_button_label = 'sections.testimonials.view_product' | t -%}
+
+          {% render 'button',
+            label: product_button_label,
+            link: block.settings.featured_product.url,
+            button_alignment: 'left',
+            button_style: 'text',
+            wrapper_class: 'testimonial-item__featured-product-button'
+          -%}
+        </div>
+      </div>
+    {%- endif %}
+  </div>
+</div>

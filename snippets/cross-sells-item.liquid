@@ -1,0 +1,97 @@
+{% liquid
+  comment
+    Renders a cross sell item.
+
+    Required parameters:
+      - item: { Object } The current line item object.
+  endcomment
+-%}
+
+<div class="cross-sells__item">
+  {% if settings.cross_sells_show_thumbnails -%}
+    <div class="cross-sells__item-image">
+      <a href="{{ item.url }}" class="cross-sells__item-link">
+        {%- render 'image',
+          image: item.featured_image,
+          sizes: '(min-width: 720px) 80px, 64px',
+          prioritize_loading: true,
+          aspect_ratio: settings.cart_item_aspect_ratio,
+          include_placeholder: true
+        -%}
+      </a>
+    </div>
+  {%- endif %}
+
+  <div class="cross-sells__item-content">
+    <div class="cross-sells__item-details ff-body fs-body-75">
+      <h4 class="cross-sells__item-title fs-body-100">
+        <a href="{{ item.url }}">{{ item.title }}</a>
+      </h4>
+
+      <div class="cross-sells__item-price-wrapper ff-product-price">
+        {% liquid
+          assign currency_code = ''
+
+          if section.settings.show_product_currency
+            assign currency_code = ' ' | append: cart.currency.iso_code
+          endif
+        -%}
+
+        {% if item.compare_at_price > item.price -%}
+          <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+
+          <s class="t-subdued">
+            {{ item.compare_at_price | money -}}
+            {{- currency_code }}
+          </s>
+
+          <div class="sale" data-price>
+            {% liquid
+              assign sale_price = item.price | money | append: currency_code
+
+              if item.price_varies
+                echo 'products.product.on_sale_from_html' | t: price: sale_price
+              else
+                echo sale_price
+              endif
+            -%}
+          </div>
+        {%- else -%}
+          {% liquid
+            assign price = item.price | money | append: currency_code
+
+            if item.price_varies
+              echo 'products.product.from_lowest_price_html' | t: lowest_price: price
+            else
+              echo '<span class="cross-sells__item-price">[[price]]</span>' | replace: '[[price]]', price
+            endif
+          -%}
+        {%- endif %}
+      </div>
+    </div>
+
+    <div class="cross-sells__item-button">
+      <button
+        type="button"
+        class="cross-sells__item-add btn btn--tertiary btn--small"
+        data-title="{{ item.title | escape }}"
+        data-product-url="{{ item.url }}"
+        {% if item.has_only_default_variant -%}
+          data-add-item-id="{{ item.variants[0].id }}"
+        {%- else -%}
+          data-quick-add-trigger
+        {%- endif %}
+      >
+        {% unless section.id == 'quick-cart' -%}
+          <span class="cross-sells__text-add-to-cart">{{ 'product.add_to_cart' | t }}</span>
+        {%- endunless %}
+
+        <span class="cross-sells__text-add">{{ 'cart.general.add' | t }}</span>
+
+        <div class="btn__loading-wrap">
+          <div class="btn__loading-bar"></div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

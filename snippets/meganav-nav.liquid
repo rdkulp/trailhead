@@ -1,0 +1,89 @@
+{% liquid
+  comment
+    Renders the primary meganav content (ie. navigation columns).
+
+    Required parameters:
+      - meganav_settings: { Object } The settings object for the associated meganav block.
+      - link: { Object } The current menu link.
+      - show_collection_images: { Boolean } Whether to show collection images above second-level
+        links that are collection links.
+      - show_animations: { Boolean } Whether animations are enabled.
+  endcomment
+-%}
+
+<div
+  class="meganav__nav"
+  data-column-count="{{ meganav_settings.nav_column_count }}"
+  data-show-column-dividers="{{ meganav_settings.show_column_borders }}"
+>
+  <ul class="meganav__list-parent" depth="0" data-show-column-dividers="{{ meganav_settings.show_column_borders }}">
+    {% for link in link.links -%}
+      {% liquid
+        assign list_child_class = 'meganav__list-child animation--dropdown-item'
+
+        if link.links.size > 0
+          assign list_child_class = list_child_class | append: ' has-children'
+        endif
+      -%}
+
+      <li class="{{ list_child_class }}" depth="0">
+        {% if show_collection_images -%}
+          {% liquid
+            if link.type == 'collection_link'
+              assign collection = link.object
+              assign image = collection.image
+
+              if meganav_settings.image_source == 'product'
+                assign image = collection.products.first.featured_media
+              endif
+            endif
+          -%}
+
+          <a class="meganav__list-nav-image-wrap" href="{{ link.url }}" label="{{ link.title }}" tabindex="-1">
+            {% render 'image',
+              image: image,
+              sizes: image_sizes,
+              aspect_ratio: meganav_settings.image_aspect_ratio,
+              include_placeholder: true,
+              animate: show_animations
+            -%}
+          </a>
+        {%- endif %}
+
+        {% liquid
+          if link.links and link.links.size > 0
+            assign child_title_class = 'has-children fs-accent-bold'
+          else
+            assign child_title_class = 'fs-body-100'
+          endif
+
+          capture child_title
+            if link.url == '#'
+              echo link.title
+            else
+              echo link.title | link_to: link.url
+            endif
+          endcapture
+        -%}
+
+        <h4 class="{{ child_title_class }}">
+          {{ child_title }}
+        </h4>
+
+        {% if link.links and link.links.size > 0 -%}
+          <ul depth="1">
+            {% for link in link.links -%}
+              <li>
+                <a class="fs-body-100" href="{{ link.url }}">{{ link.title }}</a>
+              </li>
+            {%- endfor %}
+          </ul>
+        {%- endif %}
+      </li>
+    {%- endfor %}
+  </ul>
+
+  {% for i in (2..meganav_settings.nav_column_count) -%}
+    <span class="meganav__column-rule" data-index="{{ forloop.index }}"></span>
+  {%- endfor %}
+</div>

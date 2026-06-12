@@ -1,0 +1,113 @@
+{% liquid
+  comment
+    Renders a collection list buttons item.
+
+    Required parameters:
+      - coll: { Object } The collection object.
+
+    Optional parameters:
+      - show_product_counts: { Boolean } Whether to show the inline product count
+      - image_aspect_ratio: { String } The image's aspect ratio.
+      - image_circle_crop_enable: { Boolean } Whether to apply a circle crop to the image. Only applies when the aspect ratio is "Square".
+      - image_position: { String } Relative position to the item text (left or right).
+      - image_size: { Number } The px size of the image on desktop.
+      - image_size_mobile: { Number } The px size of the image on mobile.
+      - image_spacing: { Number } The px padding of the image.
+      - image_spacing_mobile: { Number } The px padding of the image on mobile.
+      - image_source: { String } Whether the image should be:
+        - The collection's featured image
+        - The featured image of the first product in the collection
+      - list_item_shape: { String } Determines the shape of the item's corners
+      - list_item_style: { String } Determines the style of the item
+      - title_font_type: { String } The font type (family) to use for the collection title.
+      - title_font_size: { Number } A number representing the text "size". Ranges from 1-8.
+      - beyond_desktop_limit: { Boolean } If true, hide within collection truncation.
+      - beyond_tablet_limit: { Boolean } If true, hide within collection truncation on tablet (720px - 960px).
+      - beyond_mobile_limit: { Boolean } If true, hide within collection truncation on mobile.
+      - wrapper_class: { String } A class to add to the button container.
+  endcomment
+
+  assign collection_image = ''
+  assign circle_crop = false
+
+  if show_product_counts
+    assign product_count_string = '([[pc]])' | replace: '[[pc]]', coll.all_products_count
+  endif
+
+  if beyond_desktop_limit
+    assign wrapper_class = wrapper_class | append: ' overflow-desktop'
+  endif
+
+  if beyond_tablet_limit
+    assign wrapper_class = wrapper_class | append: ' overflow-tablet'
+  endif
+
+  if beyond_mobile_limit
+    assign wrapper_class = wrapper_class | append: ' overflow-mobile'
+  endif
+
+  if image_source == 'collection'
+    assign collection_image = coll.image | default: coll.products.first.featured_image
+  else
+    assign collection_image = coll.products.first.featured_image
+  endif
+
+  if image_aspect_ratio == 'square' and image_circle_crop_enable
+    assign circle_crop = true
+  endif
+
+  if title_font_type == 'body'
+    assign title_class = 'ff-body '
+  else
+    assign title_class = 'ff-heading '
+  endif
+
+  capture title_font_class
+    render 'settings-text-size', type: 'text', size: title_font_size
+  endcapture
+
+  assign title_class = title_class | append: title_font_class
+  assign collection_title_string = 'general.onboarding.collection_title' | t
+-%}
+
+<a
+  class="collection-list-buttons-item {{- wrapper_class }} animation--item"
+  href="{{ coll.url }}"
+  data-list-item-style="{{ list_item_style }}"
+  data-list-item-shape="{{ list_item_shape }}"
+  data-image-crop="{{ circle_crop }}"
+  style="
+    --image-size: {{ image_size }}px;
+    --image-size-mobile: {{ image_size_mobile }}px;
+    --image-spacing: {{ image_spacing }}px;
+    --image-spacing-mobile: {{ image_spacing_mobile }}px;
+  "
+>
+  <div
+    class="collection-list-buttons-item__left"
+  >
+    {% liquid
+      assign image_sizes = '(min-width: 720px) [[is]]px, [[ism]]px'
+      assign image_sizes = image_sizes | replace: '[[is]]', image_size | replace: '[[ism]]', image_size_mobile
+    -%}
+
+    {% render 'image',
+      wrapper_class: 'collection-list-buttons-item__image',
+      image: collection_image,
+      aspect_ratio: image_aspect_ratio,
+      sizes: image_size,
+      include_placeholder: true,
+      placeholder_name: placeholder_name
+    -%}
+  </div>
+
+  <div class="collection-list-buttons-item__right">
+    <div class="collection-list-buttons-item__details {{ title_class }}">
+      <span class="collection-list-buttons-item__title">
+        {{ coll.title | default: collection_title_string }}
+      </span>
+
+      <span class="collection-list-buttons-item__product-count fs-body-75">{{ product_count_string }}</span>
+    </div>
+  </div>
+</a>

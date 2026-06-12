@@ -1,0 +1,94 @@
+{% liquid
+  comment
+    Renders a standard button.
+
+    Required parameters:
+      - label: { String } The button label.
+      - link: { String } The button URL.
+
+    Optional parameters:
+      - additional_button_content: { String } Further content to render within the button (at end).
+      - allow_linkless: { Boolean } Whether the button needs a link.
+      - button_alignment: { String } How the button should be horizontally aligned. Can be:
+        - "left"
+        - "center"
+        - "right"
+      - button_attributes: { String } Any HTML attributes (ie. data attributes) to include with the button.
+      - button_size: { String } The button size. Can be:
+        - "small"
+        - "full"
+      - button_style: { String } The button style. Can be:
+        - "primary"
+        - "secondary"
+        - "tertiary"
+        - "solid"
+        - "outline"
+        - "text"
+      - wrapper_class: { String } A class to add to the button container.
+      - icon: { String } The name of an icon to render inside the button.
+      - type: { String } The button "type" for linkless buttons. Can be:
+        - "button"
+        - "submit"
+  endcomment
+
+  assign button_wrapper_class = 'button-wrapper'
+
+  if wrapper_class != blank
+    assign button_wrapper_class = button_wrapper_class | append: ' ' | append: wrapper_class
+  endif
+
+  assign button_alignment = button_alignment | default: 'none'
+
+  capture button_tag
+    if link != blank
+      echo 'a'
+    else
+      echo 'button'
+    endif
+  endcapture
+
+  capture button_attributes
+    echo button_attributes
+
+    if link == blank
+      assign type = type | default: 'button'
+      assign type_attribute = ' type="' | append: type | append: '"'
+
+      echo type_attribute
+
+      unless allow_linkless
+        assign flash_message = 'general.flash_alert.no_link' | t
+        assign flash_message_data = 'data-flash-message="' | append: flash_message | append: '"'
+
+        echo ' data-flash-trigger '
+        echo flash_message_data
+      endunless
+    else
+      assign link_attribute = ' href="' | append: link | append: '"'
+
+      echo link_attribute
+    endif
+  endcapture
+
+  assign button_style = button_style | default: 'primary'
+  assign button_style_class = 'btn--' | append: button_style
+  assign button_class = 'btn ' | append: button_style_class
+
+  if button_size != blank
+    assign button_size_class = 'btn--' | append: button_size
+    assign button_class = button_class | append: ' ' | append: button_size_class
+  endif
+-%}
+
+<div class="{{ button_wrapper_class }}" data-alignment="{{ button_alignment }}">
+  <{{ button_tag }} class="{{ button_class }}" {{ button_attributes }}>
+    {% liquid
+      if icon != blank and icon != 'none'
+        render 'icon-editorial', class: 'button__icon', icon: icon
+      endif
+    -%}
+
+    <span>{{ label }}</span>
+    {{ additional_button_content }}
+  </{{ button_tag }}>
+</div>

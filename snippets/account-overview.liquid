@@ -1,0 +1,37 @@
+{% liquid
+  assign heading_class = heading_class | default: 'ff-body fs-body-150'
+%}
+<div class="account-overview">
+  <div class="account-overview__header">
+    <div class="account-overview__header-customer">
+      <div class="account-overview__header-customer-name {{ heading_class }}">
+        {%- if customer.first_name != blank -%}
+          {{ customer.first_name }}
+          {% if customer.last_name != blank %}{{ customer.last_name }}{% endif %}
+        {%- else -%}
+          {{ 'account.overview_title_nameless' | t }}
+        {%- endif -%}
+      </div>
+
+      {%- if customer.email != blank -%}
+        <div class="account-overview__header-customer-email fs-body-75">
+          {{ customer.email }}
+        </div>
+      {%- endif -%}
+    </div>
+    <a class="account-overview__logout fs-body-75 btn btn--text-link" href="{{ routes.account_logout_url }}">
+      {{- 'account.log_out' | t -}}
+    </a>
+  </div>
+
+  <div class="account-overview__links">
+    <a class="account-overview__link fs-body-100" href="{{ routes.account_url }}">
+      {%- render 'icon', icon: 'package-closed' -%}
+      {{- 'account.orders_overview' | t -}}
+    </a>
+    <a class="account-overview__link fs-body-100" href="{{ routes.account_addresses_url }}">
+      {%- render 'icon-editorial', icon: 'delivery-truck-left' -%}
+      {{- 'account.addresses_overview' | t -}}
+    </a>
+  </div>
+</div>

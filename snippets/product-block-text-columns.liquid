@@ -1,0 +1,94 @@
+{% liquid
+  comment
+    Renders text columns with icons.
+
+    Required parameters:
+      - block: {Object} The parent block.
+  endcomment
+
+  assign icon_border_color_name = 'accent'
+  assign icon_text_color = '--color-accent-contrasting'
+
+  if block.settings.icon_border_color == 'current_text'
+    assign icon_text_color = '--color-background'
+
+    if block.settings.icon_border_style == 'filled'
+      assign icon_border_color_name = 'text'
+    else
+      assign icon_border_color_name = 'text-alpha-30'
+    endif
+  endif
+
+  assign item_count = 0
+-%}
+
+{% capture image_sizes -%}
+  (min-width: 720px) {{ block.settings.icon_size }}px, {{ block.settings.icon_size_mobile }}px
+{%- endcapture %}
+
+{% capture items -%}
+  {% for i in (1..3) -%}
+    {% liquid
+      assign heading_setting_string = 'heading_' | append: i
+      assign text_setting_string = 'text_' | append: i
+      assign icon_setting_string = 'icon_' | append: i
+      assign custom_icon_image_setting_string = 'custom_icon_image_' | append: i
+
+      assign heading_setting = block.settings[heading_setting_string]
+      assign text_setting = block.settings[text_setting_string]
+      assign icon_setting = block.settings[icon_setting_string]
+      assign custom_icon_image_setting = block.settings[custom_icon_image_setting_string]
+
+      if text_setting != blank or heading_setting != blank
+          assign item_count = item_count | plus: 1
+        endif
+    -%}
+
+    {% render 'icon-with-text-column',
+      source: 'product-block',
+      heading: heading_setting,
+      text: text_setting,
+      icon: icon_setting,
+      custom_icon_image: custom_icon_image_setting,
+      image_sizes: image_sizes,
+      desktop_alignment: 'above_center',
+      shopify_attributes: block.shopify_attributes
+    -%}
+  {%- endfor %}
+{%- endcapture %}
+
+{% capture content -%}
+  <div
+    class="product__text-columns-items icon-modifiers"
+    data-icon-border="{{ block.settings.icon_border }}"
+    data-icon-fill="{{ block.settings.icon_border_style }}"
+    data-with-box="{{ block.settings.add_box }}"
+    data-with-dividers="{{ block.settings.add_dividers }}"
+    data-item-count="{{ item_count }}"
+    style="
+      --icon-border-color: var(--color-{{ icon_border_color_name }});
+      --icon-text-color: var({{ icon_text_color }});
+      --icon-max-width: {{ block.settings.icon_size }}px;
+      --icon-mobile-max-width: {{ block.settings.icon_size_mobile }}px;
+      --column-count: {{ item_count }}
+    "
+  >
+    {{ items }}
+  </div>
+{%- endcapture %}
+
+{% if block.settings.display_as_collapsible_row -%}
+  {%
+    render 'product-block-accordion',
+    block: block,
+    heading: block.settings.collapsible_row_title,
+    content: content,
+  -%}
+{%- else -%}
+  <div
+    class="product__block product__block-text-columns product__block--medium"
+    {{ block.shopify_attributes }}
+  >
+    {{ content }}
+  </div>
+{%- endif %}

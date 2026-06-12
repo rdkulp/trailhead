@@ -1,0 +1,64 @@
+{% comment %}
+  pass in :
+
+  Required
+  * prod (product but avoiding collision with globally scoped product)
+
+  Optional
+  * rating_style: "regular" or "compact"
+  * show_rating_count: boolean (default false)
+  * show_when_zero_ratings: boolean (default false)
+  * text_class: string
+  * count_link_url: string
+  * count_link_class: string
+{% endcomment %}
+
+{%- liquid
+  assign reviews = prod.metafields.reviews
+  assign rating_count = 0
+
+  if reviews.rating_count != blank
+    assign rating_count = reviews.rating_count
+  endif
+
+  assign rating = 0
+  if reviews.rating.value != blank and reviews.rating.value.scale_max != blank
+    # normalize on a 0-5 scale
+    assign rating = reviews.rating.value.rating | times: 5.0 | divided_by: reviews.rating.value.scale_max | round: 1
+  endif
+
+  unless rating_style
+    assign rating_style = 'regular'
+  endunless
+-%}
+
+{% if show_rating_count %}
+  {% capture rating_count_string %}
+    {% if count_link_url %}
+      (<a href="{{ count_link_url }}" class="{{ count_link_class }}">{{ rating_count }}</a>)
+    {% else %}
+      ({{ rating_count }})
+    {% endif %}
+  {% endcapture %}
+{%- endif -%}
+
+{%- capture rating_content -%}
+  {%- if rating_count > 0 %}
+    {%- render 'star-rating', rating: rating, rating_style: rating_style, class_name: 'product-rating__stars' -%}
+    <div class="product-rating__count {{ text_class }}">
+      <span>{{ rating }}</span>
+      <span>{{- rating_count_string -}}</span>
+    </div>
+  {%- elsif rating_count == 0 and show_when_zero_ratings -%}
+    <div class="star-rating product-rating__stars" data-rating-style="compact">
+      {%- render 'icon', icon: 'star-filled', style: '--icon-size: 15px' -%}
+    </div>
+    <span class="{{ text_class }}">{{ 'products.product.no_reviews' | t }}</span>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if rating_content != blank -%}
+  <div class="product-rating" data-rating-style="{{ rating_style }}">
+    {{ rating_content }}
+  </div>
+{%- endif -%}

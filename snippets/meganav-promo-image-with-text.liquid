@@ -1,0 +1,49 @@
+{% liquid
+  comment
+    Renders promotion items for a meganav.
+
+    Required parameters:
+      - meganav_settings: { Object } The settings object for the associated meganav block.
+      - show_animations: { Boolean } Whether animations are enabled.
+  endcomment
+-%}
+
+<div class="meganav__secondary">
+  {% unless meganav_settings.promo_heading_text == blank %}
+    <h4 class="meganav__secondary--heading fs-accent-bold">{{ meganav_settings.promo_heading_text }}</h4>
+  {% endunless %}
+
+  <div
+    class="meganav__secondary--inner meganav-promo-image-with-text-inner"
+    data-layout="{{ meganav_settings.layout }}"
+    data-column-count="{{ meganav_settings.promo_column_count }}"
+    data-image-position="{{ meganav_settings.image_position }}"
+  >
+    {% for i in (1..4) -%}
+      {%- assign enabled_setting = 'promo_[[i]]_enabled' | replace: '[[i]]', i -%}
+
+      {% if meganav_settings[enabled_setting] -%}
+        {% liquid
+          assign image_setting = 'promo_[[i]]_image' | replace: '[[i]]', i
+          assign heading_setting = 'promo_[[i]]_heading' | replace: '[[i]]', i
+          assign text_setting = 'promo_[[i]]_text' | replace: '[[i]]', i
+          assign link_setting = 'promo_[[i]]_link' | replace: '[[i]]', i
+          assign link_text_setting = 'promo_[[i]]_link_text' | replace: '[[i]]', i
+        -%}
+
+        {% render 'meganav-promo-image-with-text-item',
+          promo_width: meganav_settings.promo_width,
+          promo_column_count: meganav_settings.promo_column_count,
+          image_aspect_ratio: meganav_settings.image_aspect_ratio,
+          image_position: meganav_settings.image_position,
+          image: meganav_settings[image_setting],
+          heading: meganav_settings[heading_setting],
+          text: meganav_settings[text_setting],
+          link: meganav_settings[link_setting],
+          link_text: meganav_settings[link_text_setting],
+          show_animations: show_animations
+        %}
+      {%- endif %}
+    {%- endfor %}
+  </div>
+</div>

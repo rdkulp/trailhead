@@ -1,0 +1,222 @@
+{% liquid
+  comment
+    Renders product-specific blocks.
+
+    Required parameters:
+      - blocks: { Object } The parent section's blocks.
+      - prod: { Object } The associated product object.
+      - current_variant: { Object } The current variant object.
+
+    Optional parameters:
+    - featured_media: { Object } The media object for the featured media.
+    - aspect_ratio: { String } The value which determines the aspect ratio of the media.
+    - is_quick: { Boolean } Whether the content is being rendered inside a quick view.
+    - is_featured: { Boolean } Whether the content is being rendered inside a featured product.
+    - column: { String } The product column that's currently being rendered. This allows us to filter blocks
+      by the "column_placement" setting.
+  endcomment
+
+  capture product_url
+    echo shop.url | append: prod.url
+  endcapture
+
+  capture custom_swatch_color_maps
+    render 'get-custom-swatch-color-maps'
+  endcapture
+
+  assign custom_color_key_map = custom_swatch_color_maps | split: ' | ' | first | split: ','
+  assign custom_color_value_map = custom_swatch_color_maps | split: ' | ' | last | split: ','
+-%}
+
+<div class="product-blocks">
+  {% for block in blocks -%}
+    {% liquid
+      assign renderBlock = false
+
+      if column == block.settings.column_placement or column == blank or column == 'right' and block.settings.column_placement == blank
+        assign renderBlock = true
+      endif
+    -%}
+
+    {% if renderBlock -%}
+      {%- case block.type -%}
+        {%- when '@app' -%}
+          {% render block %}
+        {%- when 'product_header' -%}
+          {%- capture product_block_header -%}
+            {% render 'product-block-header',
+              prod: prod,
+              block_settings: block.settings,
+              current_variant: current_variant,
+              is_quick: is_quick,
+              is_featured: is_featured,
+              featured_media: featured_media,
+              shopify_attributes: block.shopify_attributes
+            -%}
+          {%- endcapture -%}
+
+          {% if is_quick -%}
+            <div class="quick-product__header-block-wrap">{{ product_block_header }}</div>
+          {%- else -%}
+            {{ product_block_header }}
+          {%- endif %}
+        {%- when 'price' -%}
+          {% render 'product-block-price',
+            prod: prod,
+            block: block,
+            current_variant: current_variant,
+            is_quick: is_quick,
+            label: block.settings.label
+          -%}
+        {%- when 'spacer' -%}
+          <div
+            class="product-block-spacer product__block"
+            style="height: {{ block.settings.space }}px"
+            {{ block.shopify_attributes }}
+          ></div>
+        {%- when 'variant_picker' -%}
+          {% liquid
+            if prod != blank
+              assign show_siblings = true
+
+              if is_quick or is_featured
+                assign show_siblings = false
+              endif
+
+              render 'product-block-variant-picker', prod: prod, block: block, show_siblings: show_siblings, custom_color_key_map: custom_color_key_map, custom_color_value_map: custom_color_value_map
+            endif
+          -%}
+        {%- when 'quantity_selector' -%}
+          {% liquid
+            if prod != blank
+              render 'product-block-quantity-selector', prod: prod, block: block
+            endif
+          -%}
+        {%- when 'custom_option' -%}
+          {% render 'product-block-custom-option', block: block, field_type: block.settings.field_type %}
+        {%- when 'buy_buttons' -%}
+          {% if prod != blank -%}
+            {% render 'product-block-buy-buttons',
+              prod: prod,
+              block: block,
+              blocks: blocks,
+              current_variant: current_variant,
+              featured_media: featured_media,
+              aspect_ratio: aspect_ratio
+            -%}
+          {%- else -%}
+            <div class="product-form">
+              <div class="product-form__controls-group product-form__controls-group--submit">
+                <button
+                  type="button"
+                  aria-disabled="true"
+                  disabled
+                  class="product-form__cart-submit btn btn--medium btn--full"
+                >
+                  <span>
+                    {{ 'products.product.add_to_cart' | t }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          {%- endif %}
+        {%- when 'description' -%}
+          {% render 'product-block-description', prod: prod, block: block %}
+        {%- when 'text-list-with-icons' -%}
+          {% render 'section-block-text-list-with-icons', type: 'product', block: block %}
+        {%- when 'product_labels' -%}
+          {% render 'product-block-product-labels', block: block %}
+        {%- when 'image_with_text' -%}
+          {% render 'product-block-image-with-text', block: block %}
+        {%- when 'payments_and_trust' -%}
+          {% render 'payments-and-trust', block: block %}
+        {%- when 'product_text_columns' -%}
+          {% render 'product-block-text-columns', block: block %}
+        {%- when 'text' -%}
+          {% render 'product-block-text', content: block.settings.text, block: block %}
+        {%- when 'share' -%}
+          {% if prod != blank -%}
+            {%- liquid
+              assign share_alignment = 'left-below'
+
+              if is_quick or is_featured
+                assign share_alignment = 'left-above'
+              endif
+            -%}
+
+            <div
+              class="product-blocks__social-share product__block product__block--medium"
+              {{ block.shopify_attributes }}
+            >
+              {% render 'social-share',
+                url: product_url,
+                title: prod.title,
+                text: page_description,
+                image: prod.featured_image,
+                alignment: share_alignment,
+                enable_os_share: block.settings.enable_os_share
+              -%}
+            </div>
+          {%- endif %}
+        {%- when 'inventory-counter' -%}
+          {% if prod != blank -%}
+            {% render 'inventory-counter', prod: prod, block: block, current_variant: current_variant %}
+          {%- endif %}
+        {%- when 'accordion' -%}
+          {% render 'product-block-accordion',
+            block: block,
+            heading: block.settings.heading,
+            content: block.settings.content,
+            classes: 'product-blocks__accordion'
+          -%}
+        {%- when 'custom_liquid' -%}
+          {% unless block.settings.custom_liquid == blank -%}
+            <div
+              class="product-block-custom-liquid product__block product__block--medium"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.custom_liquid }}
+            </div>
+          {%- endunless %}
+        {%- when 'information_popup' -%}
+          {%- assign popup_modal_page = pages[block.settings.popup_page] -%}
+
+          {% if block.settings.popup_text != blank and popup_modal_page.content != blank or request.design_mode -%}
+            {% render 'product-block-information-popup',
+              block: block,
+              popup_page_target: block.settings.popup_page,
+              popup_page: popup_modal_page,
+              icon: block.settings.popup_icon,
+              custom_icon_image: block.settings.custom_icon_image,
+              text: block.settings.popup_text
+            -%}
+          {%- endif %}
+        {%- when 'complementary_products' -%}
+          {% render 'product-block-complementary-products', block: block, prod: prod %}
+        {%- when 'image' -%}
+          <div
+            class="
+              product-block-image
+              product__block
+              product__block--large
+            "
+          >
+            {% render 'section-block-image',
+              image: block.settings.image,
+              width: block.settings.image_size,
+              mobile_width: block.settings.image_size_mobile,
+              break_to_mobile_at: '720',
+              wrapper_class: 'product-block-image__text-container-image',
+              shopify_attributes: block.shopify_attributes,
+              alignment: block.settings.content_alignment,
+              image_full_width: 'custom'
+            -%}
+          </div>
+        {%- when 'customer_support' -%}
+          {% render 'product-block-customer-support', block: block %}
+        {%- when 'full_details_link' -%}
+          {% render 'product-block-full-details-link', block: block, prod: prod %}
+      {%- endcase -%}
+    {%- endif %}
+  {%- endfor %}
+</div>

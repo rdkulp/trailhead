@@ -1,0 +1,80 @@
+{% liquid
+  comment
+    Renders a "video player" block, where a modal video is attached to the video play button.
+  endcomment
+
+  assign video = block.settings.video
+  assign video_url = block.settings.video_url
+
+  assign has_video = false
+
+  if video != blank or video_url != blank
+    assign has_video = true
+  endif
+
+  if video != blank
+    assign video_type = 'shopify'
+  elsif video_url != blank
+    assign video_type = 'external'
+  endif
+
+  assign styles = ''
+
+  if alignment != blank
+    assign styles = styles | append: '--video-alignment: ' | append: alignment | append: ';'
+  endif
+
+  if alignment_mobile != blank
+    assign styles = styles | append: '--video-alignment-mobile: ' | append: alignment_mobile | append: ';'
+  endif
+-%}
+
+<div
+  class="section-blocks__video-player video-player-block ff-body fs-body-75"
+  style="{{ styles }}"
+  {{ block.shopify_attributes }}
+>
+  {%
+    render 'video-play-button',
+    button_style: block.settings.button_style,
+    button_size: block.settings.button_size,
+    button_design: block.settings.button_design,
+    has_video: has_video,
+    icon_style: block.settings.icon_style,
+    label: block.settings.button_label,
+  %}
+
+  {% if has_video -%}
+    <div
+      class="video-player-block__video-container"
+      data-video-player-block-video-container
+      data-video-type="{{ video_type }}"
+    >
+      {% if video_type == 'shopify' -%}
+        {{
+          video
+          | video_tag:
+            class: 'video-player-block__video',
+            data-video-player-block-video: '',
+            controls: true,
+            playsinline: true
+        }}
+      {%- else -%}
+        {% liquid
+          assign video_class = 'video-player-block__video'
+
+          unless video_url.type == 'youtube'
+            assign video_class = video_class | append: ' video__iframe'
+          endunless
+        -%}
+
+        <div
+          class="{{ video_class }}"
+          data-video-player-block-video
+          data-video-provider="{{ video_url.type }}"
+          data-video-id="{{ video_url.id | escape }}"
+        ></div>
+      {%- endif %}
+    </div>
+  {%- endif %}
+</div>

@@ -1,0 +1,85 @@
+{%- liquid
+  comment
+    Renders cart cross-sell products.
+
+    Required parameters:
+      - source: { String } Where the cross-sells are being rendered. Can be:
+        - 'cart'
+        - 'quick-cart'
+      - cart: { Object } The cart object (to ensure we don't cross-sell items already in the cart).
+
+    Optional parameters:
+      - is_slider: { Boolean } Whether the cross sell items should be in a slider.
+      - position: { String } The position of the cross sells (in the cart template). Can be:
+        - 'below-subtotal'
+        - 'below-line-items'
+  endcomment
+
+  case settings.cross_sells_recommendations_type
+      # TODO: Need to land on the behaviour we want.
+      #   - Should it be complementary or related?
+      #   - Should we loop through all products in the cart to find the max number of recommendations?
+      # when 'complementary'
+    when 'collection'
+      assign product_pool = settings.collection.products
+    when 'product-list'
+      assign product_pool = settings.product_list
+  endcase
+
+  assign cart_item_ids = cart.items | map: 'product_id'
+  assign found_products = false
+
+  for item in product_pool
+    if cart_item_ids contains item.id or item.available == false
+      continue
+    else
+      assign found_products = true
+      break
+    endif
+  endfor
+
+  assign is_slider = is_slider | default: false, allow_false: true
+-%}
+
+<div
+  class="cross-sells"
+  data-cross-sells
+  data-source="{{ source }}"
+  {% if position != blank -%}
+    data-position="{{ position }}"
+  {%- endif %}
+>
+  {%- if found_products -%}
+    <div class="cross-sells-inner">
+      <div class="cross-sells__header">
+        <div class="cross-sells__heading ff-heading fs-heading-6-base">{{ settings.cross_sells_heading }}</div>
+      </div>
+
+      <div class="cross-sells__items">
+        {% liquid
+          assign product_count = 0
+
+          capture product_items
+            for item in product_pool
+              if product_count >= settings.cross_sells_max_products
+                break
+              elsif cart_item_ids contains item.id or item.available == false
+                continue
+              endif
+
+              assign product_count = product_count | plus: 1
+              render 'cross-sells-item', item: item
+            endfor
+          endcapture
+
+          if is_slider
+            render 'scroll-slider', id: 'cross-sells', slider_items: product_items, columns: 1, gap: 32, peek: 80, navigation_container: '.cross-sells'
+            render 'scroll-slider-navigation-buttons', is_small: true
+          else
+            echo product_items
+          endif
+        -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>

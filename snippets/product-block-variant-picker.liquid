@@ -1,0 +1,423 @@
+{%- liquid
+  comment
+    Renders a product variant picker.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - block: { Object } The associated block object.
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+
+    Optional parameters:
+      - show_siblings: { Boolean } Whether 'sibling' products should show.
+  endcomment
+
+  assign swatch_options = settings.swatch_options | downcase | split: ', '
+  assign chip_options = settings.chip_options | downcase | split: ', '
+  assign swatch_shape = settings.swatch_shape
+  assign swatch_size = block.settings.swatch_size
+  assign chip_layout = block.settings.chip_layout
+  assign dynamic_options = settings.enable_dynamic_product_options
+
+  assign file_extension = 'png'
+
+  # Merchants often make the mistake of inputting 'sibling_collection' instead of the
+  # documented 'siblings_collection'. We now support both to help with support debt.
+  assign siblings_collection = prod.metafields.cornerstone.sibling_collection.value.products | default: prod.metafields.cornerstone.siblings_collection.value.products
+
+  case swatch_size
+    when 'small'
+      assign swatch_image_width = 44 | times: 2
+    when 'medium'
+      assign swatch_image_width = 60 | times: 2
+    when 'large'
+      assign swatch_image_width = 72 | times: 2
+  endcase
+-%}
+
+{% comment %} Siblings {% endcomment %}
+{% if show_siblings
+  and prod.metafields.cornerstone.sibling_option_name
+  and siblings_collection
+  and block.settings.siblings_option_name != blank
+-%}
+  <div class="product__block product__block--medium" data-sibling-products>
+    <div class="product__label-wrapper">
+      <label class="product__label fs-body-100">
+        {{ block.settings.siblings_option_name }}:
+
+        <span class="t-opacity-70" data-sibling-label-value>
+          {{- prod.metafields.cornerstone.sibling_option_name -}}
+        </span>
+      </label>
+    </div>
+
+    <div class="product__color-swatches">
+      <div class="product__color-swatches--inner">
+        {% for sibling_product in siblings_collection -%}
+          {% liquid
+            capture sibling_swatch_styles
+              if block.settings.siblings_show_product_image
+                assign sibling_product_featured_media = sibling_product.featured_media | image_url: width: image_width
+
+                echo 'background-image: url([[spfm]]);' | replace: '[[spfm]]', sibling_product_featured_media
+              else
+                assign downcased_sibling_option_name = block.settings.siblings_option_name | strip | downcase
+                assign downcased_sibling_color_name = sibling_product.metafields.cornerstone.sibling_option_name | strip | downcase
+                assign sibling_value = blank
+                assign sibling_swatch_image_url = blank
+
+                for option in sibling_product.options_with_values
+                  assign downcased_option_name = option.name | downcase
+
+                  if downcased_option_name == downcased_sibling_option_name
+                    for value in option.values
+                      assign downcased_value_name = value.name | downcase
+
+                      if downcased_value_name == downcased_sibling_color_name
+                        assign sibling_value = value
+                        break
+                      endif
+                    endfor
+
+                    break
+                  endif
+                endfor
+
+                # Color
+                if sibling_value and sibling_value.swatch and sibling_value.swatch.color
+                  echo 'background-color: [[bc]];' | replace: '[[bc]]', sibling_value.swatch.color
+                elsif custom_color_key_map contains downcased_sibling_color_name
+                  for color_name in custom_color_key_map
+                    if color_name == downcased_sibling_color_name
+                      echo 'background-color: [[cc]];' | replace: '[[cc]]', custom_color_value_map[forloop.index0]
+                      break
+                    endif
+                  endfor
+                else
+                  assign formatted_sibling_option_name = sibling_product.metafields.cornerstone.sibling_option_name | downcase | replace: ' ', ''
+
+                  echo 'background-color: [[fson]];' | replace: '[[fson]]', formatted_sibling_option_name
+                endif
+
+                if sibling_value and sibling_value.swatch and sibling_value.swatch.image
+                  assign sibling_swatch_image_url = sibling_value.swatch.image | image_url: width: swatch_image_width
+                else
+                  assign custom_sibling_swatch_image = sibling_product.metafields.cornerstone.sibling_option_name | handle | append: '.' | append: file_extension
+
+                  if images[custom_sibling_swatch_image] != blank
+                    assign sibling_swatch_image_url = images[custom_sibling_swatch_image] | image_url: width: swatch_image_width
+                  endif
+                endif
+
+                if sibling_swatch_image_url != blank
+                  echo ' background-image: url([[siu]]);' | replace: '[[siu]]', sibling_swatch_image_url
+                  echo ' background-position: center; background-size: cover;'
+                endif
+              endif
+            endcapture
+          -%}
+
+          <a
+            href="{{ sibling_product.url }}"
+            class="
+              product__color-swatch
+              product__color-swatch--sibling-product
+              {% if sibling_product.id == prod.id -%}
+                selected
+              {%- endif %}
+            "
+            data-shape="{{ settings.swatch_shape }}"
+            data-size="{{ swatch_size }}"
+            data-sibling-swatch
+            data-sibling-cutline="{{ sibling_product.metafields.cornerstone.sibling_option_name }}"
+            style="{{ sibling_swatch_styles }}"
+          >
+          </a>
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+{%- endif %}
+
+{% unless prod.has_only_default_variant -%}
+  {%- liquid
+    assign variant_popup_page = pages[block.settings.variant_popup_page]
+    assign variant_popup_content_exists = false
+    assign variant_popup_option = ''
+
+    if block.settings.variant_popup_option != blank and block.settings.variant_popup_text != blank and variant_popup_page.content != blank
+      assign variant_popup_content_exists = true
+      assign variant_popup_option = block.settings.variant_popup_option | downcase
+    endif
+  -%}
+
+  <div
+    class="product__controls-group product__variants-wrapper product__block product__block--medium"
+    data-enable-dynamic-product-options="{{ dynamic_options }}"
+    data-current-variant-id="{{ prod.selected_or_first_available_variant.id }}"
+    {{ block.shopify_attributes }}
+  >
+    {% for option in prod.options_with_values -%}
+      {%- liquid
+        assign option_name = option.name | downcase
+        assign show_popup_trigger = false
+        assign rendered_popup_trigger = ''
+        assign option_values = ''
+
+        if variant_popup_content_exists and option_name == variant_popup_option
+          assign show_popup_trigger = true
+        endif
+
+        # Hide "duplicate" variant options for sibling products with a single option value added to use category
+        # metafields for swatches.
+        if show_siblings
+          assign matches_sibling_value = false
+
+          if option.values.size == 1
+            assign option_single_value = true
+          else
+            assign option_single_value = false
+          endif
+
+          if option_single_value
+            assign option_value_downcased = option.values[0] | downcase | strip
+            assign sibling_downcased = product.metafields.stiletto.sibling_option_name | downcase | strip
+
+            if option_value_downcased == sibling_downcased
+              assign matches_sibling_value = true
+            endif
+          endif
+
+          if option_single_value and matches_sibling_value
+            assign hide_variant_option = true
+          endif
+        endif
+      -%}
+
+      {% if show_popup_trigger -%}
+        {%- capture rendered_popup_trigger -%}
+          {% render 'product-block-information-popup'
+            block: block,
+            popup_page_target: block.settings.variant_popup_page,
+            popup_page: variant_popup_page,
+            icon: block.settings.variant_popup_icon,
+            custom_icon_image: block.settings.custom_icon_image,
+            text: block.settings.variant_popup_text
+          -%}
+        {%- endcapture -%}
+      {%- endif %}
+
+      {% comment %}
+        All inputs that have `name=options[Name]` will be picked up by
+        ProductForm(), registered as an option input, and made available
+        at ProductForm.optionsInputs
+      {% endcomment %}
+      {%- capture option_values -%}
+        <select
+          id="option{{ option.position }}"
+          name="options[{{ option.name | escape }}]"
+          class="
+            input
+            {% if dynamic_options %}
+              dynamic-variant-input
+            {% endif %}
+          "
+          data-index="option{{ forloop.index }}"
+        >
+          {% for value in option.values -%}
+            <option
+              data-value-handle="{{ value | handleize }}--{{ forloop.index0 }}"
+              value="{{ value | escape }}"
+              {% if option.selected_value == value -%}
+                selected="selected"
+              {%- endif %}
+            >
+              {{ value }}
+            </option>
+          {%- endfor %}
+        </select>
+      {%- endcapture -%}
+
+      {%- capture rendered_option_inner %}
+        {% if swatch_options contains option_name -%}
+          <div
+            class="product__color-swatches"
+            data-option-buttons
+            data-product-option="option{{ option.position }}"
+          >
+            <div
+              class="
+                product__color-swatches--inner
+                {% if dynamic_options -%}
+                  dynamic-variant-input-wrap
+                {%- endif %}
+              "
+              data-index="option{{ forloop.index }}"
+            >
+              {% for value in option.values -%}
+                {% liquid
+                  assign color_swatch_class = 'product__color-swatch'
+                  assign swatch_image_url = blank
+
+                  if option.selected_value == value
+                    assign color_swatch_class = color_swatch_class | append: ' selected'
+                  endif
+
+                  if dynamic_options
+                    assign color_swatch_class = color_swatch_class | append: ' dynamic-variant-button'
+                  endif
+
+                  capture color_swatch_styles
+                    assign downcased_value_name = value.name | downcase
+
+                    if value.swatch and value.swatch.color
+                      echo 'background-color: [[vsc]];' | replace: '[[vsc]]', value.swatch.color
+                    elsif custom_color_key_map contains downcased_value_name
+                      for color_name in custom_color_key_map
+                        if color_name == downcased_value_name
+                          echo 'background-color: [[cc]];' | replace: '[[cc]]', custom_color_value_map[forloop.index0]
+                          break
+                        endif
+                      endfor
+                    else
+                      assign formatted_value_name = value.name | downcase | replace: ' ', ''
+
+                      echo 'background-color: [[fvn]];' | replace: '[[fvn]]', formatted_value_name
+                    endif
+
+                    if value.swatch and value.swatch.image
+                      assign swatch_image_url = value.swatch.image | image_url: width: swatch_image_width
+                    else
+                      assign custom_swatch_image = value.name | handle | append: '.' | append: file_extension
+
+                      if images[custom_swatch_image] != blank
+                        assign swatch_image_url = images[custom_swatch_image] | image_url: width: swatch_image_width
+                      endif
+                    endif
+
+                    if swatch_image_url != blank
+                      echo ' background-image: url([[siu]]);' | replace: '[[siu]]', swatch_image_url
+                      echo ' background-position: center; background-size: cover;'
+                    endif
+                  endcapture
+                -%}
+
+                <button
+                  type="button"
+                  class="{{ color_swatch_class }}"
+                  aria-label="{{ value | replace: '"', "'" }}"
+                  data-button
+                  data-label="{{ value | url_encode }}"
+                  data-option-value="{{ value | escape }}"
+                  data-option-handle="{{ value | handleize }}--{{ forloop.index0 }}"
+                  data-shape="{{ swatch_shape }}"
+                  data-size="{{ swatch_size }}"
+                  style="{{ color_swatch_styles }}"
+                >
+                  <label class="product__color-swatch-tooltip ff-body fs-body-75" role="tooltip">
+                    {{ value }}
+                  </label>
+                </button>
+              {%- endfor %}
+
+              {{ option_values }}
+            </div>
+          </div>
+        {%- elsif chip_options contains option_name -%}
+          <div
+            class="
+              product__color-chips
+              {% if dynamic_options -%}
+                dynamic-variant-input-wrap
+              {%- endif %}
+            "
+            data-option-buttons
+            data-product-option="option{{ option.position }}"
+            data-index="option{{ forloop.index }}"
+            data-layout="{{ chip_layout }}"
+          >
+            {% for value in option.values -%}
+              <button
+                type="button"
+                data-button
+                data-label="{{ value | url_encode }}"
+                aria-label="{{ value | replace: '"', "'" }}"
+                data-option-value="{{ value | escape }}"
+                data-option-handle="{{ value | handleize }}--{{ forloop.index0 }}"
+                class="
+                  product__chip
+                  {% if option.selected_value == value %}
+                    selected
+                  {% endif %}
+                  {% if dynamic_options %}
+                    dynamic-variant-button
+                  {% endif %}
+                "
+              >
+                {{ value }}
+
+                <span class="product__chip-crossed">
+                  <svg width="100%" height="100%">
+                    <line x1="0%" y1="100%" x2="100%" y2="0%" stroke="currentColor" />
+                  </svg>
+                </span>
+              </button>
+            {%- endfor %}
+
+            {{ option_values }}
+          </div>
+        {%- else -%}
+          <div
+            class="
+              select-wrapper
+              {% if dynamic_options -%}
+                dynamic-variant-input-wrap
+              {%- endif %}
+            "
+            data-index="option{{ forloop.index }}"
+          >
+            {{ option_values }}
+
+            {% render 'icon' icon: 'chevron-small', class: 'select-wrapper--icon' %}
+          </div>
+        {%- endif %}
+      {%- endcapture -%}
+
+      {%- capture rendered_option -%}
+        <div
+          class="
+            js-enabled
+            product__option
+            {% if hide_variant_option -%}
+              product__option--hidden-sibling-duplicate
+            {%- endif -%}
+          "
+          data-product-option>
+          <div class="product__label-wrapper">
+            <label class="product__label fs-body-100" for="option{{ option.position }}">
+              {{ option.name }}:
+
+              <span class="t-opacity-70" data-selected-value-for-option data-option-name="option{{ option.position }}">
+                {{- option.selected_value -}}
+              </span>
+            </label>
+
+            {{ rendered_popup_trigger }}
+          </div>
+
+          {{ rendered_option_inner }}
+        </div>
+      {%- endcapture -%}
+
+      {%- comment -%}Due to dynamic product options, options will be displayed in order of appearance{%- endcomment -%}
+      {{ rendered_option }}
+    {% endfor %}
+
+    {% if dynamic_options -%}
+      <script type="application/json" data-variant-json>
+        {{ prod.variants | json }}
+      </script>
+    {%- endif %}
+  </div>
+{%- endunless %}

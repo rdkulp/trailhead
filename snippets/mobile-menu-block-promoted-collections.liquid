@@ -1,0 +1,65 @@
+{% liquid
+  comment
+    Renders a mobile menu promoted collection block.
+
+    Required parameters:
+    - block: { Object } The associated block object.
+  endcomment
+
+  assign column_count = 1
+
+  if block.settings.layout == '2_col'
+    assign column_count = 2
+  elsif block.settings.layout == '3_col'
+    assign column_count = 3
+  endif
+-%}
+
+<div class="mobile_menu__promo_block mobile-menu-block-promoted-collections" {{ block.shopify_attributes }}>
+  {% if block.settings.title != blank -%}
+    <{{ block.settings.heading_tag }} class="mobile-menu-block-title fs-accent-bold">
+      {{- block.settings.title -}}
+    </{{ block.settings.heading_tag }}>
+  {%- endif %}
+
+  <div
+    class="mobile-menu-block-promoted-collections__inner"
+    data-column-count="{{ column_count }}"
+    data-title-style="{{ block.settings.collection_title_style }}"
+  >
+    {% for nav_collection in block.settings.collections -%}
+      {% render 'mobile-menu-block-promoted-collections-item',
+        block: block,
+        nav_collection: nav_collection,
+        column_count: column_count,
+        layout: block.settings.layout,
+        collection_title_style: block.settings.collection_title_style,
+        title_position: block.settings.title_position,
+        image_source: block.settings.image_source,
+        image_aspect_ratio: block.settings.image_aspect_ratio,
+        color_text: block.settings.color_text,
+        color_overlay: block.settings.color_overlay,
+        color_overlay_gradient: block.settings.color_overlay_gradient,
+        overlay_opacity: block.settings.overlay_opacity
+      -%}
+    {%- else -%}
+      {% for num in (1..column_count) -%}
+        {% render 'mobile-menu-block-promoted-collections-item',
+          block: block,
+          nav_collection: nav_collection,
+          column_count: column_count,
+          layout: block.settings.layout,
+          collection_title_style: block.settings.collection_title_style,
+          title_position: block.settings.title_position,
+          image_source: block.settings.image_source,
+          image_aspect_ratio: block.settings.image_aspect_ratio,
+          color_text: block.settings.color_text,
+          color_overlay: block.settings.color_overlay,
+          color_overlay_gradient: block.settings.color_overlay_gradient,
+          overlay_opacity: block.settings.overlay_opacity,
+          placeholder: true
+        -%}
+      {%- endfor %}
+    {%- endfor %}
+  </div>
+</div>

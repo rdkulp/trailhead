@@ -1,0 +1,157 @@
+{%- liquid
+  if predictive_search.performed
+    assign total_results = predictive_search.resources.products.size | plus: predictive_search.resources.queries.size | plus: predictive_search.resources.collections.size | plus: predictive_search.resources.pages.size | plus: predictive_search.resources.articles.size
+  elsif search.performed
+    assign total_results = search.results_count
+  else
+    assign total_results = 0
+  endif
+
+  assign sizes = '64px'
+  if settings.predictive_search_product_style == 'columns'
+    assign sizes = '200px'
+  endif
+-%}
+
+<div class="quick-search-results" data-results-count="{{ total_results }}">
+  {% comment %}
+    Predictive search results
+  {% endcomment %}
+  {% if predictive_search.performed -%}
+    {%- assign clean_terms = predictive_search.terms | split: ' AND ' | last -%}
+
+    {% if total_results > 0 -%}
+      {% if predictive_search.resources.queries.size > 0 -%}
+        <div class="quick-search-results__query-suggestions-column">
+          <h4 class="quick-search__resource-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+            {{ 'search.headings.suggestions' | t }}
+          </h4>
+          
+          <ul class="quick-search__resource-list">
+            {% for query in predictive_search.resources.queries -%}
+              <li class="quick-search__resource-list-item">
+                <a
+                  class="quick-search__result quick-search__result--suggested no-transition"
+                  href="{{ query.url }}"
+                  data-result-type="suggested-search"
+                >
+                  {% render 'icon', icon: 'search' %}
+                  <span class="quick-search__result-heading ff-body fs-body-100">{{ query.styled_text }}</span>
+                </a>
+              </li>
+            {%- endfor %}
+          </ul>
+        </div>
+      {%- endif %}
+      
+      <div class="quick-search-results__results-column">
+        {% if predictive_search.resources.products.size > 0 -%}
+          <h4 class="quick-search__resource-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+            {{ 'search.headings.products' | t }}
+          </h4>
+          
+          <ul class="quick-search__resource-list quick-search__resource-list--{{ settings.predictive_search_product_style }}">
+            {% for product in predictive_search.resources.products -%}
+              <li class="quick-search__resource-list-item">
+                <a
+                  class="quick-search__result quick-search__result--product"
+                  data-result-type="product"
+                  href="{{ product.url }}"
+                >
+                  {% if settings.predictive_search_product_style != 'list' -%}
+                    <div class="quick-search__result-image-wrapper">
+                      {% render 'image',
+                        image: product.featured_media,
+                        wrapper_class: 'quick-search__result-image',
+                        aspect_ratio: settings.product_listing_aspect_ratio,
+                        object_fit: settings.product_listing_media_fit,
+                        include_placeholder: true,
+                        sizes: sizes
+                      %}
+                    </div>
+                  {%- endif %}
+                  
+                  <div class="quick-search__result-details ff-body">
+                    <div class="quick-search__result-info">
+                      <div class="quick-search__result-heading fs-body-100">{{ product.title }}</div>
+                      {% if settings.predictive_search_show_vendor and product.vendor -%}
+                        <span class="quick-search__result-vendor fs-body-75 t-subdued">{{ product.vendor }}</span>
+                      {%- endif %}
+                    </div>
+
+                    {%- if settings.predictive_search_show_price -%}
+                      {%- render 'product-item-price',
+                        wrapper_class: 'quick-search__result-price fs-body-60',
+                        prod: product
+                      -%}
+                    {%- endif %}
+                  </div>
+                </a>
+              </li>
+            {%- endfor %}
+          </ul>
+        {%- else -%}
+          <h4 class="quick-search__resource-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+            {{ 'search.headings.products' | t }}
+          </h4>
+          
+          <p class="quick-search__no-results t-subdued ff-body fs-body-100">{{ 'search.no_products' | t }}</p>
+        {%- endif -%}
+
+        {% if predictive_search.resources.collections.size > 0 -%}
+          <h4 class="quick-search__resource-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+            {{ 'search.headings.collections' | t }}
+          </h4>
+          
+          <ul class="quick-search__resource-list quick-search__resource-list--list">
+            {% for collection in predictive_search.resources.collections -%}
+              <li class="quick-search__resource-list-item">
+                <a class="quick-search__result" href="{{ collection.url }}" data-result-type="collection">
+                  <span class="quick-search__result-heading ff-body fs-body-100">{{ collection.title }}</span>
+                </a>
+              </li>
+            {%- endfor %}
+          </ul>
+        {%- endif %}
+
+        {% if predictive_search.resources.pages.size > 0 -%}
+          <h4 class="quick-search__resource-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+            {{ 'search.headings.pages' | t }}
+          </h4>
+          
+          <ul class="quick-search__resource-list quick-search__resource-list--list">
+            {% for page in predictive_search.resources.pages -%}
+              <li class="quick-search__resource-list-item">
+                <a class="quick-search__result" href="{{ page.url }}" data-result-type="page">
+                  <span class="quick-search__result-heading ff-body fs-body-100">{{ page.title }}</span>
+                </a>
+              </li>
+            {%- endfor %}
+          </ul>
+        {%- endif %}
+
+        {% if predictive_search.resources.articles.size > 0 -%}
+          <h4 class="quick-search__resource-header ff-body fs-body-50 fs-accent fs-accent-bold t-opacity-70">
+            {{ 'search.headings.articles' | t }}
+          </h4>
+          
+          <ul class="quick-search__resource-list quick-search__resource-list--list">
+            {% for article in predictive_search.resources.articles -%}
+              <li class="quick-search__resource-list-item">
+                <a class="quick-search__result" href="{{ article.url }}" data-result-type="article">
+                  <span class="quick-search__result-heading ff-body fs-body-100">{{ article.title }}</span>
+                </a>
+              </li>
+            {%- endfor %}
+          </ul>
+        {%- endif %}
+      </div>
+    {%- else -%}
+      <h4 class="quick-search__no-results-header ff-body fs-body-200">
+        {{ 'search.no_results_html' | t: terms: clean_terms }}
+      </h4>
+
+      <p class="quick-search__no-results t-subdued ff-body fs-body-100">{{ 'search.check_spelling' | t }}</p>
+    {%- endif %}
+  {%- endif %}
+</div>

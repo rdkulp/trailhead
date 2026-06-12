@@ -1,0 +1,154 @@
+{% liquid
+  comment
+    Renders a single slideshow slide.
+
+    Required parameters:
+      - block: { Object } The parent block.
+      - forloop: { Object } The forloop object for the current block iteration.
+  endcomment
+
+  assign placeholder_aspect_ratio = 'no-ratio'
+
+  if section.settings.image_aspect == 'original'
+    assign placeholder_aspect_ratio = 'square'
+  endif
+
+  assign has_2_buttons = false
+
+  if block.settings.button_1_button_link != blank and block.settings.button_1_button_label != blank and block.settings.button_2_button_link != blank and block.settings.button_2_button_label != blank
+    assign has_2_buttons = true
+  endif
+
+  # Normally this is handled by the 'settings-background-image' snippet, however the settings are
+  # split between section and block, so we're setting it here.
+  assign absolutely_position_images = true
+
+  if section.settings.image_height_type == 'adapt_to_image'
+    assign absolutely_position_images = false
+  endif
+
+  assign prioritize_loading = false
+  if section.index == 1 and forloop.index == 1
+    assign prioritize_loading = true
+  endif
+-%}
+
+<div
+  class="slideshow-slide"
+  data-index="{{ forloop.index0 }}"
+  {{ block.shopify_attributes }}
+  {% if forloop.index0 > 0 and section.settings.enable_autoplay -%}
+    inert
+  {%- endif %}
+>
+  <div class="slideshow-slide__inner">
+    {% render 'settings-background-image',
+      local_settings: block.settings,
+      placeholder_aspect_ratio: placeholder_aspect_ratio,
+      wrapper_class: 'slideshow-slide__image',
+      absolutely_position_image: absolutely_position_images,
+      prioritize_loading: prioritize_loading
+    -%}
+
+    <div
+      class="slideshow-slide__overlay image-overlay animation--image-overlay"
+      {% render 'settings-image-overlay', local_settings: block.settings %}
+    ></div>
+
+    <div
+      class="slideshow-slide__text-container-wrapper"
+      style="
+        {% render 'settings-text-position-style' local_settings: block.settings %}
+        --content-max-width: {{ block.settings.custom_width }}px;
+      "
+    >
+      {%- assign text_container_class = 'slideshow-slide__text-container text-container image-overlay-content' -%}
+
+      {%- capture text_container_attributes -%}
+        {% render 'text-box-container-class-and-attributes',
+          local_settings: block.settings,
+          class: text_container_class,
+          animate_text_box: true,
+          section_type: 'hero'
+        -%}
+      {%- endcapture -%}
+
+      <div {{ text_container_attributes }}>
+        {% unless block.settings.media_link == blank -%}
+          <a
+            href="{{ block.settings.media_link }}"
+            class="slideshow-slide__image-link"
+            aria-label="{{ block.settings.media_link }}"
+          ></a>
+        {%- endunless %}
+
+        {% liquid
+          assign text_container_inner_class = 'slideshow-slide__text-container-inner text-container-inner section-blocks'
+
+          unless block.settings.enable_text_box
+            assign text_container_inner_class = text_container_inner_class | append: ' animation--container'
+          endunless
+        -%}
+        <div class="{{ text_container_inner_class }}">
+          {%- render 'section-block-accent',
+            accent_text: block.settings.accent,
+            accent_divider_enable: block.settings.accent_divider_enable,
+            accent_divider_color: block.settings.accent_divider_color
+          -%}
+
+          {% unless block.settings.title == blank -%}
+            {% liquid
+              capture heading_font_class
+                render 'settings-text-size', type: 'heading', size: block.settings.heading_font_size
+              endcapture
+            -%}
+
+            <{{ block.settings.heading_tag }} class="slideshow-slide__text-container-heading ff-heading {{ heading_font_class }} section-blocks__heading">
+              {{ block.settings.title }}
+            </{{ block.settings.heading_tag }}>
+          {%- endunless %}
+
+          {% unless block.settings.text == blank -%}
+            {% liquid
+              capture text_font_class
+                render 'settings-text-size', type: 'text', size: block.settings.text_font_size
+              endcapture
+            -%}
+
+            <div
+              class="slideshow-slide__text-container-text rte ff-body {{ text_font_class }} section-blocks__text"
+            >
+              {{ block.settings.text }}
+            </div>
+          {%- endunless %}
+
+          {% if has_2_buttons -%}
+            <div class="slideshow-slide__buttons-wrapper section-blocks__inline-buttons">
+          {%- endif %}
+
+          {% if block.settings.button_1_button_link != blank and block.settings.button_1_button_label != blank -%}
+            {% render 'button',
+              label: block.settings.button_1_button_label,
+              link: block.settings.button_1_button_link,
+              button_style: block.settings.button_1_button_style,
+              wrapper_class: 'slideshow-slide__text-container-image-button section-blocks__button'
+            -%}
+          {%- endif %}
+
+          {% if block.settings.button_2_button_link != blank and block.settings.button_2_button_label != blank -%}
+            {% render 'button',
+              label: block.settings.button_2_button_label,
+              link: block.settings.button_2_button_link,
+              button_style: block.settings.button_2_button_style,
+              wrapper_class: 'slideshow-slide__text-container-image-button section-blocks__button'
+            -%}
+          {%- endif %}
+
+          {% if has_2_buttons %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

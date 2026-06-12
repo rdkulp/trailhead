@@ -1,0 +1,47 @@
+{% liquid
+  comment
+    Renders a loader display.
+
+    Optional parameters:
+      - background_color_var: { String } A CSS variable name to use as the loader background
+        color (eg. --color-text-popups-drawers). Defaults to '--color-text' in CSS.
+      - foreground_color_var: { String } A CSS variable name to use as the loader foreground
+        color (eg. --color-text-popups-drawers). Defaults to '--color-text-alpha20' in CSS.
+      - loader_size: { String } The width of the loader, including 'px' (eg. '40px'). Defaults to '20px' in CSS.
+  endcomment
+
+  capture loader_styles
+    if background_color_var != blank
+      assign background_color_var = background_color_var | prepend: 'var(' | append: ')'
+
+      echo '--loader-background-color: [[bcv]];' | replace: '[[bcv]]', background_color_var
+    endif
+
+    if foreground_color_var != blank
+      assign foreground_color_var = foreground_color_var | prepend: 'var(' | append: ')'
+
+      echo '--loader-foreground-color: [[fcv]];' | replace: '[[fcv]]', foreground_color_var
+    endif
+
+    if loader_size != blank
+      echo '--loader-size: [[ls]];' | replace: '[[ls]]', loader_size
+    endif
+  endcapture
+%}
+
+<div
+  class="loader"
+  style="{{ loader_styles }}"
+>
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    role="presentation"
+    class="loader__spinner"
+    viewBox="0 0 66 66"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle class="loader__circle-background" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+    <circle class="loader__circle" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+  </svg>
+</div>

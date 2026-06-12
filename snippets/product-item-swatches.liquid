@@ -1,0 +1,129 @@
+{%- liquid
+  comment
+    Renders product item swtaches.
+
+    Required parameters:
+      - prod: { Object } The associated product object.
+      - option_name: { String } The name of the option to get the swatches from.
+      - custom_color_key_map: { Object } An array of custom swatch color keys (names).
+      - custom_color_value_map: { Object } An array of custom swatch color values (HEX values).
+
+    Optional parameters:
+      - coll: { Object } The associated collection object.
+      - show_quick_view: { Boolean } Whether to show the quick view.
+  endcomment
+
+  unless prod.has_only_default_variant
+    assign max_items = 5
+    assign option_name = option_name | downcase | strip_newlines
+    assign show_quick_view = show_quick_view | default: true, allow_false: true
+
+    unless settings.enable_quick_view
+      assign show_quick_view = false
+    endunless
+  endunless
+-%}
+
+{% unless prod.has_only_default_variant -%}
+  {%- capture content -%}
+    {% for product_option in prod.options_with_values -%}
+      {%- assign product_option_name = product_option.name | downcase -%}
+
+      {% if product_option_name == option_name -%}
+        {% liquid
+          assign overflows = false
+
+          if product_option.values.size > max_items
+            assign overflows = true
+            assign overflow_amount = product_option.values.size | minus: max_items
+          endif
+        -%}
+
+        <ul class="product-swatches-options__list ff-body fs-body-50">
+          {% for value in product_option.values limit: max_items -%}
+            {% liquid
+              assign downcased_value_name = value.name | downcase
+              assign swatch_image_url = ''
+
+              capture swatch_styles
+                if value.swatch and value.swatch.color
+                  echo 'background-color: [[vsc]];' | replace: '[[vsc]]', value.swatch.color
+                elsif custom_color_key_map contains downcased_value_name
+                  for color_name in custom_color_key_map
+                    if color_name == downcased_value_name
+                      echo 'background-color: [[cc]];' | replace: '[[cc]]', custom_color_value_map[forloop.index0]
+                      break
+                    endif
+                  endfor
+                else
+                  assign formatted_value_name = value.name | downcase | replace: ' ', ''
+
+                  echo 'background-color: [[fvn]];' | replace: '[[fvn]]', formatted_value_name
+                endif
+
+                if value.swatch and value.swatch.image
+                  assign swatch_image_url = value.swatch.image | image_url: width: swatch_image_width
+                else
+                  assign custom_swatch_image = value.name | handle | append: '.png'
+
+                  if images[custom_swatch_image] != blank
+                    assign swatch_image_url = custom_swatch_image | file_img_url: custom_swatch_image_size
+                  endif
+                endif
+
+                if swatch_image_url != blank
+                  echo ' background-image: url([[siu]]);' | replace: '[[siu]]', swatch_image_url
+                  echo ' background-position: center; background-size: cover;'
+                endif
+              endcapture
+            -%}
+
+            <li>
+              <a
+                class="
+                  product-swatches-options__item
+                  {% if show_quick_view %}show-product-quick-view{% endif %}
+                "
+                title="{{ value.name }}"
+                data-swatch-shape="{{ settings.swatch_shape }}"
+                style="{{ swatch_styles }}"
+              >
+                <label class="product-swatches-options__item-tooltip ff-body fs-body-75" role="tooltip">
+                  {{ value }}
+                </label>
+              </a>
+            </li>
+          {%- endfor %}
+
+          {% if overflows -%}
+            <li>
+              <a
+                class="
+                  product-swatches-options__item
+                  product-swatches-options__item--overflow
+                  {% if show_quick_view %}show-product-quick-view{% endif %}
+                "
+                data-swatch-shape="{{ settings.swatch_shape }}"
+                title="{{ 'products.product.view_all_swatches' | t }}"
+                aria-label="{{ 'products.product.view_all_swatches' | t }}"
+                {% unless show_quick_view -%}
+                  href="{{ product_url }}"
+                {%- endunless %}
+              >
+                {{ 'general.concepts.overflowing_number' | t: number: overflow_amount }}
+              </a>
+            </li>
+          {%- endif %}
+        </ul>
+
+        {% break %}
+      {%- endif %}
+    {%- endfor %}
+  {%- endcapture -%}
+
+  {% if content != blank -%}
+    <div class="product-swatches-options">
+      {{ content | strip }}
+    </div>
+  {%- endif %}
+{%- endunless %}

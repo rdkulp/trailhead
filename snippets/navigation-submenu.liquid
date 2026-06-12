@@ -1,0 +1,113 @@
+{% liquid
+  comment
+    Renders a navigation submenu.
+
+    Required parameters:
+      - menu: { Object } The associated menu links.
+      - interaction_type: { String } The interaction type to expand dropdown items. Can be:
+        - 'click'
+        - 'hover'
+
+    Optional parameters:
+      - announcement_bar_links: { Boolean } Whether the navigation is being rendered as part of
+        the announcement bar.
+      - depth: { Number } The current menu depth.
+  endcomment
+
+  assign submenu_class = 'navigation__submenu ff-body'
+
+  if announcement_bar_links
+    assign submenu_class = submenu_class | append: ' fs-body-60'
+  else
+    assign submenu_class = submenu_class | append: ' fs-body-100'
+  endif
+
+  if settings.enable_section_animations
+    assign submenu_class = submenu_class | append: ' animation animation--dropdown'
+  endif
+-%}
+
+<div
+  class="{{ submenu_class }}"
+  data-submenu
+  data-depth="{{ depth }}"
+  aria-hidden="true"
+>
+  <ul class="navigation__submenu-list ff-body">
+    {%- assign depth = depth | plus: 1 -%}
+
+    {% for link in menu -%}
+      {% liquid
+        assign has_children = false
+
+        if link.links.size > 0
+          assign has_children = true
+        endif
+      -%}
+
+      <li class="navigation__submenu-item animation--dropdown-item">
+        {% if has_children -%}
+          {% liquid
+            assign child_is_active = false
+
+            for link in link.links
+              if link.active
+                assign child_is_active = true
+                break
+              elsif link.links.size > 0
+                for link in link.links
+                  if link.active
+                    assign child_is_active = true
+                    break
+                  endif
+                endfor
+              endif
+            endfor
+
+            assign submenu_trigger_class = 'navigation__submenu-trigger has-icon'
+
+            if interaction_type == 'click'
+              assign submenu_trigger_class = submenu_trigger_class | append: ' no-transition'
+            endif
+
+            if child_is_active
+              assign submenu_trigger_class = submenu_trigger_class | append: ' active'
+            endif
+          -%}
+
+          <a
+            class="{{ submenu_trigger_class }}"
+            data-dropdown-trigger
+            data-link
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="{{ link.url }}"
+          >
+            <span class="navigation__submenu-child-link">
+              <label>{{ link.title }}</label>
+
+              {% render 'icon', icon: 'chevron-small', class: 'navigation__submenu-icon' %}
+            </span>
+          </a>
+
+          {% render 'navigation-submenu',
+            menu: link.links,
+            depth: depth,
+            announcement_bar_links: announcement_bar_links
+          %}
+        {%- else -%}
+          <a
+            href="{{ link.url }}"
+            class="{% if link.active %}active{% endif %}"
+            {% if link.active %}
+              aria-current="page"
+            {% endif %}
+            data-link
+          >
+            {{ link.title }}
+          </a>
+        {%- endif %}
+      </li>
+    {%- endfor %}
+  </ul>
+</div>

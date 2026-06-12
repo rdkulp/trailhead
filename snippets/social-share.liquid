@@ -1,0 +1,88 @@
+{%- liquid
+  if alignment == blank
+    assign alignment = 'center-above'
+  endif
+
+  assign alignment_values = alignment | split: '-'
+  assign horizontal_alignment = alignment_values | first
+  assign vertical_alignment = alignment_values | last
+
+  if share_text == blank
+    assign share_text = 'general.social.share' | t
+  endif
+
+  if request.design_mode
+    if enable_os_share
+      assign flash_message = 'general.flash_alert.no_share_os' | t
+      assign flash_message_data = 'data-flash-message="' | append: flash_message | append: '"'
+      assign os_share_flash_alert_attribute = 'data-flash-trigger ' | append: flash_message_data
+    else
+      assign flash_message = 'general.flash_alert.no_share_copy' | t
+      assign flash_message_data = 'data-flash-message="' | append: flash_message | append: '"'
+      assign copy_share_flash_alert_attribute = 'data-flash-trigger ' | append: flash_message_data
+    endif
+  endif
+-%}
+<div
+  class="
+    social-share
+    social-sharing--align-horizontal-{{ horizontal_alignment }}
+    social-sharing--align-vertical-{{ vertical_alignment }}
+  "
+  style="
+    --font-button-text-transform: none;
+    --font-size-button: var(--font-size-body-100);
+  "
+>
+  <button
+    type="button"
+    class="btn social-share__button ff-body"
+    aria-expanded="false"
+    aria-controls="social-sharing--{{ title | handle }}"
+    data-title="{{ title | escape }}"
+    data-text="{{ text }}"
+    data-url="{{ url }}"
+    data-enable-os-share="{{ enable_os_share }}"
+    {{ os_share_flash_alert_attribute }}
+  >
+    {%- render 'icon', icon: 'share' -%}
+    {{ share_text }}
+  </button>
+
+  <div class="social-sharing__popup-wrapper">
+    <div
+      id="social-sharing--{{ title | handle }}"
+      class="social-sharing__popup"
+      aria-hidden="true"
+    >
+      <div class="social-share__input-wrapper">
+        <input
+          type="text"
+          class="social-share__input"
+          value="{{ url }}"
+          readonly
+        >
+
+        <button
+          type="button"
+          class="social-share__copy-url"
+          aria-label="{{ 'general.social.copy_link' | t }}"
+          data-url="{{ url }}"
+          data-error-message="{{ 'general.social.link_copy_error' | t }}"
+          data-success-message="{{ 'general.social.link_copied' | t }}"
+          {{ copy_share_flash_alert_attribute }}
+        >
+          {%- render 'icon', icon: 'copy' -%}
+        </button>
+
+        <div class="social-share__success-message social-share__success-message--hidden" role="alert">
+          {{ 'general.social.link_copied' | t }}
+        </div>
+      </div>
+
+      <div class="social-share__icons">
+        {% render 'share-icons', url: url, title: title, image: image %}
+      </div>
+    </div>
+  </div>
+</div>

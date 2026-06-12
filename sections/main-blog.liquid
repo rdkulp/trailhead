@@ -1,0 +1,488 @@
+{% liquid
+  assign paginate_by = section.settings.articles_per_page
+  assign article_categories = settings.article_categories | downcase
+
+  if section.settings.text_font_type == 'body'
+    assign tab_title_class = 'ff-body '
+  else
+    assign tab_title_class = 'ff-heading '
+  endif
+
+  capture tab_title_font_size
+    render 'settings-text-size', type: 'text', size: section.settings.text_font_size
+  endcapture
+
+  assign tab_title_class = tab_title_class | append: tab_title_font_size
+-%}
+
+{% if section.settings.show_tag_nav and blog.all_tags.size > 0 -%}
+  {% for tag in blog.all_tags -%}
+    {%- assign tag_dc = tag | downcase -%}
+
+    {% if article_categories contains tag_dc or article_categories == blank -%}
+      {%- capture tag_list -%}
+        {{ tag_list }}
+
+        <li class="tab-buttons__button-wrapper">
+          <a
+            href="{{ blog.url }}/tagged/{{ tag | handle }}"
+            class="
+              tab-buttons__button
+              blog__nav-link
+              {% if current_tags contains tag %} selected{% endif %}
+            "
+          >
+            <span class="tab-buttons__button-label {{ tab_title_class }}">{{ tag }}</span>
+
+            <span class="tab-buttons__button-indicator"></span>
+          </a>
+        </li>
+      {%- endcapture -%}
+
+      {%- capture tag_select_options -%}
+        {{ tag_select_options }}
+
+        <option
+          value="{{ blog.url }}/tagged/{{ tag | handle }}"
+          {% if current_tags contains tag %}
+            selected="selected"
+          {% endif %}
+        >
+          {{ tag }}
+        </option>
+      {%- endcapture -%}
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}
+
+{%- paginate blog.articles by paginate_by -%}
+  {% liquid
+    assign on_blog_home = true
+
+    if current_tags or paginate.current_page != 1
+      assign on_blog_home = false
+    endif
+  -%}
+
+  <div
+    class="
+      blog
+      section
+      {% if settings.enable_section_animations and section.settings.section_style_enable_animation %}
+        animation
+        animation--blog
+      {% endif %}
+    "
+    data-page="{{ paginate.current_page }}"
+    data-section-id="{{ section.id }}"
+    data-section-type="blog"
+    data-text-box-enabled="{{ section.settings.enable_text_box }}"
+    style="--section-style-spacing-bottom: 40px;"
+  >
+    <div class="section-inner">
+      <div class="blog__inner">
+        <header class="blog__header page__header animation--container">
+          {% liquid
+            capture blog_title
+              echo '<h1 class="blog__heading ff-heading fs-heading-2-base fs-heading-1-base-ns ta-c">[[bt]]</h1>' | replace: '[[bt]]', blog.title
+            endcapture
+
+            if on_blog_home
+              echo blog_title
+            else
+              echo blog_title | link_to: blog.url
+            endif
+          -%}
+
+          {% if tag_list.size > 0 -%}
+            <div class="blog__nav">
+              <ul
+                class="tab-buttons blog__nav-list"
+                data-current="{{ current_tags }}"
+                data-tab-design="{{ section.settings.tab_design }}"
+              >
+                <li class="tab-buttons__button-wrapper">
+                  <a
+                    href="{{ blog.url }}"
+                    class="
+                      blog__nav-link
+                      tab-buttons__button
+                      {% if current_tags == blank %} selected{% endif %}
+                    "
+                  >
+                    <span class="tab-buttons__button-label {{ tab_title_class }}">{{ 'blogs.general.all' | t }}</span>
+
+                    <span class="tab-buttons__button-indicator"></span>
+                  </a>
+                </li>
+                {{ tag_list }}
+              </ul>
+
+              {% if tag_select_options.size > 0 -%}
+                <div class="blog__nav-mobile--wrapper select-wrapper">
+                  <select name="blog-mobile-nav" id="blog-mobile-nav" class="blog__nav-mobile input">
+                    <option
+                      value="{{ blog.url }}"
+                      {% if current_tags == blank -%}
+                        selected="selected"
+                      {%- endif %}
+                    >
+                      {{ 'blogs.general.all' | t }}
+                    </option>
+
+                    {{ tag_select_options }}
+                  </select>
+
+                  {% render 'icon', icon: 'chevron-small' %}
+                </div>
+              {%- endif %}
+            </div>
+          {%- endif %}
+        </header>
+
+        <ul
+          class="blog__article-list"
+          style="--column-count-desktop: {{ section.settings.num_columns }}; "
+        >
+          {%- capture article_image_sizes -%}
+            {% render 'grid-slider-item-image-sizes',
+              num_columns: 1,
+              num_columns_above_720: 2,
+              num_columns_above_1024: 2,
+              num_columns_above_1200: 2,
+              gap: 0,
+              gap_above_720: 40,
+              gap_above_1024: 40,
+              gap_above_1200: 40
+            -%}
+          {%- endcapture -%}
+
+          {% for article in blog.articles -%}
+            <li class="blog__article-item">
+              {% render 'article-item',
+                blog_article: article,
+                blog: blog,
+                show_author: section.settings.show_author,
+                show_date: section.settings.show_date,
+                show_tags: section.settings.show_tags,
+                show_excerpt: section.settings.show_excerpt,
+                show_featured_image: section.settings.show_featured_image,
+                aspect_ratio: section.settings.aspect_ratio,
+                image_sizes: article_image_sizes,
+                section_settings: section.settings
+              -%}
+            </li>
+          {%- endfor %}
+        </ul>
+
+        {% if paginate.pages > 1 -%}
+          <div class="blog__pagination animation--item">
+            {% render 'pagination', paginate: paginate, type: 'general.pagination.blog_posts' %}
+          </div>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "t:sections.main_blog.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "min": 12,
+      "max": 36,
+      "step": 12,
+      "label": "t:sections.main_blog.settings.articles_per_page.label",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "num_columns",
+      "label": "t:shared.settings.num_columns.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:shared.settings.num_columns.options.2"
+        },
+        {
+          "value": "3",
+          "label": "t:shared.settings.num_columns.options.3"
+        },
+        {
+          "value": "4",
+          "label": "t:shared.settings.num_columns.options.4"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main_blog.settings.header__tag_navigation.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tag_nav",
+      "label": "t:sections.main_blog.settings.show_tag_nav.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "tab_design",
+      "label": "t:shared.settings.tab_buttons.tab_design.label",
+      "options": [
+        {
+          "value": "line",
+          "label": "t:shared.settings.tab_buttons.tab_design.options.line"
+        },
+        {
+          "value": "contained",
+          "label": "t:shared.settings.tab_buttons.tab_design.options.contained"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_font_type",
+      "label": "t:shared.settings.typography.font.label",
+      "default": "body",
+      "options": [
+        {
+          "value": "body",
+          "label": "t:shared.settings.typography.font.option_body_singular"
+        },
+        {
+          "value": "heading",
+          "label": "t:shared.settings.typography.font.option_heading_singular"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "label": "t:shared.settings.text_size.text.label",
+      "info": "t:shared.settings.text_size.info",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main_blog.settings.header__article_options.content"
+    },
+    {
+      "id": "show_tags",
+      "type": "checkbox",
+      "label": "t:sections.blog_shared.settings.show_tags.label",
+      "info": "t:sections.blog_shared.settings.show_tags.info",
+      "default": true
+    },
+    {
+      "id": "show_author",
+      "type": "checkbox",
+      "label": "t:sections.blog_shared.settings.show_author.label",
+      "default": true
+    },
+    {
+      "id": "show_date",
+      "type": "checkbox",
+      "label": "t:sections.blog_shared.settings.show_date.label",
+      "default": true
+    },
+    {
+      "id": "show_excerpt",
+      "type": "checkbox",
+      "label": "t:sections.blog_shared.settings.show_excerpt.label",
+      "default": true
+    },
+    {
+      "id": "show_featured_image",
+      "type": "checkbox",
+      "label": "t:sections.blog_shared.settings.show_featured_image.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:sections.blog_shared.settings.featured_image_aspect_ratio.label",
+      "default": "landscape",
+      "options": [
+        {
+          "value": "natural",
+          "label": "t:shared.settings.aspect_ratio.option_natural"
+        },
+        {
+          "value": "square",
+          "label": "t:shared.settings.aspect_ratio.option_square"
+        },
+        {
+          "value": "landscape_alt",
+          "label": "t:shared.settings.aspect_ratio.option_landscape_alt"
+        },
+        {
+          "value": "landscape",
+          "label": "t:shared.settings.aspect_ratio.option_landscape"
+        },
+        {
+          "value": "landscape_wide_alt",
+          "label": "t:shared.settings.aspect_ratio.option_landscape_wide_alt"
+        },
+        {
+          "value": "landscape_ultrawide_alt",
+          "label": "t:shared.settings.aspect_ratio.option_landscape_ultrawide_alt"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.text_box.header_plural"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_text_box",
+      "default": false,
+      "label": "t:shared.settings.text_box.enable_text_box.label_plural"
+    },
+    {
+      "type": "select",
+      "id": "text_box_style",
+      "label": "t:shared.settings.text_box.text_box_style.label",
+      "default": "plain",
+      "options": [
+        {
+          "value": "plain",
+          "label": "t:shared.settings.text_box.text_box_style.option_plain",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_plain"
+        },
+        {
+          "value": "soft_small",
+          "label": "t:shared.settings.text_box.text_box_style.option_soft_small",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_soft"
+        },
+        {
+          "value": "soft_large",
+          "label": "t:shared.settings.text_box.text_box_style.option_soft_large",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_soft"
+        },
+        {
+          "value": "solid_thin",
+          "label": "t:shared.settings.text_box.text_box_style.option_solid_thin",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_solid"
+        },
+        {
+          "value": "solid_thick",
+          "label": "t:shared.settings.text_box.text_box_style.option_solid_thick",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_solid"
+        },
+        {
+          "value": "solid_thin_accent",
+          "label": "t:shared.settings.text_box.text_box_style.option_solid_thin_accent",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_solid"
+        },
+        {
+          "value": "solid_thick_accent",
+          "label": "t:shared.settings.text_box.text_box_style.option_solid_thick_accent",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_solid"
+        },
+        {
+          "value": "border_thin",
+          "label": "t:shared.settings.text_box.text_box_style.option_border_thin",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_border"
+        },
+        {
+          "value": "border_thick",
+          "label": "t:shared.settings.text_box.text_box_style.option_border_thick",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_border"
+        },
+        {
+          "value": "border_thin_accent",
+          "label": "t:shared.settings.text_box.text_box_style.option_border_thin_accent",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_border"
+        },
+        {
+          "value": "border_thick_accent",
+          "label": "t:shared.settings.text_box.text_box_style.option_border_thick_accent",
+          "group": "t:shared.settings.text_box.text_box_style.option_group_border"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_box_color_scheme",
+      "label": "t:shared.settings.color_scheme.select.label",
+      "info": "t:shared.settings.color_scheme.info",
+      "default": "soft",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:shared.settings.color_scheme.select.option_default",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "inverse",
+          "label": "t:shared.settings.color_scheme.select.option_inverse",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "soft",
+          "label": "t:shared.settings.color_scheme.select.option_soft",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "accent",
+          "label": "t:shared.settings.color_scheme.select.option_accent",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "sale",
+          "label": "t:shared.settings.color_scheme.select.option_sale",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "color_scheme_1",
+          "label": "t:shared.settings.color_scheme.select.option_scheme_1",
+          "group": "t:shared.settings.color_scheme.select.group_schemes"
+        },
+        {
+          "value": "color_scheme_2",
+          "label": "t:shared.settings.color_scheme.select.option_scheme_2",
+          "group": "t:shared.settings.color_scheme.select.group_schemes"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "text_box_override_with_custom_colors",
+      "label": "t:shared.settings.color_scheme.override",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "text_box_override_color_text",
+      "label": "t:shared.settings.color_scheme.color_text",
+      "default": "#393939"
+    },
+    {
+      "type": "color",
+      "id": "text_box_override_color_background",
+      "label": "t:shared.settings.color_scheme.color_background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header_style.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_style_enable_animation",
+      "default": true,
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    }
+  ]
+}
+{% endschema %}

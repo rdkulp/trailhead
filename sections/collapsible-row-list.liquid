@@ -1,0 +1,1163 @@
+{% liquid
+  assign show_animations = false
+  assign section_class = 'collapsible-row-list section'
+  assign flex_direction = 'column'
+  assign header_order = 1
+  assign content_order = 2
+
+  if settings.enable_section_animations and section.settings.section_style_enable_animation
+    assign show_animations = true
+  endif
+
+  if show_animations
+    assign section_class = section_class | append: ' animation animation--collapsible-row-list'
+  endif
+
+  if section.settings.header_position == 'left'
+    assign flex_direction = 'row'
+  elsif section.settings.header_position == 'right'
+    assign flex_direction = 'row'
+    assign header_order = 2
+    assign content_order = 1
+  endif
+
+  assign content_styles = '--content-flex-direction: [[cfd]];' | replace: '[[cfd]]', flex_direction
+  assign content_styles = content_styles | append: ' --header-order: [[ho]];' | replace: '[[ho]]', header_order
+  assign content_styles = content_styles | append: ' --content-order: [[co]];' | replace: '[[co]]', content_order
+
+  if section.settings.content_width == 'custom'
+    assign content_styles = content_styles | append: ' --content-width: [[cw]]px;' | replace: '[[cw]]', section.settings.custom_width
+  endif
+-%}
+
+<div
+  class="{{ section_class }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="collapsible-row-list"
+  data-use-custom-colors="{{ section.settings.override_with_custom_colors }}"
+  data-color-scheme="{{ section.settings.color_scheme }}"
+  style="
+    {% render 'settings-color-schemes-style', local_settings: section.settings %}
+    {% render 'settings-section-style-style' %}
+  "
+>
+  <div class="section-inner">
+    <div
+      class="collapsible-row-list__inner"
+      style="
+        {{ content_styles }}
+        {% render 'settings-color-schemes-style', local_settings: section.settings %}
+      "
+      data-flex-direction="{{ flex_direction }}"
+    >
+      {% render 'settings-section-header-content', section: section %}
+
+      <div class="collapsible-row-list__items animation--container">
+        {% for block in section.blocks -%}
+          {% render 'collapsible-row-list-item',
+            block: block,
+            heading_font: section.settings.item_heading_font,
+            forloop: forloop
+          -%}
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.collapsible_row_list.name",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_header.title"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_content",
+      "default": true,
+      "label": "t:shared.settings.section_header.center_content.label"
+    },
+    {
+      "type": "text",
+      "id": "preheading",
+      "label": "t:shared.settings.general.accent.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:shared.settings.section_header.heading.label",
+      "default": "Accordion list"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "label": "t:shared.settings.text_size.heading.label",
+      "info": "t:shared.settings.text_size.info",
+      "default": 3
+    },
+    {
+      "id": "section_header_heading_tag",
+      "type": "select",
+      "label": "t:shared.settings.heading_tag.label",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "info": "t:shared.settings.heading_tag.info",
+      "default": "h2"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:shared.settings.section_header.sub_heading.label"
+    },
+    {
+      "id": "section_header_subheading_tag",
+      "type": "select",
+      "label": "t:shared.settings.heading_tag.subheading_label",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "info": "t:shared.settings.heading_tag.info",
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "header_position",
+      "label": "t:sections.collapsible_row_list.settings.header_position.label",
+      "options": [
+        {
+          "value": "above",
+          "label": "t:sections.collapsible_row_list.settings.header_position.options.above"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.collapsible_row_list.settings.header_position.options.left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.collapsible_row_list.settings.header_position.options.right"
+        }
+      ],
+      "info": "t:sections.collapsible_row_list.settings.header_position.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collapsible_row_list.settings.items__header.content"
+    },
+    {
+      "id": "item_heading_font",
+      "type": "select",
+      "label": "t:sections.collapsible_row_list.settings.item_heading_font.label",
+      "default": "heading",
+      "options": [
+        {
+          "value": "heading",
+          "label": "t:sections.collapsible_row_list.settings.item_heading_font.options.heading"
+        },
+        {
+          "value": "body",
+          "label": "t:sections.collapsible_row_list.settings.item_heading_font.options.body"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collapsible_row_list.settings.layout__header.content"
+    },
+    {
+      "type": "radio",
+      "id": "content_width",
+      "label": "t:shared.settings.content_area.content_width.label",
+      "default": "custom",
+      "options": [
+        {
+          "value": "full",
+          "label": "t:shared.settings.content_area.content_width.options.option_full"
+        },
+        {
+          "value": "custom",
+          "label": "t:shared.settings.content_area.content_width.options.option_custom"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "t:shared.settings.content_area.custom_width.label",
+      "min": 400,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "default": 1000,
+      "info": "t:shared.settings.content_area.custom_width.info"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.color_scheme.header.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "t:shared.settings.color_scheme.select.label",
+      "info": "t:shared.settings.color_scheme.info",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:shared.settings.color_scheme.select.option_default",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "inverse",
+          "label": "t:shared.settings.color_scheme.select.option_inverse",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "soft",
+          "label": "t:shared.settings.color_scheme.select.option_soft",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "accent",
+          "label": "t:shared.settings.color_scheme.select.option_accent",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "sale",
+          "label": "t:shared.settings.color_scheme.select.option_sale",
+          "group": "t:shared.settings.color_scheme.select.group_theme"
+        },
+        {
+          "value": "color_scheme_1",
+          "label": "t:shared.settings.color_scheme.select.option_scheme_1",
+          "group": "t:shared.settings.color_scheme.select.group_schemes"
+        },
+        {
+          "value": "color_scheme_2",
+          "label": "t:shared.settings.color_scheme.select.option_scheme_2",
+          "group": "t:shared.settings.color_scheme.select.group_schemes"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "override_with_custom_colors",
+      "label": "t:shared.settings.color_scheme.override",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "override_color_text",
+      "label": "t:shared.settings.color_scheme.color_text",
+      "default": "#393939"
+    },
+    {
+      "type": "color",
+      "id": "override_color_background",
+      "label": "t:shared.settings.color_scheme.color_background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header_style.content"
+    },
+    {
+      "id": "section_style_spacing_top",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_top.label",
+      "default": 36
+    },
+    {
+      "id": "section_style_spacing_bottom",
+      "type": "range",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:shared.settings.section_style.spacing_bottom.label",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "section_style_enable_animation",
+      "default": true,
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "t:sections.collapsible_row_list.blocks.item.name",
+      "settings": [
+        {
+          "id": "expand_by_default",
+          "type": "checkbox",
+          "label": "t:sections.collapsible_row_list.blocks.item.settings.expand_by_default.label",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:sections.collapsible_row_list.blocks.item.settings.icon.label",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:shared.settings.icon.option_none"
+            },
+            {
+              "value": "clothes-button",
+              "label": "t:shared.settings.icon.clothing_group.option_clothes_button",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "clothes-iron",
+              "label": "t:shared.settings.icon.clothing_group.option_clothes_iron",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "hand-wash",
+              "label": "t:shared.settings.icon.clothing_group.option_hand_wash",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "heels",
+              "label": "t:shared.settings.icon.clothing_group.option_heels",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "laundry-dryer",
+              "label": "t:shared.settings.icon.clothing_group.option_laundry_dryer",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "laundry-washer",
+              "label": "t:shared.settings.icon.clothing_group.option_laundry_washer",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "measuring-tape",
+              "label": "t:shared.settings.icon.clothing_group.option_measuring_tape",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "ruler",
+              "label": "t:shared.settings.icon.clothing_group.option_ruler",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "scissors",
+              "label": "t:shared.settings.icon.clothing_group.option_scissors",
+              "group": "t:shared.settings.icon.clothing_group.label"
+            },
+            {
+              "value": "email",
+              "label": "t:shared.settings.icon.communication_group.option_email",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "envelope",
+              "label": "t:shared.settings.icon.communication_group.option_envelope",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "headphones",
+              "label": "t:shared.settings.icon.communication_group.option_headphones",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "meeting-camera",
+              "label": "t:shared.settings.icon.communication_group.option_meeting_camera",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "message-bubble",
+              "label": "t:shared.settings.icon.communication_group.option_message_bubble",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "message-bubble-double",
+              "label": "t:shared.settings.icon.communication_group.option_message_bubble_double",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "message-bubble-information",
+              "label": "t:shared.settings.icon.communication_group.option_message_bubble_information",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "message-bubble-person",
+              "label": "t:shared.settings.icon.communication_group.option_message_bubble_person",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "paper-airplane",
+              "label": "t:shared.settings.icon.communication_group.option_paper_airplane",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "phone",
+              "label": "t:shared.settings.icon.communication_group.option_phone",
+              "group": "t:shared.settings.icon.communication_group.label"
+            },
+            {
+              "value": "book-closed",
+              "label": "t:shared.settings.icon.content_and_media_group.option_book_closed",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "book-opened",
+              "label": "t:shared.settings.icon.content_and_media_group.option_book_opened",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "book-opened-with-text",
+              "label": "t:shared.settings.icon.content_and_media_group.option_book_opened_with_text",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "bookmark",
+              "label": "t:shared.settings.icon.content_and_media_group.option_bookmark",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "microphone",
+              "label": "t:shared.settings.icon.content_and_media_group.option_microphone",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "music-notes",
+              "label": "t:shared.settings.icon.content_and_media_group.option_music_notes",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "pen",
+              "label": "t:shared.settings.icon.content_and_media_group.option_pen",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "pencil",
+              "label": "t:shared.settings.icon.content_and_media_group.option_pencil",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "photo-frame",
+              "label": "t:shared.settings.icon.content_and_media_group.option_photo_frame",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "picture",
+              "label": "t:shared.settings.icon.content_and_media_group.option_picture",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "picture-polaroid",
+              "label": "t:shared.settings.icon.content_and_media_group.option_picture_polaroid",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "presentation-board",
+              "label": "t:shared.settings.icon.content_and_media_group.option_presentation_board",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "video-player",
+              "label": "t:shared.settings.icon.content_and_media_group.option_video_player",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "vinyl-record",
+              "label": "t:shared.settings.icon.content_and_media_group.option_vinyl_record",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "volume",
+              "label": "t:shared.settings.icon.content_and_media_group.option_volume",
+              "group": "t:shared.settings.icon.content_and_media_group.label"
+            },
+            {
+              "value": "chat-support",
+              "label": "t:shared.settings.icon.customer_support_group.option_chat_support",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "hand-shake-heart",
+              "label": "t:shared.settings.icon.customer_support_group.option_hand_shake_heart",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "headphones-with-mic",
+              "label": "t:shared.settings.icon.customer_support_group.option_headphones_with_mic",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "help-wheel",
+              "label": "t:shared.settings.icon.customer_support_group.option_help_wheel",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "question-circle",
+              "label": "t:shared.settings.icon.customer_support_group.option_question_circle",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "rating-star",
+              "label": "t:shared.settings.icon.customer_support_group.option_rating_star",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "rating-star-shining",
+              "label": "t:shared.settings.icon.customer_support_group.option_rating_star_shining",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "rating-star-winner",
+              "label": "t:shared.settings.icon.customer_support_group.option_rating_star_winner",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "rating-star-with-hand",
+              "label": "t:shared.settings.icon.customer_support_group.option_rating_star_with_hand",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "rating-stars-three",
+              "label": "t:shared.settings.icon.customer_support_group.option_rating_stars_three",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "smile",
+              "label": "t:shared.settings.icon.customer_support_group.option_smile",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "smile-heart-eyes",
+              "label": "t:shared.settings.icon.customer_support_group.option_smile_heart_eyes",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "smile-relaxed",
+              "label": "t:shared.settings.icon.customer_support_group.option_smile_relaxed",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "thumbs-up",
+              "label": "t:shared.settings.icon.customer_support_group.option_thumbs_up",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "user-multiple",
+              "label": "t:shared.settings.icon.customer_support_group.option_user_multiple",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "user-question",
+              "label": "t:shared.settings.icon.customer_support_group.option_user_question",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "user-single",
+              "label": "t:shared.settings.icon.customer_support_group.option_user_single",
+              "group": "t:shared.settings.icon.customer_support_group.label"
+            },
+            {
+              "value": "alarm-clock",
+              "label": "t:shared.settings.icon.date_and_time_group.option_alarm_clock",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "back-10",
+              "label": "t:shared.settings.icon.date_and_time_group.option_back_10",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "back-15",
+              "label": "t:shared.settings.icon.date_and_time_group.option_back_15",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "back-30",
+              "label": "t:shared.settings.icon.date_and_time_group.option_back_30",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "back-90",
+              "label": "t:shared.settings.icon.date_and_time_group.option_back_90",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "calendar",
+              "label": "t:shared.settings.icon.date_and_time_group.option_calendar",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "clock",
+              "label": "t:shared.settings.icon.date_and_time_group.option_clock",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "clock-forward",
+              "label": "t:shared.settings.icon.date_and_time_group.option_clock_forward",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "stopwatch",
+              "label": "t:shared.settings.icon.date_and_time_group.option_stopwatch",
+              "group": "t:shared.settings.icon.date_and_time_group.label"
+            },
+            {
+              "value": "cruelty-free",
+              "label": "t:shared.settings.icon.ecology_group.option_cruelty_free",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "earth",
+              "label": "t:shared.settings.icon.ecology_group.option_earth",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "globe",
+              "label": "t:shared.settings.icon.ecology_group.option_globe",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:shared.settings.icon.ecology_group.option_leaf",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "no-plastic-bag",
+              "label": "t:shared.settings.icon.ecology_group.option_no_plastic_bag",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "no-plastic-bottle",
+              "label": "t:shared.settings.icon.ecology_group.option_no_plastic_bottle",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "paw-print",
+              "label": "t:shared.settings.icon.ecology_group.option_paw_print",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "plastic-bag",
+              "label": "t:shared.settings.icon.ecology_group.option_plastic_bag",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "recycling-sign",
+              "label": "t:shared.settings.icon.ecology_group.option_recycling_sign",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "water-bottle",
+              "label": "t:shared.settings.icon.ecology_group.option_water_bottle",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "water-drop-ripple",
+              "label": "t:shared.settings.icon.ecology_group.option_water_drop_ripple",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "water-droplet",
+              "label": "t:shared.settings.icon.ecology_group.option_water_droplet",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "water-glass-half-full",
+              "label": "t:shared.settings.icon.ecology_group.option_water_glass_half_full",
+              "group": "t:shared.settings.icon.ecology_group.label"
+            },
+            {
+              "value": "no-alchohol-beer",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_no_alchohol_beer",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "no-alchohol-wine",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_no_alchohol_wine",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "no-dairy",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_no_dairy",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "no-gluten",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_no_gluten",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "no-gmo",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_no_gmo",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "no-peanut",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_no_peanut",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "no-sugar",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_no_sugar",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "vegan",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_vegan",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "wheat",
+              "label": "t:shared.settings.icon.food_and_nutrition_group.option_wheat",
+              "group": "t:shared.settings.icon.food_and_nutrition_group.label"
+            },
+            {
+              "value": "checked-box",
+              "label": "t:shared.settings.icon.general_symbols_group.option_checked_box",
+              "group": "t:shared.settings.icon.general_symbols_group.label"
+            },
+            {
+              "value": "checkmark-badge",
+              "label": "t:shared.settings.icon.general_symbols_group.option_checkmark_badge",
+              "group": "t:shared.settings.icon.general_symbols_group.label"
+            },
+            {
+              "value": "checkmark-outline",
+              "label": "t:shared.settings.icon.general_symbols_group.option_checkmark_outline",
+              "group": "t:shared.settings.icon.general_symbols_group.label"
+            },
+            {
+              "value": "checkmark-thin",
+              "label": "t:shared.settings.icon.general_symbols_group.option_checkmark_thin",
+              "group": "t:shared.settings.icon.general_symbols_group.label"
+            },
+            {
+              "value": "heart",
+              "label": "t:shared.settings.icon.general_symbols_group.option_heart",
+              "group": "t:shared.settings.icon.general_symbols_group.label"
+            },
+            {
+              "value": "forward-arrow",
+              "label": "t:shared.settings.icon.navigation_group.option_forward_arrow",
+              "group": "t:shared.settings.icon.navigation_group.label"
+            },
+            {
+              "value": "map",
+              "label": "t:shared.settings.icon.navigation_group.option_map",
+              "group": "t:shared.settings.icon.navigation_group.label"
+            },
+            {
+              "value": "pin",
+              "label": "t:shared.settings.icon.navigation_group.option_pin",
+              "group": "t:shared.settings.icon.navigation_group.label"
+            },
+            {
+              "value": "pin-location",
+              "label": "t:shared.settings.icon.navigation_group.option_pin_location",
+              "group": "t:shared.settings.icon.navigation_group.label"
+            },
+            {
+              "value": "cog",
+              "label": "t:shared.settings.icon.objects_group.option_cog",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "diamond",
+              "label": "t:shared.settings.icon.objects_group.option_diamond",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "flag",
+              "label": "t:shared.settings.icon.objects_group.option_flag",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "glasses",
+              "label": "t:shared.settings.icon.objects_group.option_glasses",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "lightbulb",
+              "label": "t:shared.settings.icon.objects_group.option_lightbulb",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "paint-brush",
+              "label": "t:shared.settings.icon.objects_group.option_paint_brush",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "painting-palette",
+              "label": "t:shared.settings.icon.objects_group.option_painting_palette",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "sofa",
+              "label": "t:shared.settings.icon.objects_group.option_sofa",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "trash-bin",
+              "label": "t:shared.settings.icon.objects_group.option_trash_bin",
+              "group": "t:shared.settings.icon.objects_group.label"
+            },
+            {
+              "value": "bank",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_bank",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "key",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_key",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "keyhole",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_keyhole",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "money",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_money",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "money-stack",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_money_stack",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "padlock",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_padlock",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "shield-check",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_shield_check",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "shield-lock",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_shield_lock",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "wallet",
+              "label": "t:shared.settings.icon.payment_and_security_group.option_wallet",
+              "group": "t:shared.settings.icon.payment_and_security_group.label"
+            },
+            {
+              "value": "delivery-truck-left",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_delivery_truck_left",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "delivery-truck-right",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_delivery_truck_right",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "eco-package",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_eco_package",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "fragile",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_fragile",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "house",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_house",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "package",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_package",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "package-front",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_package_front",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "package-plane",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_package_plane",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "package-trolley",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_package_trolley",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "shipping-truck-fast",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_shipping_truck_fast",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "worldwide-shipping",
+              "label": "t:shared.settings.icon.shipping_and_delivery_group.option_worldwide_shipping",
+              "group": "t:shared.settings.icon.shipping_and_delivery_group.label"
+            },
+            {
+              "value": "barcode",
+              "label": "t:shared.settings.icon.shopping_group.option_barcode",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "coupon",
+              "label": "t:shared.settings.icon.shopping_group.option_coupon",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "gift-box",
+              "label": "t:shared.settings.icon.shopping_group.option_gift_box",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "gift-card",
+              "label": "t:shared.settings.icon.shopping_group.option_gift_card",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "mobile-shopping",
+              "label": "t:shared.settings.icon.shopping_group.option_mobile_shopping",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "shopping-basket",
+              "label": "t:shared.settings.icon.shopping_group.option_shopping_basket",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "shopping-cart",
+              "label": "t:shared.settings.icon.shopping_group.option_shopping_cart",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "storefront",
+              "label": "t:shared.settings.icon.shopping_group.option_storefront",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "tag",
+              "label": "t:shared.settings.icon.shopping_group.option_tag",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "tag-with-price",
+              "label": "t:shared.settings.icon.shopping_group.option_tag_with_price",
+              "group": "t:shared.settings.icon.shopping_group.label"
+            },
+            {
+              "value": "accessibility",
+              "label": "t:shared.settings.icon.technology_group.option_accessibility",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "artificial-intelligence",
+              "label": "t:shared.settings.icon.technology_group.option_artificial_intelligence",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "augmented-reality",
+              "label": "t:shared.settings.icon.technology_group.option_augmented_reality",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "bluetooth",
+              "label": "t:shared.settings.icon.technology_group.option_bluetooth",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "camera",
+              "label": "t:shared.settings.icon.technology_group.option_camera",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "cloud-download",
+              "label": "t:shared.settings.icon.technology_group.option_cloud_download",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "cloud-wifi",
+              "label": "t:shared.settings.icon.technology_group.option_cloud_wifi",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "cursor-click",
+              "label": "t:shared.settings.icon.technology_group.option_cursor_click",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "download",
+              "label": "t:shared.settings.icon.technology_group.option_download",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "download-box",
+              "label": "t:shared.settings.icon.technology_group.option_download_box",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "flash",
+              "label": "t:shared.settings.icon.technology_group.option_flash",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "game-controller",
+              "label": "t:shared.settings.icon.technology_group.option_game_controller",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "mobile-phone",
+              "label": "t:shared.settings.icon.technology_group.option_mobile_phone",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "motion-sensor",
+              "label": "t:shared.settings.icon.technology_group.option_motion_sensor",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "smart-home",
+              "label": "t:shared.settings.icon.technology_group.option_smart_home",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "smart-watch",
+              "label": "t:shared.settings.icon.technology_group.option_smart_watch",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "touch",
+              "label": "t:shared.settings.icon.technology_group.option_touch",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "touch-tap",
+              "label": "t:shared.settings.icon.technology_group.option_touch_tap",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "wifi",
+              "label": "t:shared.settings.icon.technology_group.option_wifi",
+              "group": "t:shared.settings.icon.technology_group.label"
+            },
+            {
+              "value": "wifi-antenna",
+              "label": "t:shared.settings.icon.technology_group.option_wifi_antenna",
+              "group": "t:shared.settings.icon.technology_group.label"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon_image",
+          "label": "t:shared.settings.custom_icon_image.label"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.collapsible_row_list.blocks.item.settings.title.label",
+          "default": "This is an example of a question that a customer might ask"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.collapsible_row_list.blocks.item.settings.text.label",
+          "default": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collapsible_row_list.presets.name",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

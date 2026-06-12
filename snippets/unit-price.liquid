@@ -1,0 +1,39 @@
+{% liquid
+  comment
+    Renders the unit price display.
+
+    Optional parameters:
+      - item: { Object }The variant object of the current variant.
+  endcomment
+
+  assign unit_price_available = false
+
+  if item.unit_price_measurement
+    assign unit_price_available = true
+  endif
+-%}
+
+<dl class="unit-price" data-unit-price-container data-unit-price-available="{{ unit_price_available }}">
+  <dt>
+    <span class="visually-hidden visually-hidden--inline">{{ 'products.product.unit_price_label' | t }}</span>
+  </dt>
+
+  <dd class="unit-price__price">
+    <span data-unit-price>{{ item.unit_price | money }}</span>
+    <span aria-hidden="true">/</span>
+    <span class="visually-hidden">{{ 'general.accessibility.unit_price_separator' | t }}</span>
+    <span data-unit-base>
+      <span data-unit-price-base-unit>
+        {%- liquid
+          if item.unit_price_measurement
+            if item.unit_price_measurement.reference_value != 1
+              echo item.unit_price_measurement.reference_value
+            endif
+
+            echo item.unit_price_measurement.reference_unit
+          endif
+        -%}
+      </span>
+    </span>
+  </dd>
+</dl>

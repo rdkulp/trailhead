@@ -1,0 +1,36 @@
+{% comment %}
+  Renders the announcement block content
+
+  Required parameters:
+    - announcement_text: { String } The announcement block copy.
+    - announcement_link: { String } The link within the announcement block copy if present.
+    - has_announcement_modal: { Boolean } Enabled or disabled modal popup.
+    - modal_link_style: { String } The modal trigger style, Text or Button
+    - modal_link_text: { String } The modal trigger copy
+    - loop: { String } The loop index to match copy with appropriate block.
+{% endcomment %}
+
+{% liquid
+  assign announcement_text = announcement_text | replace: '<p>', '' | replace: '</p>', ''
+
+  if announcement_text and announcement_link != blank
+    assign announcement_tag = 'a'
+    assign announcement_link_attributes = 'href="[[link]]" ' | replace: '[[link]]', announcement_link
+  else
+    assign announcement_tag = 'span'
+  endif
+%}
+
+<{{ announcement_tag }} {{- announcement_link_attributes -}}>
+  {{- announcement_text -}}
+</{{ announcement_tag }}>
+
+{% if has_announcement_modal %}
+  <button
+    class="announcement-bar__details-link"
+    data-modal-link-style="{{ modal_link_style }}"
+    data-content-target-id="announcement-modal-content-{{ loop }}"
+  >
+    {{ modal_link_text }}
+  </button>
+{% endif %}

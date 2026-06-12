@@ -1,0 +1,106 @@
+{% liquid
+  comment
+    Renders a "media with content" pattern, where a media container and content container
+    display inline (and stack on mobile).
+
+    Required parameters:
+      - content: { String } The content to be rendered in the content container.
+      - content_is_full_width: { Boolean } Whether the content should fill the width of its container or not.
+      - content_width: { Number } The max width (in pixels) of the content inside its
+        container, if content isn't full-width.
+      - content_alignment: { String } The horizontal alignment of the content.
+      - media: { String } The content to be rendered in the media container.
+      - media_container_width: { Number } The percent width of the media container.
+      - media_position_desktop: { String } The media position on desktop. Can be:
+        - 'left'
+        - 'right'
+      - media_position_mobile: { String } The media position on mobile. Can be:
+        - 'above'
+        - 'below'
+
+    Optional parameters
+      - content_has_inner_container: { Boolean } Whether the content has an inner container. If it does, then the
+        'section block' classes are ommitted from the main content container, and need to be included with the
+        content that's passed in.
+      - media_padding: { String } Where to apply padding around the media. Can be:
+        - 'none': No padding.
+        - 'top_and_bottom': Top and bottom padding.
+        - 'all_sides': Padding on all sides.
+      - section_settings: { Object } The settings from the parent section.
+  endcomment
+
+  assign content_container_width = 100 | minus: media_container_width
+  assign content_order_desktop = 1
+  assign content_order_mobile = 2
+  assign media_order_desktop = 2
+  assign media_order_mobile = 1
+
+  if media_position_desktop == 'left'
+    assign content_order_desktop = 2
+    assign media_order_desktop = 1
+  endif
+
+  if media_position_mobile == 'below'
+    assign content_order_mobile = 1
+    assign media_order_mobile = 2
+  endif
+
+  assign media_padding = media_padding | default: 'none'
+-%}
+
+<div class="media-with-content__inner">
+  <div
+    class="media-with-content__media-wrapper"
+    style="
+      --media-container-width: {{ media_container_width }}%;
+      --desktop-order: {{ media_order_desktop }};
+      --mobile-order: {{ media_order_mobile }};
+    "
+    data-media-padding="{{ media_padding }}"
+  >
+    {{ media }}
+  </div>
+
+  <div
+    class="media-with-content__content-wrapper"
+    data-media-position-desktop="{{ media_position_desktop }}"
+    data-media-position-mobile="{{ media_position_mobile }}"
+    style="
+      --content-container-width: {{ content_container_width }}%;
+      --desktop-order: {{ content_order_desktop }};
+      --mobile-order: {{ content_order_mobile }};
+    "
+  >
+    {% liquid
+      assign content_class = 'media-with-content__content'
+      assign content_style = '--content-alignment: [[ca]];' | replace: '[[ca]]', content_alignment
+
+      unless content_has_inner_container
+        assign content_class = content_class | append: ' section-blocks animation--container'
+      endunless
+
+      if section_settings != blank and section_settings.text_box_style != blank
+        assign content_class = content_class | append: ' text-box'
+      endif
+
+      unless content_is_full_width
+        assign content_style = content_style | append: ' --content-max-width: [[cmw]]px;' | replace: '[[cmw]]', content_width
+      endunless
+    -%}
+
+    <div
+      class="{{ content_class }}"
+      {% if section_settings != blank and section_settings.text_box_style != blank -%}
+        {% render 'settings-text-box',
+          local_settings: section_settings,
+          leading_style: content_style,
+          section_type: 'image-with-text'
+        %}
+      {%- else -%}
+        style="{{ content_style }}"
+      {%- endif %}
+    >
+      {{ content }}
+    </div>
+  </div>
+</div>

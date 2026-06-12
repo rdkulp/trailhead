@@ -1,0 +1,34 @@
+{% liquid
+  comment
+    Renders the "Full details link" block for the quick view modal.
+
+    Required parameters:
+      - block: { Object } The parent block object.
+  endcomment
+
+  assign link_class = 'product__full-details-link btn'
+
+  if block.settings.link_style == 'button'
+    assign link_class = link_class | append: ' btn--tertiary btn--small'
+  else
+    assign link_class = link_class | append: ' btn--text-link fs-body-100'
+  endif
+-%}
+
+<div
+  class="product__block product__block--large"
+  {{ block.shopify_attributes }}
+>
+  <a
+    class="{{ link_class }}"
+    href="{{ prod.url | within: collection }}"
+  >
+    {% liquid
+      echo 'products.product.quick_view_product_link' | t
+
+      if block.settings.link_style == 'text' and block.settings.show_arrow
+        render 'icon', icon: 'arrow-short'
+      endif
+    -%}
+  </a>
+</div>

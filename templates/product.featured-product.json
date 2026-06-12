@@ -1,0 +1,1135 @@
+{
+  "sections": {
+    "image_hero_Kc8eir": {
+      "type": "image-hero",
+      "blocks": {
+        "accent_4qCUGz": {
+          "type": "accent",
+          "settings": {
+            "text": "",
+            "accent_font_size": 5,
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent"
+          }
+        },
+        "text_YJ8QqE": {
+          "type": "text",
+          "settings": {
+            "text": "<p>{{ product.vendor }}   •   {{ product.title }}</p>",
+            "text_font_size": 6
+          }
+        },
+        "heading_JHF8cK": {
+          "type": "heading",
+          "settings": {
+            "title": "For the bold",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "spacer_pwPzrq": { "type": "spacer", "settings": { "space": 12 } }
+      },
+      "block_order": [
+        "accent_4qCUGz",
+        "text_YJ8QqE",
+        "heading_JHF8cK",
+        "spacer_pwPzrq"
+      ],
+      "settings": {
+        "enable_full_width": true,
+        "image_height_type": "custom",
+        "custom_height_desktop": "80vh",
+        "custom_height_mobile": "550px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 700,
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "center_flex-end",
+        "image_overlay_tint_opacity": 70,
+        "image_overlay_tint_style": "gradient_up",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "countdown_bar_eXjPXp": {
+      "type": "countdown-bar",
+      "disabled": true,
+      "settings": {
+        "min_height": 60,
+        "min_height_mobile": 60,
+        "full_width": false,
+        "year": 2027,
+        "month": "january",
+        "day": "1",
+        "hour": "0",
+        "minute": "0",
+        "time_zone_selection": "shop",
+        "hide_timer_on_complete": false,
+        "timer_complete_message": "",
+        "heading": "This item is on sale for another",
+        "heading_tag": "h3",
+        "text": "<p>Get it now while quantities last! </p>",
+        "button_link": "shopify://collections",
+        "button_label": "",
+        "button_style": "solid",
+        "color_scheme": "color_scheme_1",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "image_overlay_tint_opacity": 50,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "main": {
+      "type": "main-product--default",
+      "blocks": {
+        "product_header": {
+          "type": "product_header",
+          "settings": {
+            "show_divider": true,
+            "show_vendor": true,
+            "show_sku": false,
+            "show_price": true,
+            "show_discount": true,
+            "discount_format": "percent_off",
+            "show_shop_pay": false,
+            "show_product_rating": true,
+            "show_rating_count": false,
+            "rating_style": "compact",
+            "show_sale_badge": false,
+            "show_new_badge": true,
+            "show_custom_badges": true,
+            "product_header_always_top_mobile": "above"
+          }
+        },
+        "price_7gNU4E": {
+          "type": "price",
+          "disabled": true,
+          "settings": {
+            "label": "",
+            "show_discount": true,
+            "discount_format": "percent_off",
+            "show_shop_pay": false
+          }
+        },
+        "text_1": {
+          "type": "text",
+          "settings": {
+            "column_placement": "right",
+            "text_font_size": 3,
+            "text": "<p>Transform your space with our exquisite furniture collections at Flair. Discover timeless elegance and modern comfort in every piece. Elevate your home with quality craftsmanship and stylish designs for a truly inviting atmosphere.</p><p></p>"
+          }
+        },
+        "product_labels": {
+          "type": "product_labels",
+          "settings": {
+            "heading": "",
+            "icon_size": 24,
+            "label_style": "accent_bold",
+            "outline": true,
+            "icon_1": "none",
+            "text_1": "Made in Norway",
+            "icon_2": "none",
+            "text_2": "Sustainably made",
+            "icon_3": "none",
+            "text_3": "",
+            "icon_4": "none",
+            "text_4": "",
+            "icon_5": "none",
+            "text_5": "",
+            "icon_6": "none",
+            "text_6": ""
+          }
+        },
+        "spacer_jHzffe": {
+          "type": "spacer",
+          "settings": { "column_placement": "right", "space": 48 }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "variant_popup_option": "Size",
+            "variant_popup_icon": "measuring-tape",
+            "variant_popup_text": "Size guide",
+            "variant_popup_page": "",
+            "swatch_size": "medium",
+            "siblings_show_product_image": true,
+            "siblings_option_name": "Color",
+            "chip_layout": "3col"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "enable_sticky_atc_bar_desktop": true,
+            "enable_sticky_atc_bar_mobile": true,
+            "drop_shadow": "line",
+            "show_quantity_selector": false,
+            "show_quantity_in_cart": true,
+            "show_pickup_availability": true
+          }
+        },
+        "inventory_counter": {
+          "type": "inventory-counter",
+          "settings": {
+            "label": "",
+            "inventory_max": "100",
+            "low_inventory_threshold": "40",
+            "indicator_style": "dot_with_text",
+            "show_status_bar": true,
+            "show_inventory_transfer": true,
+            "show_untracked_quantity": true
+          }
+        },
+        "text_list_with_icons_nwAxtq": {
+          "type": "text-list-with-icons",
+          "settings": {
+            "column_placement": "right",
+            "title": "",
+            "add_box": false,
+            "add_dividers": true,
+            "truncate_num_lines": "0",
+            "icon_border": "none",
+            "icon_border_style": "outlined",
+            "icon_border_color": "accent",
+            "icon_size": 20,
+            "icon_size_mobile": 24,
+            "icon_1": "checkmark-badge",
+            "icon_alignment_1": "icon_center",
+            "text_1": "<p>1-year Warranty Available</p>",
+            "icon_2": "package",
+            "icon_alignment_2": "icon_center",
+            "text_2": "<p>Free Returns & Exchanges</p>",
+            "icon_3": "message-bubble",
+            "icon_alignment_3": "icon_center",
+            "text_3": "<p>Need help? <a href=\"/pages/contact\">Contact us</a></p>",
+            "icon_4": "none",
+            "icon_alignment_4": "icon_center",
+            "text_4": "",
+            "icon_5": "none",
+            "icon_alignment_5": "icon_center",
+            "text_5": "",
+            "icon_6": "none",
+            "icon_alignment_6": "icon_center",
+            "text_6": "",
+            "display_as_collapsible_row": false,
+            "expand_by_default": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "column_placement": "right",
+            "title": "Description",
+            "text_font_class": "fs-body-100",
+            "truncate_num_lines": "0",
+            "display_as_collapsible_row": true,
+            "expand_by_default": false
+          }
+        },
+        "accordion_ePjkTb": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "right",
+            "expand_by_default": false,
+            "heading": "The Designer",
+            "content": "<p>Use metafields in your product page to provide information about the  brand or creator. Or customize each row with other technical information related to your product.</p>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "accordion-2": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "right",
+            "expand_by_default": false,
+            "heading": "The Materials",
+            "content": "<ul><li>Listing of materials</li><li>Use metafields to add dynamic info here</li></ul>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "accordion-3": {
+          "type": "accordion",
+          "settings": {
+            "column_placement": "right",
+            "expand_by_default": false,
+            "heading": "Shipping & Returns",
+            "content": "<p><strong>Standard Shipping</strong><br/>Free Standard Shipping on orders over $250. Select “Free Shipping” at checkout.<br/><br/><strong>Free Easy Returns</strong><br/>Need to return an item? We make it easy. Email us and we'll send you a free return label with instructions.</p>",
+            "page_for_content": "",
+            "custom_liquid": ""
+          }
+        },
+        "share": {
+          "type": "share",
+          "disabled": true,
+          "settings": { "enable_os_share": true }
+        },
+        "spacer_Q7gzmR": {
+          "type": "spacer",
+          "settings": { "column_placement": "right", "space": 24 }
+        },
+        "spacer_grdgGc": {
+          "type": "spacer",
+          "settings": { "column_placement": "left", "space": 28 }
+        },
+        "complementary_products_e8MtWq": {
+          "type": "complementary_products",
+          "disabled": true,
+          "settings": {
+            "column_placement": "left",
+            "heading": "You may also like",
+            "enable_slider_desktop": true,
+            "enable_slider_mobile": true,
+            "max_products": 5,
+            "product_source": "app-recommendations",
+            "product_list": []
+          }
+        }
+      },
+      "block_order": [
+        "product_header",
+        "price_7gNU4E",
+        "text_1",
+        "product_labels",
+        "spacer_jHzffe",
+        "variant_picker",
+        "buy_buttons",
+        "inventory_counter",
+        "text_list_with_icons_nwAxtq",
+        "description",
+        "accordion_ePjkTb",
+        "accordion-2",
+        "accordion-3",
+        "share",
+        "spacer_Q7gzmR",
+        "spacer_grdgGc",
+        "complementary_products_e8MtWq"
+      ],
+      "settings": {
+        "enable_sticky_product_details": true,
+        "show_breadcrumbs": false,
+        "show_navigation_buttons": false,
+        "gallery_size": "large",
+        "thumbnail_position": "bottom",
+        "thumbnail_size": "small",
+        "enable_video_looping": true,
+        "enable_product_lightbox": true,
+        "show_thumbs_in_product_lightbox": true,
+        "image_aspect_ratio": "square",
+        "enable_multiple_variant_media": false,
+        "enable_gift_card_recipient": true,
+        "show_recommended_products_on_desktop": false,
+        "show_recommended_products_on_mobile": false,
+        "max_recommended_products": 3,
+        "enable_quick_view_recommended_products": true,
+        "recommended_products_heading": "You may also like",
+        "section_style_enable_animation": true
+      }
+    },
+    "icon_with_text_columns_xnkrFb": {
+      "type": "icon-with-text-columns",
+      "blocks": {
+        "column_YRJMqN": {
+          "type": "column",
+          "settings": {
+            "icon": "shipping-truck-fast",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>Fast, free shipping</strong> over $50</p>"
+          }
+        },
+        "column_9emVkT": {
+          "type": "column",
+          "settings": {
+            "icon": "package",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>100-day</strong> free returns</p>"
+          }
+        },
+        "column_kzEEnn": {
+          "type": "column",
+          "settings": {
+            "icon": "rating-star-winner",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>4.9</strong> stars based on 499 reviews</p>"
+          }
+        },
+        "column_yTQ3pL": {
+          "type": "column",
+          "settings": {
+            "icon": "chat-support",
+            "link": "",
+            "accent": "",
+            "heading": "",
+            "text": "<p><strong>Dedicated support</strong></p>"
+          }
+        }
+      },
+      "block_order": [
+        "column_YRJMqN",
+        "column_9emVkT",
+        "column_kzEEnn",
+        "column_yTQ3pL"
+      ],
+      "settings": {
+        "icon_border": "none",
+        "icon_border_style": "outlined",
+        "icon_border_color": "accent",
+        "icon_size": 24,
+        "icon_size_mobile": 32,
+        "accent_font_size": 3,
+        "heading_font_size": 2,
+        "text_font_size": 2,
+        "desktop_alignment": "above_center",
+        "columns_per_row": 4,
+        "content_width": "full",
+        "custom_width": 1200,
+        "color_scheme": "accent",
+        "override_with_custom_colors": true,
+        "override_color_text": "#161a15",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_9w6jw9": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_nwftLU": {
+          "type": "heading",
+          "settings": {
+            "title": "Explore more",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "spacer_DwGmYE": { "type": "spacer", "settings": { "space": 12 } },
+        "text_PEKaRg": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Available in a range of colours. Whether you're looking for a bright pop of colour or a subtle piece to fit seamlessly into your space.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["heading_nwftLU", "spacer_DwGmYE", "text_PEKaRg"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 100,
+        "section_style_spacing_bottom": 48,
+        "section_style_enable_animation": true
+      }
+    },
+    "featured_collection_W7dKEG": {
+      "type": "featured-collection",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "button_2_button_link": "",
+        "button_2_button_label": "",
+        "button_2_button_style": "tertiary",
+        "button_position": "header",
+        "collection": "",
+        "maximum_products": 10,
+        "num_columns": "4",
+        "num_columns_mobile": "2",
+        "enable_slider_desktop": true,
+        "enable_slider_mobile": true,
+        "show_view_all_tile": false,
+        "tile_location": "beginning",
+        "accent": "",
+        "title": "Featured collection",
+        "heading_tag": "h3",
+        "text": "Shop all",
+        "text_position": "flex-start_flex-start",
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "background_image_focal_point": "image_presentation",
+        "image_overlay_tint_opacity": 50,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "section_style_spacing_top": 28,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "multi_column_4PiPgq": {
+      "type": "multi-column",
+      "blocks": {
+        "image_column_gGCbDA": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "square",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "Bold Details",
+            "heading_tag": "h3",
+            "heading_font_size": 2,
+            "text": "<p>Enhance your living space with our collection of bold designs at the frontier of modern decor.</p>",
+            "text_font_size": 2,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        },
+        "image_column_pTyPNm": {
+          "type": "image_column",
+          "settings": {
+            "image_width": 100,
+            "aspect_ratio": "square",
+            "focal_point": "center",
+            "image_position": "above_text",
+            "image_link": "",
+            "small_caption": "",
+            "text_max_width": 100,
+            "accent": "",
+            "heading": "Inspired Design",
+            "heading_tag": "h3",
+            "heading_font_size": 2,
+            "text": "<p>The designers drew from the riches of Norwegian modernism blended with a contemporary flair.</p>",
+            "text_font_size": 2,
+            "button_link": "",
+            "button_label": "",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": ["image_column_gGCbDA", "image_column_pTyPNm"],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "num_columns": "2",
+        "column_spacing": 24,
+        "row_spacing": 24,
+        "column_alignment": "left",
+        "row_alignment": "top",
+        "num_columns_mobile": "1",
+        "column_spacing_mobile": 24,
+        "row_spacing_mobile": 24,
+        "column_alignment_mobile": "left",
+        "row_alignment_mobile": "top",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 100,
+        "section_style_spacing_bottom": 80,
+        "section_style_enable_animation": true
+      }
+    },
+    "grid_78g3gn": {
+      "type": "grid",
+      "blocks": {
+        "item_FfCt6w": {
+          "type": "item",
+          "settings": {
+            "width": "33",
+            "height": 300,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-start",
+            "text_position_mobile": "flex-start_flex-start",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Find your flair",
+            "heading_tag": "h3",
+            "heading_font_size": 1,
+            "text": "<p></p><p>With subtle variations, find the one that suits your space.</p>",
+            "text_font_size": 5,
+            "maximum_text_width": 500,
+            "button_link": "",
+            "button_label": "Read more",
+            "button_style": "primary",
+            "image_overlay_tint_opacity": 100,
+            "image_overlay_tint_style": "solid",
+            "image_overlay_override_with_custom_colors": true,
+            "image_overlay_override_color_text": "#161a15",
+            "image_overlay_override_color_tint": "#f1f1f1"
+          }
+        },
+        "item_EM9pa6": {
+          "type": "item",
+          "settings": {
+            "width": "33",
+            "height": 300,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-start",
+            "text_position_mobile": "flex-start_flex-start",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Materials",
+            "heading_tag": "h3",
+            "heading_font_size": 1,
+            "text": "<p></p><p>Made from locally-sourced materials.</p>",
+            "text_font_size": 5,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Read more",
+            "button_style": "primary",
+            "image_overlay_tint_opacity": 100,
+            "image_overlay_tint_style": "solid",
+            "image_overlay_override_with_custom_colors": true,
+            "image_overlay_override_color_text": "#161a15",
+            "image_overlay_override_color_tint": "#f1f1f1"
+          }
+        },
+        "item_g8g9ea": {
+          "type": "item",
+          "settings": {
+            "width": "33",
+            "height": 300,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-start",
+            "text_position_mobile": "flex-start_flex-start",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Designed by",
+            "heading_tag": "h3",
+            "heading_font_size": 1,
+            "text": "<p></p><p>{{ product.vendor }}</p>",
+            "text_font_size": 5,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Read more",
+            "button_style": "primary",
+            "image_overlay_tint_opacity": 100,
+            "image_overlay_tint_style": "solid",
+            "image_overlay_override_with_custom_colors": true,
+            "image_overlay_override_color_text": "#161a15",
+            "image_overlay_override_color_tint": "#f1f1f1"
+          }
+        }
+      },
+      "block_order": ["item_FfCt6w", "item_EM9pa6", "item_g8g9ea"],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "full_width": false,
+        "grid_spacing": 24,
+        "color_scheme": "default",
+        "override_with_custom_colors": true,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_YDc73d": {
+      "type": "rich-text",
+      "blocks": {
+        "accent_pnfty8": {
+          "type": "accent",
+          "settings": {
+            "text": "THE BRAND",
+            "accent_font_size": 4,
+            "accent_divider_enable": false,
+            "accent_divider_color": "accent"
+          }
+        },
+        "heading_NzkdXK": {
+          "type": "heading",
+          "settings": {
+            "title": "{{ product.vendor }}",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "text_darUXi": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Designing home furnishings since 1980 with everlasting boldness and flair.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": ["accent_pnfty8", "heading_NzkdXK", "text_darUXi"],
+      "settings": {
+        "alignment": "center_center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 100,
+        "section_style_spacing_bottom": 48,
+        "section_style_enable_animation": true
+      }
+    },
+    "featured_collection_with_media_6UmzwK": {
+      "type": "featured-collection-with-media",
+      "blocks": {
+        "featured_image_KamKfG": {
+          "type": "featured_image",
+          "settings": {
+            "background_image_media_fit": "cover",
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "media_link": "",
+            "image_overlay_tint_opacity": 50,
+            "image_overlay_tint_style": "gradient_down",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000",
+            "maximum_content_width": 500,
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Bringing bold to everyday spaces",
+            "heading_tag": "h3",
+            "heading_font_size": 6,
+            "text": "",
+            "text_font_size": 3,
+            "button_link": "",
+            "button_label": "View collection",
+            "button_style": "secondary",
+            "text_position": "flex-start_flex-start",
+            "text_position_mobile": "center_flex-start"
+          }
+        }
+      },
+      "block_order": ["featured_image_KamKfG"],
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_link": "",
+        "button_label": "",
+        "button_style": "primary",
+        "collection": "",
+        "maximum_products": 6,
+        "num_columns": "3",
+        "enable_slider_desktop": false,
+        "enable_slider_mobile": true,
+        "media_position": "left",
+        "media_width": 50,
+        "media_height": 350,
+        "media_position_mobile": "above",
+        "media_height_mobile": 400,
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 60,
+        "section_style_enable_animation": true
+      }
+    },
+    "collapsible_row_list_CKTwAq": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item_cUTzyb": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Where can I find information on sustainability?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_8jyLjd": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do you offer gift cards?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_VW3jGw": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "How long will it take to get my item?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        },
+        "item_jfnFWX": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is your return policy?",
+            "text": "<p>This is an example of a response that you might give. It's good to be as thorough as possible in responses as that has a tendency to improve trust overall.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_cUTzyb",
+        "item_8jyLjd",
+        "item_VW3jGw",
+        "item_jfnFWX"
+      ],
+      "settings": {
+        "center_content": true,
+        "preheading": "Frequently asked",
+        "heading": "",
+        "heading_font_size": 4,
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "header_position": "above",
+        "item_heading_font": "heading",
+        "content_width": "full",
+        "custom_width": 1200,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 48,
+        "section_style_spacing_bottom": 84,
+        "section_style_enable_animation": true
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "block-0": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Sheryl Gray",
+            "testimonial": "<p>This table turned my apartment into a five-star restaurant; even my cat is impressed!</p>",
+            "show_rating": true,
+            "rating": 5,
+            "featured_product": ""
+          }
+        },
+        "block-1": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Sydney Cross",
+            "testimonial": "<p>I bought this table and suddenly became an expert in medieval furniture – a delightful, time-traveling bonus!</p>",
+            "show_rating": true,
+            "rating": 5,
+            "featured_product": ""
+          }
+        },
+        "block-2": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Paul Welter",
+            "testimonial": "<p>This table is so magical; it transformed my breakfasts into a Broadway musical – a showstopper!</p>",
+            "show_rating": true,
+            "rating": 5,
+            "featured_product": ""
+          }
+        },
+        "block-3": {
+          "type": "testimonial",
+          "settings": {
+            "show_author_image": true,
+            "author": "Sam Estand",
+            "testimonial": "<p>I can't believe this table is not in the Louvre – it's the Mona Lisa of furniture.</p>",
+            "show_rating": true,
+            "rating": 5,
+            "featured_product": "ceramic-tray-nazar"
+          }
+        }
+      },
+      "block_order": ["block-0", "block-1", "block-2", "block-3"],
+      "settings": {
+        "center_content": true,
+        "preheading": "What our customers are saying",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_link": "",
+        "button_label": "Button",
+        "button_style": "primary",
+        "button_position": "header",
+        "num_columns": "3",
+        "truncate_num_lines": "0",
+        "show_verified_review_badges": false,
+        "product_thumbnail_size": 40,
+        "text_alignment": "left",
+        "enable_text_box": true,
+        "text_box_style": "plain",
+        "text_box_color_scheme": "accent",
+        "text_box_override_with_custom_colors": true,
+        "text_box_override_color_text": "#161a15",
+        "text_box_override_color_background": "#ffffff",
+        "color_rating": "product_rating",
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 80,
+        "section_style_enable_animation": true
+      }
+    },
+    "recommendations": {
+      "type": "recommended-products",
+      "disabled": true,
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "You may also like",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "button_1_button_link": "",
+        "button_1_button_label": "",
+        "button_1_button_style": "primary",
+        "button_2_button_link": "",
+        "button_2_button_label": "",
+        "button_2_button_style": "tertiary",
+        "button_position": "header",
+        "maximum_products": 8,
+        "num_columns": "5",
+        "num_columns_mobile": "2",
+        "enable_slider_desktop": true,
+        "enable_slider_mobile": true,
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "grid_CJejbQ": {
+      "type": "grid",
+      "blocks": {
+        "item_MpAmwW": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Living Room",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 40,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item_RMA4ja": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Kitchen",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 40,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item_DBdaGM": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Dining Room",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 40,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        },
+        "item_RhXNFW": {
+          "type": "item",
+          "settings": {
+            "width": "25",
+            "height": 500,
+            "mobile_height": 300,
+            "background_image_focal_point": "image_presentation",
+            "background_image_mobile_focal_point": "image_presentation",
+            "text_position": "flex-start_flex-end",
+            "text_position_mobile": "flex-start_flex-end",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Bathroom",
+            "heading_tag": "h3",
+            "heading_font_size": 3,
+            "text": "",
+            "text_font_size": 3,
+            "maximum_text_width": 250,
+            "button_link": "",
+            "button_label": "Shop products",
+            "button_style": "secondary",
+            "image_overlay_tint_opacity": 40,
+            "image_overlay_tint_style": "gradient_up",
+            "image_overlay_override_with_custom_colors": false,
+            "image_overlay_override_color_text": "#ffffff",
+            "image_overlay_override_color_tint": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "item_MpAmwW",
+        "item_RMA4ja",
+        "item_DBdaGM",
+        "item_RhXNFW"
+      ],
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "Shop by room",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "full_width": false,
+        "grid_spacing": 24,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "image_hero_Kc8eir",
+    "countdown_bar_eXjPXp",
+    "main",
+    "icon_with_text_columns_xnkrFb",
+    "rich_text_9w6jw9",
+    "featured_collection_W7dKEG",
+    "multi_column_4PiPgq",
+    "grid_78g3gn",
+    "rich_text_YDc73d",
+    "featured_collection_with_media_6UmzwK",
+    "collapsible_row_list_CKTwAq",
+    "testimonials",
+    "recommendations",
+    "grid_CJejbQ"
+  ]
+}
