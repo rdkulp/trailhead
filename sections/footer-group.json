@@ -1,1 +1,212 @@
-{"type":"footer","name":"t:groups.footer_group.name","sections":{"0e02acc1-543f-435e-b58a-8e59e6c5e6e0":{"type":"icon-with-text-columns","blocks":{"sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-1":{"type":"column","settings":{"icon":"diamond","link":"","accent":"","heading":"Authenticity & Quality","text":"<p><\/p><p>Authentically and locally made<\/p>"}},"sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-2":{"type":"column","settings":{"icon":"delivery-truck-right","link":"","accent":"","heading":"Free Shipping & Pickup","text":"<p><\/p><p>Free shipping on orders over $50<\/p>"}}},"block_order":["sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-1","sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-2"],"settings":{"icon_border":"none","icon_border_style":"outlined","icon_border_color":"accent","icon_size":24,"icon_size_mobile":24,"accent_font_size":3,"heading_font_size":1,"text_font_size":2,"desktop_alignment":"above_center","columns_per_row":2,"content_width":"full","custom_width":600,"color_scheme":"accent","override_with_custom_colors":true,"override_color_text":"#161a15","override_color_background":"#ffffff","section_style_spacing_top":60,"section_style_spacing_bottom":60,"section_style_enable_animation":false}},"75a630c6-25bd-4edb-83bc-d73c5312fe0e":{"type":"newsletter-compact","blocks":{"sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-text_content-1":{"type":"text_content","settings":{"width":"500","text_alignment":"left","accent":"","accent_divider_enable":true,"accent_divider_color":"accent","title":"Sign up for our Newsletter","heading_font_size":3,"heading_tag":"h3","text":"<p>Exclusive deals and savings delivered straight to your inbox!<\/p>","text_font_size":3}},"sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-newsletter_signup-1":{"type":"newsletter_signup","settings":{"enable_collect_customer_name":false,"signup_link_text":"Sign up","button_style":"primary","footer_text":"<p>By completing this form, you are signing up to receive our emails and can unsubscribe at any time.<\/p>"}}},"block_order":["sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-text_content-1","sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-newsletter_signup-1"],"settings":{"spacing_mode":"between","color_forms":"transparent","color_scheme":"inverse","override_with_custom_colors":true,"override_color_text":"#ffffff","override_color_background":"#272727","background_image_focal_point":"image_presentation","background_image_mobile_focal_point":"image_presentation","image_overlay_tint_opacity":50,"image_overlay_tint_style":"solid","image_overlay_override_with_custom_colors":false,"image_overlay_override_color_text":"#ffffff","image_overlay_override_color_tint":"#000000","section_style_spacing_top":20,"section_style_spacing_bottom":64,"section_style_enable_animation":false}},"footer":{"type":"footer","blocks":{"text_WcM8LH":{"type":"text","disabled":true,"settings":{"collapse_on_mobile":true,"title":"More Information","heading_tag_text":"h3","show_title_on_desktop":true,"text":"<p>Link1<\/p><p>Link2<\/p><p>Link3<\/p><p>Link4<\/p>","image_max_width":200,"image_placement":"below_text","show_social_icons":false,"social_icons_header":"Follow us","footer_social_heading_tag":"h3","enable_follow_on_shop":false}}},"block_order":["text_WcM8LH"],"custom_css":[".footer__groups {display: flex; width: 100%; justify-content: space-between;}"],"settings":{"desktop_column_gap":100,"enable_locale_selector":true,"enable_country_selector":false,"show_payment_icons":false,"additional_copyright_text":"","subfooter_menu":"main-menu-copy"}}},"order":["0e02acc1-543f-435e-b58a-8e59e6c5e6e0","75a630c6-25bd-4edb-83bc-d73c5312fe0e","footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "t:groups.footer_group.name",
+  "sections": {
+    "icon_with_text_columns_Grxy8f": {
+      "type": "icon-with-text-columns",
+      "blocks": {
+        "column_XEBE6E": {
+          "type": "column",
+          "settings": {
+            "icon": "pin",
+            "link": "",
+            "accent": "",
+            "heading": "Fort Collins",
+            "text": "<p>123 N. College Ave Fort Collins, CO 80524<br/><a href=\"tel:(970) 682-2971\">(970) 682-2971</a><br/>fortcollins@trailheadspice.com</p>"
+          }
+        },
+        "column_7m3jih": {
+          "type": "column",
+          "settings": {
+            "icon": "pin",
+            "link": "",
+            "accent": "",
+            "heading": "Southlands",
+            "text": "<p>6235 S. Main St. - Unit 107 Aurora, CO 80016<br/><a href=\"tel:(303) 680-2117\">(303) 680-2117</a><br/>southlands@trailheadspice.com</p>"
+          }
+        }
+      },
+      "block_order": [
+        "column_XEBE6E",
+        "column_7m3jih"
+      ],
+      "disabled": true,
+      "name": "t:sections.icon_with_text_columns.presets.name",
+      "settings": {
+        "icon_border": "none",
+        "icon_border_style": "outlined",
+        "icon_border_color": "accent",
+        "icon_size": 24,
+        "icon_size_mobile": 24,
+        "accent_font_size": 3,
+        "heading_font_size": 2,
+        "text_font_size": 3,
+        "desktop_alignment": "left_left_centered",
+        "columns_per_row": 2,
+        "content_width": "full",
+        "custom_width": 1200,
+        "color_scheme": "default",
+        "override_with_custom_colors": true,
+        "override_color_text": "#FFFFFF",
+        "override_color_background": "#2F3E4A",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "0e02acc1-543f-435e-b58a-8e59e6c5e6e0": {
+      "type": "icon-with-text-columns",
+      "blocks": {
+        "sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-1": {
+          "type": "column",
+          "settings": {
+            "icon": "diamond",
+            "link": "",
+            "accent": "",
+            "heading": "Authenticity & Quality",
+            "text": "<p></p><p>Authentically and locally made</p>"
+          }
+        },
+        "sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-2": {
+          "type": "column",
+          "settings": {
+            "icon": "delivery-truck-right",
+            "link": "",
+            "accent": "",
+            "heading": "Free Shipping & Pickup",
+            "text": "<p></p><p>Free shipping on orders over $50</p>"
+          }
+        }
+      },
+      "block_order": [
+        "sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-1",
+        "sections--21033935110454__0e02acc1-543f-435e-b58a-8e59e6c5e6e0-column-2"
+      ],
+      "disabled": true,
+      "settings": {
+        "icon_border": "none",
+        "icon_border_style": "outlined",
+        "icon_border_color": "accent",
+        "icon_size": 24,
+        "icon_size_mobile": 24,
+        "accent_font_size": 3,
+        "heading_font_size": 1,
+        "text_font_size": 2,
+        "desktop_alignment": "above_center",
+        "columns_per_row": 2,
+        "content_width": "full",
+        "custom_width": 600,
+        "color_scheme": "accent",
+        "override_with_custom_colors": true,
+        "override_color_text": "#161a15",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 60,
+        "section_style_spacing_bottom": 60,
+        "section_style_enable_animation": false
+      }
+    },
+    "75a630c6-25bd-4edb-83bc-d73c5312fe0e": {
+      "type": "newsletter-compact",
+      "blocks": {
+        "sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-text_content-1": {
+          "type": "text_content",
+          "settings": {
+            "width": "500",
+            "text_alignment": "left",
+            "accent": "",
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent",
+            "title": "Sign up for our Newsletter",
+            "heading_font_size": 3,
+            "heading_tag": "h3",
+            "text": "<p>Exclusive deals and savings delivered straight to your inbox!</p>",
+            "text_font_size": 3
+          }
+        },
+        "sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-newsletter_signup-1": {
+          "type": "newsletter_signup",
+          "settings": {
+            "enable_collect_customer_name": false,
+            "signup_link_text": "Sign up",
+            "button_style": "primary",
+            "footer_text": "<p>By completing this form, you are signing up to receive our emails and can unsubscribe at any time.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-text_content-1",
+        "sections--21033935110454__75a630c6-25bd-4edb-83bc-d73c5312fe0e-newsletter_signup-1"
+      ],
+      "disabled": true,
+      "settings": {
+        "spacing_mode": "between",
+        "color_forms": "transparent",
+        "color_scheme": "inverse",
+        "override_with_custom_colors": true,
+        "override_color_text": "#ffffff",
+        "override_color_background": "#272727",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "image_overlay_tint_opacity": 50,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "section_style_spacing_top": 20,
+        "section_style_spacing_bottom": 64,
+        "section_style_enable_animation": false
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text_WcM8LH": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "collapse_on_mobile": true,
+            "title": "More Information",
+            "heading_tag_text": "h3",
+            "show_title_on_desktop": true,
+            "text": "<p>Link1</p><p>Link2</p><p>Link3</p><p>Link4</p>",
+            "image_max_width": 200,
+            "image_placement": "below_text",
+            "show_social_icons": false,
+            "social_icons_header": "Follow us",
+            "footer_social_heading_tag": "h3",
+            "enable_follow_on_shop": false
+          }
+        }
+      },
+      "block_order": [
+        "text_WcM8LH"
+      ],
+      "custom_css": [
+        ".footer__groups {display: flex; width: 100%; justify-content: space-between;}"
+      ],
+      "settings": {
+        "desktop_column_gap": 100,
+        "enable_locale_selector": true,
+        "enable_country_selector": false,
+        "show_payment_icons": false,
+        "additional_copyright_text": "",
+        "subfooter_menu": "main-menu-copy"
+      }
+    }
+  },
+  "order": [
+    "icon_with_text_columns_Grxy8f",
+    "0e02acc1-543f-435e-b58a-8e59e6c5e6e0",
+    "75a630c6-25bd-4edb-83bc-d73c5312fe0e",
+    "footer"
+  ]
+}
