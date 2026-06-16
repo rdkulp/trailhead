@@ -104,93 +104,10 @@
         "section_style_spacing_bottom": 36,
         "section_style_enable_animation": true
       }
-    },
-    "featured_product_DRWX8m": {
-      "type": "featured-product",
-      "blocks": {
-        "product_header_LEtm3i": {
-          "type": "product_header",
-          "settings": {
-            "show_divider": true,
-            "show_vendor": true,
-            "show_sku": true,
-            "show_price": true,
-            "show_discount": true,
-            "discount_format": "percent_off",
-            "show_shop_pay": true,
-            "show_product_rating": false,
-            "show_rating_count": false,
-            "rating_style": "regular",
-            "show_sale_badge": true,
-            "show_new_badge": true,
-            "show_custom_badges": true
-          }
-        },
-        "variant_picker_6EMJ6J": {
-          "type": "variant_picker",
-          "settings": {
-            "variant_popup_option": "Size",
-            "variant_popup_icon": "none",
-            "variant_popup_text": "Size guide",
-            "variant_popup_page": "",
-            "swatch_size": "medium",
-            "chip_layout": "4col"
-          }
-        },
-        "buy_buttons_UnNeaH": {
-          "type": "buy_buttons",
-          "settings": {
-            "show_dynamic_checkout": true,
-            "show_quantity_selector": true,
-            "show_quantity_in_cart": true,
-            "show_pickup_availability": true
-          }
-        },
-        "description_YRMmXA": {
-          "type": "description",
-          "settings": {
-            "title": "Description",
-            "text_font_class": "fs-body-100",
-            "truncate_num_lines": "3",
-            "display_as_collapsible_row": false,
-            "expand_by_default": false
-          }
-        },
-        "full_details_link_yYTDEV": {
-          "type": "full_details_link",
-          "settings": {
-            "link_style": "text",
-            "show_arrow": true
-          }
-        }
-      },
-      "block_order": [
-        "product_header_LEtm3i",
-        "variant_picker_6EMJ6J",
-        "buy_buttons_UnNeaH",
-        "description_YRMmXA",
-        "full_details_link_yYTDEV"
-      ],
-      "name": "t:sections.featured_product.presets.name",
-      "settings": {
-        "featured_product": "2x-pure-madagascar-vanilla-extract-by-savory-spice",
-        "gallery_size": "small",
-        "thumbnail_size": "small",
-        "enable_video_looping": false,
-        "enable_product_lightbox": false,
-        "show_thumbs_in_product_lightbox": false,
-        "image_aspect_ratio": "square",
-        "enable_multiple_variant_media": false,
-        "enable_gift_card_recipient": false,
-        "section_style_spacing_top": 36,
-        "section_style_spacing_bottom": 36,
-        "section_style_enable_animation": true
-      }
     }
   },
   "order": [
     "image_hero_EGqQTE",
-    "main",
-    "featured_product_DRWX8m"
+    "main"
   ]
 }
