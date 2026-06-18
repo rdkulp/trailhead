@@ -56,8 +56,8 @@
         "custom_width": 1200,
         "color_scheme": "default",
         "override_with_custom_colors": true,
-        "override_color_text": "#FFFFFF",
-        "override_color_background": "#2F3E4A",
+        "override_color_text": "#ffffff",
+        "override_color_background": "#2f3e4a",
         "section_style_spacing_top": 36,
         "section_style_spacing_bottom": 36,
         "section_style_enable_animation": true
