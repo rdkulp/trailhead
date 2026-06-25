@@ -51,7 +51,7 @@
         "location_ByhyM9"
       ],
       "custom_css": [
-        ".store-locations{padding: 0 20px;}"
+        ".store-locations {padding: 10px 20px;}"
       ],
       "name": "Store Locations",
       "settings": {
