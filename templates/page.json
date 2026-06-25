@@ -11,14 +11,55 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "custom_css": [
+        ".page__inner{padding: 0px;}"
+      ],
       "settings": {
-        "content_width": "custom",
+        "content_width": "full",
         "custom_content_width": 700,
         "section_style_enable_animation": true
+      }
+    },
+    "store_locations_gtNxcf": {
+      "type": "store-locations",
+      "blocks": {
+        "location_LaCmhW": {
+          "type": "location",
+          "settings": {
+            "name": "Downtown Store",
+            "address_line_1": "123 Main Street",
+            "address_line_2": "Denver, CO 80202",
+            "phone": "(303) 555-0123",
+            "hours": "Mon–Fri: 10am–6pm\nSat: 10am–4pm\nSun: Closed",
+            "map_url": ""
+          }
+        },
+        "location_ByhyM9": {
+          "type": "location",
+          "settings": {
+            "name": "Downtown Store",
+            "address_line_1": "123 Main Street",
+            "address_line_2": "Denver, CO 80202",
+            "phone": "(303) 555-0123",
+            "hours": "Mon–Fri: 10am–6pm\nSat: 10am–4pm\nSun: Closed",
+            "map_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "location_LaCmhW",
+        "location_ByhyM9"
+      ],
+      "name": "Store Locations",
+      "settings": {
+        "heading": "",
+        "subheading": "Stop by one of our locations — we'd love to see you.",
+        "accent_color": "#444444"
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "store_locations_gtNxcf"
   ]
 }
