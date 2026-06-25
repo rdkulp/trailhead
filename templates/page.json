@@ -26,22 +26,22 @@
         "location_LaCmhW": {
           "type": "location",
           "settings": {
-            "name": "Downtown Store",
-            "address_line_1": "123 Main Street",
-            "address_line_2": "Denver, CO 80202",
-            "phone": "(303) 555-0123",
-            "hours": "Mon–Fri: 10am–6pm\nSat: 10am–4pm\nSun: Closed",
+            "name": "Fort Collins",
+            "address_line_1": "123 N. College Ave",
+            "address_line_2": "Fort Collins, CO 80524",
+            "phone": "+1 (970) 682-2971",
+            "hours": "Sun: 11am - 5pm\nMon - Sat: 10am - 6pm",
             "map_url": ""
           }
         },
         "location_ByhyM9": {
           "type": "location",
           "settings": {
-            "name": "Downtown Store",
-            "address_line_1": "123 Main Street",
-            "address_line_2": "Denver, CO 80202",
-            "phone": "(303) 555-0123",
-            "hours": "Mon–Fri: 10am–6pm\nSat: 10am–4pm\nSun: Closed",
+            "name": "Southlands",
+            "address_line_1": "6235 S Main St, Unit 107",
+            "address_line_2": "Aurora CO 80016",
+            "phone": "+1 (303) 680-2117",
+            "hours": "Sun: 11am - 5pm\nMon - Sat: 10am - 6pm",
             "map_url": ""
           }
         }
