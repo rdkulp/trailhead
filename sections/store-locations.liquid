@@ -1,0 +1,218 @@
+{% comment %}
+  Section: Store Locations
+  Add this file as: sections/store-locations.liquid
+  Then add it to any page (e.g. "Visit Us") via the Theme Customizer.
+{% endcomment %}
+
+<div class="store-locations" style="--sl-accent: {{ section.settings.accent_color }};">
+  <div class="store-locations__inner">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="store-locations__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <p class="store-locations__subheading">{{ section.settings.subheading }}</p>
+    {% endif %}
+
+    <div class="store-locations__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'location' %}
+          <div class="store-location-card" {{ block.shopify_attributes }}>
+
+            <h3 class="store-location-card__name">{{ block.settings.name }}</h3>
+
+            <div class="store-location-card__row">
+              <svg class="store-location-card__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 21s-7-7.2-7-12a7 7 0 1 1 14 0c0 4.8-7 12-7 12Z" stroke="currentColor" stroke-width="1.6"/>
+                <circle cx="12" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+              <address class="store-location-card__address">
+                {% if block.settings.map_url != blank %}
+                  <a href="{{ block.settings.map_url }}" target="_blank" rel="noopener">
+                    {{ block.settings.address_line_1 }}<br>
+                    {{ block.settings.address_line_2 }}
+                  </a>
+                {% else %}
+                  {{ block.settings.address_line_1 }}<br>
+                  {{ block.settings.address_line_2 }}
+                {% endif %}
+              </address>
+            </div>
+
+            {% if block.settings.phone != blank %}
+              <div class="store-location-card__row">
+                <svg class="store-location-card__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 4h3.5l1.5 4-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2 4 1.5V18a2 2 0 0 1-2 2C10.5 20 4 13.5 4 6a2 2 0 0 1 1-2Z" stroke="currentColor" stroke-width="1.6"/>
+                </svg>
+                <a class="store-location-card__phone" href="tel:{{ block.settings.phone | strip }}">
+                  {{ block.settings.phone }}
+                </a>
+              </div>
+            {% endif %}
+
+            {% if block.settings.hours != blank %}
+              <div class="store-location-card__hours">
+                {{ block.settings.hours | newline_to_br }}
+              </div>
+            {% endif %}
+
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .store-locations {
+    padding: 60px 20px;
+  }
+  .store-locations__inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .store-locations__heading {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+  .store-locations__subheading {
+    color: #666;
+    margin-bottom: 40px;
+  }
+  .store-locations__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    text-align: left;
+  }
+  .store-location-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 28px;
+  }
+  .store-location-card__name {
+    font-size: 1.25rem;
+    margin: 0 0 16px;
+  }
+  .store-location-card__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .store-location-card__icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--sl-accent, #444);
+  }
+  .store-location-card__address {
+    font-style: normal;
+    line-height: 1.5;
+  }
+  .store-location-card__address a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .store-location-card__address a:hover {
+    text-decoration: underline;
+  }
+  .store-location-card__phone {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .store-location-card__phone:hover {
+    text-decoration: underline;
+  }
+  .store-location-card__hours {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Store Locations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Visit Us"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Stop by one of our locations \u2014 we'd love to see you."
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon color",
+      "default": "#444444"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "location",
+      "name": "Location",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Location name",
+          "default": "Downtown Store"
+        },
+        {
+          "type": "text",
+          "id": "address_line_1",
+          "label": "Address line 1",
+          "default": "123 Main Street"
+        },
+        {
+          "type": "text",
+          "id": "address_line_2",
+          "label": "Address line 2 (city, state, zip)",
+          "default": "Denver, CO 80202"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone number",
+          "default": "(303) 555-0123"
+        },
+        {
+          "type": "textarea",
+          "id": "hours",
+          "label": "Store hours (optional, one line each)",
+          "default": "Mon\u2013Fri: 10am\u20136pm\nSat: 10am\u20134pm\nSun: Closed"
+        },
+        {
+          "type": "url",
+          "id": "map_url",
+          "label": "Google Maps link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Locations",
+      "blocks": [
+        { "type": "location" },
+        { "type": "location" }
+      ]
+    }
+  ]
+}
+{% endschema %}
