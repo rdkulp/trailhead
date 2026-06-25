@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -85,13 +94,14 @@
         "enable_sticky_product_details": true,
         "show_breadcrumbs": false,
         "show_navigation_buttons": false,
-        "gallery_size": "large",
+        "gallery_size": "medium",
+        "desktop_gallery_layout": "thumbnails",
         "thumbnail_position": "bottom",
         "thumbnail_size": "small",
         "enable_video_looping": true,
         "enable_product_lightbox": true,
         "show_thumbs_in_product_lightbox": true,
-        "image_aspect_ratio": "square",
+        "image_aspect_ratio": "natural",
         "enable_multiple_variant_media": false,
         "enable_gift_card_recipient": true,
         "show_recommended_products_on_desktop": false,
@@ -247,5 +257,9 @@
       }
     }
   },
-  "order": ["main", "product_tabs", "recommendations"]
+  "order": [
+    "main",
+    "product_tabs",
+    "recommendations"
+  ]
 }
