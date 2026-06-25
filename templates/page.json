@@ -30,6 +30,7 @@
             "address_line_1": "123 N. College Ave",
             "address_line_2": "Fort Collins, CO 80524",
             "phone": "+1 (970) 682-2971",
+            "email": "fortcollins@trailheadspice.com",
             "hours": "Sun: 11am - 5pm\nMon - Sat: 10am - 6pm",
             "map_url": "https://maps.app.goo.gl/NgLqKvJ9PjwEbHRz8"
           }
@@ -41,6 +42,7 @@
             "address_line_1": "6235 S Main St, Unit 107",
             "address_line_2": "Aurora CO 80016",
             "phone": "+1 (303) 680-2117",
+            "email": "southlands@trailheadspice.com",
             "hours": "Sun: 11am - 5pm\nMon - Sat: 10am - 6pm",
             "map_url": "https://maps.app.goo.gl/NX7Vo7NkJ6tekgyd7"
           }
