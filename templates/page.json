@@ -12,7 +12,7 @@
     "main": {
       "type": "main-page",
       "custom_css": [
-        ".page__inner{padding: 0px;}"
+        ".page__inner {padding-bottom: 0;}"
       ],
       "settings": {
         "content_width": "full",
