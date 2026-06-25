@@ -51,6 +51,18 @@
               </div>
             {% endif %}
 
+            {% if block.settings.email != blank %}
+              <div class="store-location-card__row">
+                <svg class="store-location-card__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.6"/>
+                  <path d="M4 6l8 7 8-7" stroke="currentColor" stroke-width="1.6"/>
+                </svg>
+                <a class="store-location-card__email" href="mailto:{{ block.settings.email }}">
+                  {{ block.settings.email }}
+                </a>
+              </div>
+            {% endif %}
+
             {% if block.settings.hours != blank %}
               <div class="store-location-card__hours">
                 {{ block.settings.hours | newline_to_br }}
@@ -129,6 +141,14 @@
   .store-location-card__phone:hover {
     text-decoration: underline;
   }
+  .store-location-card__email {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .store-location-card__email:hover {
+    text-decoration: underline;
+  }
   .store-location-card__hours {
     margin-top: 12px;
     padding-top: 12px;
@@ -190,6 +210,12 @@
           "id": "phone",
           "label": "Phone number",
           "default": "(303) 555-0123"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email address (optional)",
+          "default": "store@example.com"
         },
         {
           "type": "textarea",
