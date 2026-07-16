@@ -23,6 +23,7 @@
     },
     "popup": {
       "type": "popup",
+      "disabled": true,
       "settings": {}
     }
   },
