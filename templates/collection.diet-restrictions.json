@@ -1,0 +1,288 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_breadcrumbs": true,
+        "show_collection_description": true,
+        "collection_description_truncate_num_lines": "2",
+        "show_collection_image": false,
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "image_height_type": "custom",
+        "custom_height_desktop": "250px",
+        "custom_height_mobile": "250px",
+        "text_position": "flex-start_flex-end",
+        "text_position_mobile": "flex-start_flex-end",
+        "image_overlay_tint_opacity": 0,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": true,
+        "image_overlay_override_color_text": "#140ce9",
+        "image_overlay_override_color_tint": "#000000",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "image_hero_Cc8gwh": {
+      "type": "image-hero",
+      "blocks": {
+        "accent_AXGUeA": {
+          "type": "accent",
+          "settings": {
+            "text": "Accent",
+            "accent_font_size": 5,
+            "accent_divider_enable": true,
+            "accent_divider_color": "accent"
+          }
+        },
+        "heading_LtCd7Q": {
+          "type": "heading",
+          "settings": {
+            "title": "Image hero",
+            "heading_tag": "h3",
+            "heading_font_size": 6
+          }
+        },
+        "text_NHiAR8": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Use these sections to promote a particular feature with editorial photography.</p>",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": [
+        "accent_AXGUeA",
+        "heading_LtCd7Q",
+        "text_NHiAR8"
+      ],
+      "disabled": true,
+      "name": "t:sections.image_hero.presets.name",
+      "settings": {
+        "enable_full_width": true,
+        "image_height_type": "custom",
+        "custom_height_desktop": "350px",
+        "custom_height_mobile": "250px",
+        "background_image_focal_point": "image_presentation",
+        "background_image_mobile_focal_point": "image_presentation",
+        "media_link": "",
+        "content_max_width": 500,
+        "text_position": "center_center",
+        "text_position_mobile": "center_center",
+        "image_overlay_tint_opacity": 50,
+        "image_overlay_tint_style": "solid",
+        "image_overlay_override_with_custom_colors": false,
+        "image_overlay_override_color_text": "#ffffff",
+        "image_overlay_override_color_tint": "#000000",
+        "enable_text_box": false,
+        "text_box_style": "soft_small",
+        "text_box_color_scheme": "default",
+        "text_box_override_with_custom_colors": false,
+        "text_box_override_color_text": "#393939",
+        "text_box_override_color_background": "#ffffff",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "media_with_content_split_pAzJjx": {
+      "type": "media-with-content-split",
+      "blocks": {
+        "heading_eKpdai": {
+          "type": "heading",
+          "settings": {
+            "title": "{{ collection.title }}",
+            "heading_tag": "h3",
+            "heading_font_size": 7
+          }
+        },
+        "text_RTCkeC": {
+          "type": "text",
+          "settings": {
+            "text": "{{ collection.description }}",
+            "text_font_size": 3
+          }
+        }
+      },
+      "block_order": [
+        "heading_eKpdai",
+        "text_RTCkeC"
+      ],
+      "disabled": true,
+      "name": "t:sections.media_with_content_split.presets.name",
+      "settings": {
+        "media_width": 30,
+        "media_position_desktop": "right",
+        "media_position_mobile": "above",
+        "media_type": "image",
+        "media_aspect_ratio": "square",
+        "mobile_media_aspect_ratio": "square",
+        "media_focal_point": "center",
+        "mobile_media_focal_point": "center",
+        "content_width": "custom",
+        "custom_width": 700,
+        "content_alignment": "left",
+        "color_scheme": "default",
+        "override_with_custom_colors": true,
+        "override_color_text": "#393939",
+        "override_color_background": "#fafafa",
+        "section_style_spacing_top": 0,
+        "section_style_spacing_bottom": 0,
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_Ap4hgH": {
+      "type": "collection-list",
+      "disabled": true,
+      "settings": {
+        "center_content": false,
+        "preheading": "",
+        "heading": "Subcollections",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "button_link": "",
+        "button_label": "",
+        "button_style": "primary",
+        "maximum_content_width": 650,
+        "collections": [],
+        "num_columns": "4",
+        "num_rows": "4",
+        "enable_slider_desktop": true,
+        "num_columns_mobile": "2",
+        "num_rows_mobile": "all",
+        "enable_slider_mobile": true,
+        "show_product_counts": false,
+        "collection_item_style": "plain",
+        "image_source": "collection",
+        "image_aspect_ratio": "square",
+        "image_circle_crop_enable": false,
+        "image_spacing": 0,
+        "title_font_type": "heading",
+        "text_alignment": "center",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "rich_text_VAQtYm": {
+      "type": "rich-text",
+      "blocks": {
+        "spacer_MLRwQw": {
+          "type": "spacer",
+          "settings": {
+            "space": 4
+          }
+        }
+      },
+      "block_order": [
+        "spacer_MLRwQw"
+      ],
+      "name": "t:sections.rich_text.presets.name",
+      "settings": {
+        "alignment": "left_left",
+        "content_width": "full",
+        "custom_content_width": 700,
+        "color_scheme": "default",
+        "override_with_custom_colors": false,
+        "override_color_text": "#393939",
+        "override_color_background": "#ffffff",
+        "section_style_spacing_top": 4,
+        "section_style_spacing_bottom": 4,
+        "section_style_enable_animation": true
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "num_columns": "5",
+        "num_rows": "8",
+        "show_item_count": true,
+        "enable_grid_mode": true,
+        "default_grid_mode": "grid",
+        "enable_sticky_filter_sidebar": true,
+        "show_sort": true,
+        "show_filters": true,
+        "filter_search_groups": "Color",
+        "collapse_filter_sidebar": false,
+        "collapse_filter_groups_desktop": true,
+        "truncate_filter_list": true,
+        "truncate_filter_list_amount": 7,
+        "show_swatch_filters": true,
+        "show_chip_filters": true,
+        "chip_layout": "2col",
+        "pagination": "infinite",
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_buttons_wfnNYR": {
+      "type": "collection-list-buttons",
+      "settings": {
+        "center_content": true,
+        "preheading": "Shop all collections",
+        "heading": "",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "maximum_content_width": 650,
+        "collections": [
+          "baking",
+          "basecamp-blends",
+          "bbq-outfitter",
+          "chiles-paprika",
+          "dip-mixes-dressings",
+          "extracts",
+          "staff-picks",
+          "garlic-onion",
+          "herbs",
+          "salts-peppers",
+          "sauces",
+          "seeds",
+          "spice-easy-by-savory-spice",
+          "world-spice-trail"
+        ],
+        "num_columns": "4",
+        "num_rows": "2",
+        "grid_spacing": "comfort",
+        "num_columns_mobile": "1",
+        "num_rows_mobile": "4",
+        "enable_slider_mobile": false,
+        "show_product_counts": true,
+        "collection_item_style": "filled",
+        "shape": "rectangle",
+        "image_source": "product",
+        "image_position": "left",
+        "mobile_image_position": "left",
+        "image_aspect_ratio": "square",
+        "image_circle_crop_enable": false,
+        "image_size": 80,
+        "image_spacing": 0,
+        "image_size_mobile": 50,
+        "image_spacing_mobile": 0,
+        "title_font_type": "heading",
+        "section_style_spacing_top": 60,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "image_hero_Cc8gwh",
+    "media_with_content_split_pAzJjx",
+    "collection_list_Ap4hgH",
+    "rich_text_VAQtYm",
+    "product-grid",
+    "collection_list_buttons_wfnNYR"
+  ]
+}
