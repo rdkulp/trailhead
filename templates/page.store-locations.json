@@ -23,6 +23,7 @@
     },
     "collection_list_tP6e3q": {
       "type": "collection-list",
+      "disabled": true,
       "name": "t:sections.collection_list.presets.name",
       "settings": {
         "center_content": true,
@@ -95,7 +96,6 @@
         "location_LaCmhW",
         "location_ByhyM9"
       ],
-      "disabled": true,
       "custom_css": [
         ".store-locations {padding: 10px 20px;}"
       ],
