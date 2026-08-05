@@ -1,0 +1,115 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "custom_css": [
+        ".page__inner {padding-bottom: 0;}"
+      ],
+      "settings": {
+        "content_width": "full",
+        "custom_content_width": 700,
+        "section_style_enable_animation": true
+      }
+    },
+    "collection_list_tP6e3q": {
+      "type": "collection-list",
+      "name": "t:sections.collection_list.presets.name",
+      "settings": {
+        "center_content": true,
+        "preheading": "",
+        "heading": "Diet Restrictions",
+        "section_header_heading_tag": "h2",
+        "subheading": "",
+        "section_header_subheading_tag": "h2",
+        "button_link": "",
+        "button_label": "",
+        "button_style": "primary",
+        "maximum_content_width": 650,
+        "collections": [
+          "black-pepper-free",
+          "capsicum-free",
+          "garlic-onion-free",
+          "garlic-free",
+          "onion-free",
+          "salt-free",
+          "sweetener-free-products"
+        ],
+        "num_columns": "5",
+        "num_rows": "all",
+        "enable_slider_desktop": false,
+        "num_columns_mobile": "3",
+        "num_rows_mobile": "all",
+        "enable_slider_mobile": false,
+        "show_product_counts": true,
+        "collection_item_style": "plain",
+        "image_source": "collection",
+        "image_aspect_ratio": "square",
+        "image_circle_crop_enable": true,
+        "image_spacing": 10,
+        "title_font_type": "body",
+        "text_alignment": "center",
+        "section_style_spacing_top": 36,
+        "section_style_spacing_bottom": 36,
+        "section_style_enable_animation": true
+      }
+    },
+    "store_locations_gtNxcf": {
+      "type": "store-locations",
+      "blocks": {
+        "location_LaCmhW": {
+          "type": "location",
+          "settings": {
+            "name": "Fort Collins",
+            "address_line_1": "123 N. College Ave",
+            "address_line_2": "Fort Collins, CO 80524",
+            "phone": "+1 (970) 682-2971",
+            "email": "fortcollins@trailheadspice.com",
+            "hours": "Sun: 11am - 5pm\nMon - Sat: 10am - 6pm",
+            "map_url": "https://maps.app.goo.gl/NgLqKvJ9PjwEbHRz8"
+          }
+        },
+        "location_ByhyM9": {
+          "type": "location",
+          "settings": {
+            "name": "Southlands",
+            "address_line_1": "6235 S Main St, Unit 107",
+            "address_line_2": "Aurora CO 80016",
+            "phone": "+1 (303) 680-2117",
+            "email": "southlands@trailheadspice.com",
+            "hours": "Sun: 11am - 5pm\nMon - Sat: 10am - 6pm",
+            "map_url": "https://maps.app.goo.gl/NX7Vo7NkJ6tekgyd7"
+          }
+        }
+      },
+      "block_order": [
+        "location_LaCmhW",
+        "location_ByhyM9"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".store-locations {padding: 10px 20px;}"
+      ],
+      "name": "Store Locations",
+      "settings": {
+        "heading": "",
+        "subheading": "Stop by one of our locations — we'd love to see you.",
+        "accent_color": "#444444"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "collection_list_tP6e3q",
+    "store_locations_gtNxcf"
+  ]
+}
