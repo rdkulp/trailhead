@@ -157,6 +157,7 @@
       "blocks": {
         "announcement_4CUirY": {
           "type": "announcement",
+          "disabled": true,
           "settings": {
             "title": "<p><strong>SUMMER COOKOUT BUNDLE — $34.99 • ADD IT TO AN ONLINE ORDER AND THE ENTIRE ORDER SHIPS FREE</strong></p>",
             "title_mobile": "<p>SUMMER COOKOUT BUNDLE — $34.99 Plus Free Shipping</p>",
@@ -169,44 +170,10 @@
             "modal_text": "<p>Add your information popup content here</p>",
             "page_for_modal_content": ""
           }
-        },
-        "5ead3ce2-32e3-4045-b7d6-59031d387b93": {
-          "type": "announcement",
-          "disabled": true,
-          "settings": {
-            "title": "<p>Free standard shipping and returns on all orders</p>",
-            "title_mobile": "",
-            "link": "",
-            "enable_modal": false,
-            "modal_link_text": "Click for details",
-            "modal_link_style": "text",
-            "modal_heading": "",
-            "heading_tag": "h3",
-            "modal_text": "<p>Add your information popup content here</p>",
-            "page_for_modal_content": ""
-          }
-        },
-        "f91add97-e178-4ed5-8344-501f71d2d66e": {
-          "type": "announcement",
-          "disabled": true,
-          "settings": {
-            "title": "<p>Shop our new collections</p>",
-            "title_mobile": "",
-            "link": "",
-            "enable_modal": false,
-            "modal_link_text": "Click for details",
-            "modal_link_style": "text",
-            "modal_heading": "",
-            "heading_tag": "h3",
-            "modal_text": "<p>Add your information popup content here</p>",
-            "page_for_modal_content": ""
-          }
         }
       },
       "block_order": [
-        "announcement_4CUirY",
-        "5ead3ce2-32e3-4045-b7d6-59031d387b93",
-        "f91add97-e178-4ed5-8344-501f71d2d66e"
+        "announcement_4CUirY"
       ],
       "settings": {
         "autoplay_delay": 7,
